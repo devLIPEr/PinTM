@@ -1,0 +1,62 @@
+/* Variables */
+:root {
+    --bgColor: #F3FFF5;
+    --primaryColor: #D2F3C6;
+    --secondaryColor: #3DAD16;
+}
+
+/* Base CSS */
+*{
+    margin: 0;
+	padding: 0;
+    box-sizing: border-box;
+    font-family: 'K2D';
+}
+body{
+    background-color: var(--bgColor);
+}
+
+
+/* Header */
+header{
+    padding: 5px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--secondaryColor);
+}
+
+.logos{
+    width: 22%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.nav{
+    width: 25%;
+}
+.nav ul{
+    display: flex;
+    flex-direction: row;
+    list-style:none;
+    justify-content: space-evenly;
+}
+.nav a{
+    text-decoration: none;
+    color: white;
+    font-size: 24px;
+    width: 100%;
+    height: 100%;
+    line-height: 40px;
+}
+.nav:hover .navButton:hover{
+    transform: scale(1.2);
+    font-weight: bold;
+}
+
+.sepBar{
+    width: 2px;
+    background-color: white;
+    border: 50%;
+}
