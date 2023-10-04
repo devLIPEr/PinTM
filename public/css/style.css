@@ -3,6 +3,7 @@
     --bgColor: #F3FFF5;
     --primaryColor: #D2F3C6;
     --secondaryColor: #3DAD16;
+    --btnColor: #DBCF2F;
 }
 
 /* Base CSS */
@@ -24,6 +25,7 @@ header{
     justify-content: space-between;
     align-items: center;
     background-color: var(--secondaryColor);
+    box-shadow: 0 5px 8px 1px rgba(0, 0, 0, 0.3);
 }
 
 .logos{
@@ -59,4 +61,96 @@ header{
     width: 2px;
     background-color: white;
     border: 50%;
+}
+
+/* Footer */
+footer{
+    padding: 2px;
+    background-color: var(--secondaryColor);
+    text-align: center;
+    color: white;
+    /* position: fixed;
+    bottom: 0; */
+    width: 100%;
+    cursor: default;
+}
+
+/* Index.html style */
+
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main > div{
+    width: 80%;
+    background-color: var(--primaryColor);
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main > div > div{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 50px 5px 5px 5px;
+}
+
+.info{
+    width: 50%;
+    margin: 0 15px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.containerIndex{
+    background-color: #D9D9D9;
+    border-bottom: solid var(--secondaryColor) 15px;
+    border-radius: 5px;
+    width: 80%;
+    font-size: 40px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.imgIndex{
+    width: 35%;
+}
+
+.infoIndex{
+    width: 60%;
+    font-size: 26px;
+    margin-bottom: 15px;
+    color: #524949;
+}
+
+.btnIndex{
+    width: 25%;
+    background-color: var(--btnColor);
+    outline: 0;
+    border: 0;
+    padding: 10px;
+    font-size: 24px;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.btnIndex:hover p{
+    cursor: pointer;
+    transform: scale(1.1);
+    font-weight: bold;
+}
+
+.sepBarH{
+    background-color: var(--secondaryColor);
+    width: 80%;
+    height: 5px;
+    border-radius: 5px;
 }
