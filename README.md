@@ -30,6 +30,7 @@
 
 ```bash
 $ npm install
+$ npm i hbs
 ```
 
 ## Running the app
