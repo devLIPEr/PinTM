@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pin™</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link href='https://fonts.googleapis.com/css?family=K2D' rel='stylesheet'>
+</head>
+<body>
+    <header>
+        <div class="logos">
+            <a href=""><img src="./images/UnicentroLogo.png" alt="Logo UNICENTRO"></a>
+            <div class="sepBar"></div>
+            <a href=""><img src="./images/PinTMLogo.png" alt="Logo Pin"></a>
+        </div>
+        <div class="nav">
+            <ul>
+                <li class="navButton"><a href="">Horários</a></li>
+                <div class="sepBar"></div>
+                <li class="navButton"><a href="">Consulta</a></li>
+                <div class="sepBar"></div>
+                <li class="navButton"><a href="">Login</a></li>
+            </ul>
+        </div>
+    </header>
+    <main>
+        <!-- Tem comentário do html e do hbs aí, mas basicamente eu 
+            só quis comentar o que eu tinha copiado da tela inicial -->
+        <!-- {{! <div>
+            <div>
+                <div class="info">
+                    <div class="containerIndex">
+                        <img src="images/PinTMLogo.png" alt="Logo Pin">
+                    </div>
+                    <p class="infoIndex">
+                        Com o Pin™, você conseguirá encontrar horários para marcar qualquer evento para alunos do Campus CEDETEG, de acordo com os horários das turmas em que eles estão matriculados!
+                    </p>
+                    <button class="btnIndex">
+                        <p>CONFIRA</p>
+                    </button>
+                </div>
+                <img class="imgIndex" src="images/UnicentroLogo.png" alt="">
+            </div>
+            <div class="sepBarH"></div>
+            <div>
+                <img class="imgIndex" src="images/UnicentroLogo.png" alt="">
+                <div class="info">
+                    <div class="containerIndex">
+                        Nunca mais perca tempo organizando reuniões!
+                    </div>
+                    <p class="infoIndex">
+                        Utilizando o Pin™, você pode organizar uma reunião com um grupo de alunos ou professores informando quais matérias cada um participa. Então, nós buscamos o melhor horário para que todos possam participar, simples, rápido e fácil!
+                    </p>
+                    <button class="btnIndex">
+                        <p>VAMOS LÁ</p>
+                    </button>
+                </div>
+            </div>
+        </div> }} -->
+
+        <div id = "background-login">
+            <h1 id = "login-txt">LOGIN</h1>
+            <form id = "Login form">
+                <div class="login-form">
+                    <input type="text" name = "email" id = "email" placeholder="e-mail">
+                </div>
+                <div class="login-form">
+                    <input type="text" name = "password" id = "password" placeholder="senha">
+                </div>
+            </form>
+            <button id = "send-button" class = "btnIndex"> Enviar </button>
+            <!-- Esse redirect aí em baixo não existe. ainda. -->
+            <a href="./register.html" id = "register-redirect">Não possui um cadastro? Clique aqui para criar sua conta!</a>
+        </div>
+    </main>
+    <footer>
+        <p>Pin™</p>
+    </footer>
+</body>
+</html>
