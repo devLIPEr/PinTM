@@ -4,7 +4,10 @@ import { Get, Controller, Render } from '@nestjs/common';
 export class AppController {
   @Get()
   @Render('index')
-  root() {
-    return { message: 'Hello world!' };
-  }
+  root() {}
+
+  
+  @Get('/login')
+  @Render('login')
+  branchIndex() {}
 }
