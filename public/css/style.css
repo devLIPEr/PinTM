@@ -160,6 +160,7 @@ main > div > div{
     border-radius: 5px;
 }
 
+/* Login */
 #background-login{
     position: relative;
     top: 5%;
@@ -183,6 +184,11 @@ main > div > div{
     top:70%;
 }
 
+.login-form input{
+    outline: 0;
+    padding: 0px 3px 2px;
+}
+
 #register-redirect{
     position:relative;
     font-family: comic sans ms;
@@ -192,4 +198,10 @@ main > div > div{
 #send-button{
     position:relative;
     top:33%;
+}
+
+#send-button:hover p{
+    cursor: pointer;
+    transform: scale(1.1);
+    font-weight: bold;
 }
