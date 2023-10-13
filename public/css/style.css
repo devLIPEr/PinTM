@@ -4,6 +4,11 @@
     --primaryColor: #D2F3C6;
     --secondaryColor: #3DAD16;
     --btnColor: #DBCF2F;
+    --quality0: #AD1616;
+    --quality1: #7B7117;
+    --quality2: #6B8F17;
+    --quality3: #5EA717;
+    --quality4: #47D018;
 }
 
 /* Base CSS */
@@ -80,7 +85,7 @@ footer{
     cursor: default;
 }
 
-/* Index.html style */
+/* Main */
 main{
     display: flex;
     flex-direction: column;
@@ -88,7 +93,8 @@ main{
     flex: 1 0 auto;
 }
 
-main > div{
+/* Index */
+.mainIndex > div{
     width: 80%;
     background-color: var(--primaryColor);
     margin: 8px 0;
@@ -97,7 +103,7 @@ main > div{
     align-items: center;
 }
 
-main > div > div{
+.mainIndex > div > div{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -161,6 +167,15 @@ main > div > div{
 }
 
 /* Login */
+.mainLogin > div{
+    width: 80%;
+    background-color: var(--primaryColor);
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #background-login{
     position: relative;
     top: 5%;
@@ -204,4 +219,172 @@ main > div > div{
     cursor: pointer;
     transform: scale(1.1);
     font-weight: bold;
+}
+
+/* PDF */
+.pdfHeader{
+    height: 25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.pdfHeader a{
+    width: 15%;
+}
+
+.pdfHeader img{
+    width: 100%;
+    height: 100%;
+}
+.pdfHeader a:nth-of-type(2n){
+    width: 20%;
+}
+
+.pdfHeader > div{
+    text-align: center;
+    color: #F2E1E1;
+}
+
+.pdfHeader h2{
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.pdfHeader h3{
+    font-size: 35px;
+    color: #F3DCDC;
+    font-weight: 600;
+}
+
+.mainPdf > div{
+    width: 80%;
+    height: 100%;
+    margin: 8px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.pdfSide{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.pdfSide:nth-of-type(1) div{
+    margin-bottom: 50px;
+}
+
+.pdfSide p{
+    font-size: 40px;
+    font-weight: 600;
+    color: #252525;
+}
+
+.time{
+    width: 55%;
+    height: 30%;
+    border-radius: 15px;
+    background-color: #DBCF2F;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.time p{
+    font-size: 50px;
+}
+
+/* SelecionarHorario */
+.mainSelectHorario{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.mainSelectHorario table{
+    width: 60%;
+    text-align: center;
+    border-spacing: 15px 5px;
+    border-collapse: separate;
+}
+
+.mainSelectHorario td, .mainSelectHorario th{
+    width: calc(100% / 7);
+    background-color: var(--primaryColor);
+}
+
+.mainSelectHorario td:not(:first-of-type), .mainSelectHorario th:not(:first-of-type){
+    cursor: pointer;
+}
+
+.mainSelectHorario td[quality="0"]{
+    background-color: var(--quality0);
+}
+.mainSelectHorario td[quality="1"]{
+    background-color: var(--quality1);
+}
+.mainSelectHorario td[quality="2"]{
+    background-color: var(--quality2);
+}
+.mainSelectHorario td[quality="3"]{
+    background-color: var(--quality3);
+}
+.mainSelectHorario td[quality="4"]{
+    background-color: var(--quality4);
+}
+.mainSelectHorario td[quality="-1"]{
+    background-color: var(--primaryColor);
+}
+.mainSelectHorario td[selected="1"]{
+    background-color: var(--secondaryColor) !important;
+}
+
+.h2SelectHorario{
+    background-color: var(--primaryColor);
+    padding: 13px 30px;
+    border-radius: 16px;
+    color: #252525;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.formSelectHorario{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.formSelectHorario select{
+    outline: 0;
+    padding: 5px;
+    background-color: var(--primaryColor);
+    width: 45%;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.compartilharBtn{
+    background-color: var(--primaryColor);
+    border-radius: 50%;
+    padding: 10px;
+}
+
+.compartilharBtn:hover img{
+    cursor: pointer;
+    transform: scale(1.08);
+}
+
+.blankRow{
+    height: 10px !important; /* overwrites any other rules */
+}
+
+.blankRow td{
+    background-color: transparent;
 }
