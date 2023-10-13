@@ -1,29 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Pin™</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=K2D' rel='stylesheet'>
-</head>
+{{> head }}
 <body>
-    <header>
-        <div class="logos">
-            <a href="/"><img src="./images/UnicentroLogo.png" alt="Logo UNICENTRO"></a>
-            <div class="sepBar"></div>
-            <a href="/"><img src="./images/PinTMLogo.png" alt="Logo Pin"></a>
-        </div>
-        <div class="nav">
-            <ul>
-                <li class="navButton"><a href="">Horários</a></li>
-                <div class="sepBar"></div>
-                <li class="navButton"><a href="">Consulta</a></li>
-                <div class="sepBar"></div>
-                <li class="navButton"><a href="/login">Login</a></li>
-            </ul>
-        </div>
-    </header>
+    {{> header }}
     <main>
         <div id = "background-login">
             <h1 id = "login-txt">LOGIN</h1>
@@ -40,8 +19,6 @@
             <a href="./register" id = "register-redirect">Não possui um cadastro? Clique aqui para criar sua conta!</a>
         </div>
     </main>
-    <footer>
-        <p>Pin™</p>
-    </footer>
+    {{> footer }}
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head }}
+<body>
+    <header class="pdfHeader">
+        <a href="/"><img src="./images/UnicentroLogo.png" alt="Logo UNICENTRO"></a>
+        <div>
+            <h2>
+                Reposição de Aula
+            </h2>
+            <h3>
+                {{materia}}
+            </h3>
+        </div>
+        <a href="/"><img src="./images/PinTMLogo.png" alt="Logo Pin"></a>
+    </header>
+    <main class="pdfMain">
+        <div>
+            <div class="pdfSide">
+                <div>
+                    <p>Dia:</p>
+                    <p>{{data}}</p>
+                </div>
+                <div>
+                    <p>Sala:</p>
+                    <p>{{sala}}</p>
+                </div>
+            </div>
+            <div class="pdfSide">
+                <div class="time">
+                    <p>
+                        Horário:
+                    </p>
+                    <p>{{horario}}</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    {{> footer }}
+</body>
+</html>
