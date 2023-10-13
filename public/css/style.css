@@ -4,6 +4,11 @@
     --primaryColor: #D2F3C6;
     --secondaryColor: #3DAD16;
     --btnColor: #DBCF2F;
+    --quality0: #AD1616;
+    --quality1: #7B7117;
+    --quality2: #6B8F17;
+    --quality3: #5EA717;
+    --quality4: #47D018;
 }
 
 /* Base CSS */
@@ -293,4 +298,93 @@ main{
 
 .time p{
     font-size: 50px;
+}
+
+/* SelecionarHorario */
+.mainSelectHorario{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.mainSelectHorario table{
+    width: 60%;
+    text-align: center;
+    border-spacing: 15px 5px;
+    border-collapse: separate;
+}
+
+.mainSelectHorario td, .mainSelectHorario th{
+    width: calc(100% / 7);
+    background-color: var(--primaryColor);
+}
+
+.mainSelectHorario td:not(:first-of-type), .mainSelectHorario th:not(:first-of-type){
+    cursor: pointer;
+}
+
+.mainSelectHorario td[quality="0"]{
+    background-color: var(--quality0);
+}
+.mainSelectHorario td[quality="1"]{
+    background-color: var(--quality1);
+}
+.mainSelectHorario td[quality="2"]{
+    background-color: var(--quality2);
+}
+.mainSelectHorario td[quality="3"]{
+    background-color: var(--quality3);
+}
+.mainSelectHorario td[quality="4"]{
+    background-color: var(--quality4);
+}
+.mainSelectHorario td[quality="-1"]{
+    background-color: var(--primaryColor);
+}
+.mainSelectHorario td[selected="1"]{
+    background-color: var(--secondaryColor) !important;
+}
+
+.h2SelectHorario{
+    background-color: var(--primaryColor);
+    padding: 13px 30px;
+    border-radius: 16px;
+    color: #252525;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.formSelectHorario{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.formSelectHorario select{
+    outline: 0;
+    padding: 5px;
+    background-color: var(--primaryColor);
+    width: 45%;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.compartilharBtn{
+    background-color: var(--primaryColor);
+    border-radius: 50%;
+    padding: 10px;
+}
+
+.compartilharBtn:hover img{
+    cursor: pointer;
+    transform: scale(1.08);
+}
+
+.blankRow{
+    height: 10px !important; /* overwrites any other rules */
+}
+
+.blankRow td{
+    background-color: transparent;
 }
