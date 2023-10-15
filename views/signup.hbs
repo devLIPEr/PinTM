@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head }}
+<body>
+    {{> header }}
+    <main class="mainLogin">
+        <div id = "background-login">
+            <h1 id = "login-txt">Sign Up</h1>
+            <form id = "Login-Form">
+                <div class = "login-form">
+                    <input type="text" name = "name" id = "name" placeholder="nome">
+                </div>
+                {{!-- <div class = "login-form"   >
+                    <p>Qual é sua função na universidade?</p>
+                    <input type= "radio" name = "role" id = "role_professor" value = "professor">
+                    <label for="role_professor">Professor</label>
+                    <br>
+                    <input type= "radio" name = "role" id = "role_aluno" value = "aluno">
+                    <label for="role_aluno">Aluno</label>
+                    <br>
+                    <input type= "radio" name = "role" id = "role_funcionario" value = "funcionario">
+                    <label for="role_funcionario">Funcionário</label>
+                    <br>
+                    <input type= "radio" name = "role" id = "role_outro" value = "outro">
+                    <label for="role_outro">Outro</label>
+                    
+                </div> --}}
+                <div class="login-form">
+                    <input type="email" name = "email" id = "email" placeholder="e-mail">
+                </div>
+                <div class="login-form">
+                    <input type="password" name = "password" id = "password" placeholder="senha">
+                </div>
+            </form>
+            <button id = "send-button" class = "btnIndex"> <p>Criar cadastro</p> </button>
+            <a href="./login" id = "login-redirect">Já possui uma conta? Acesse-a clicando aqui!</a>
+        </div>
+    </main>
+    {{> footer }}
+</body>
+</html>
