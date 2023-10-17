@@ -387,7 +387,7 @@ main{
     background-color: transparent;
 }
 
-* Formulario de consulta*/
+/* Formulario de consulta*/
 
 .mainConsulta > div{
     background-color: var(--primaryColor);
