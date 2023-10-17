@@ -34,5 +34,9 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-#env
+# env
 .env
+
+# firebase
+serviceAccountKey.json
+firebaseConfig.ts
