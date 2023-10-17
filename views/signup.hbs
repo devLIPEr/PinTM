@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head }}
+<body>
+    {{> header }}
+    <main class="mainLogin">
+        <div id = "background-login">
+            <h1 id = "login-txt">Sign Up</h1>
+            <form id = "Login-Form">
+                <div class = "login-form">
+                    <input type="text" name = "name" id = "name" placeholder="nome">
+                </div>
+                <div class="login-form">
+                    <input type="email" name = "email" id = "email" placeholder="e-mail">
+                </div>
+                <div class="login-form">
+                    <input type="password" name = "password" id = "password" placeholder="senha">
+                </div>
+                <input style = "display: none;" type="submit" value="enviar" id = "submit-button">
+            </form>
+            <button onclick="document.querySelector('#test').click()" id = "send-button" class = "btnIndex"> <p>Criar cadastro</p> </button>
+            <a href="./login" id = "login-redirect">Já possui uma conta? Acesse-a clicando aqui!</a>
+        </div>
+    </main>
+    {{> footer }}
+</body>
+</html>

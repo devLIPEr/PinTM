@@ -9,6 +9,11 @@ export class AppController {
   @Get('/login')
   @Render('login')
   branchIndex() {}
+
+  @Get('/signup')
+  @Render('signup')
+  branchSignup() {}
+  
   
   @Get('/pdf')
   @Render('pdf')

@@ -5,18 +5,19 @@
     {{> header }}
     <main class="mainLogin">
         <div id = "background-login">
-            <h1 id = "login-txt">LOGIN</h1>
-            <form id = "Login form">
+            <h1 id = "login-txt">Login</h1>
+            <form action = "./login" method = "post" id = "Login-Form">
                 <div class="login-form">
-                    <input type="text" name = "email" id = "email" placeholder="e-mail">
+                    <input type="email" name = "email" id = "email" placeholder="e-mail">
                 </div>
                 <div class="login-form">
                     <input type="password" name = "password" id = "password" placeholder="senha">
                 </div>
+                <input style = "display : none;" type="submit" value = "enviar" id = "submit-button">
             </form>
-            <button id = "send-button" class = "btnIndex"> <p>Enviar</p> </button>
-            <!-- Esse redirect aí em baixo não existe. ainda. -->
-            <a href="./register" id = "register-redirect">Não possui um cadastro? Clique aqui para criar sua conta!</a>
+
+            <button onclick="document.querySelector('#test').click()" id = "send-button" class = "btnIndex"> <p>Enviar</p> </button>
+            <a href="./signup" id = "signup-redirect">Não possui um cadastro? Clique aqui para criar sua conta!</a>
         </div>
     </main>
     {{> footer }}

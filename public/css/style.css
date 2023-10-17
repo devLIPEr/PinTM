@@ -166,37 +166,35 @@ main{
     border-radius: 5px;
 }
 
-/* Login */
+/* Login and Sign Up*/
+
 .mainLogin > div{
-    width: 80%;
+    width: 30%;
     background-color: var(--primaryColor);
-    margin: 8px 0;
+    margin: 35px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
+    border-radius: 6%;
 }
 
-#background-login{
-    position: relative;
-    top: 5%;
-    background-color: #D2F3C6;
-    height: 500px;
-    width: 500px;
-    align-items: center;
-    border-radius: 5%;
+#Login-Form{
+    padding:0;
 }
 
 #login-txt{
-    position:relative;
-    top:20%;
+    margin-top: 10%;
+    font: bold;
+    margin-bottom: 10%;
 }
+
 .login-form{
     transform: scale(2);
-    /* width: 500px;
-    height: 50px; */
-    margin-top: 33%;
-    position:relative;
-    top:70%;
+    width:auto;
+    height:auto; 
+    margin-top: 15%;
+    margin-top: 20%;
 }
 
 .login-form input{
@@ -204,15 +202,15 @@ main{
     padding: 0px 3px 2px;
 }
 
-#register-redirect{
-    position:relative;
+#signup-redirect,
+#login-redirect{
     font-family: comic sans ms;
-    top: 37.5%;
 }
 
 #send-button{
-    position:relative;
-    top:33%;
+    margin-top: 10%;
+    width: 40%;
+    margin-bottom: 10%;
 }
 
 #send-button:hover p{
