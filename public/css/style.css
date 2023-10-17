@@ -3,6 +3,7 @@
     --bgColor: #F3FFF5;
     --primaryColor: #D2F3C6;
     --secondaryColor: #3DAD16;
+    --txtColor: #252525;
     --btnColor: #DBCF2F;
     --quality0: #AD1616;
     --quality1: #7B7117;
@@ -184,9 +185,9 @@ main{
 }
 
 #login-txt{
-    margin-top: 10%;
-    font: bold;
-    margin-bottom: 10%;
+    position:relative;
+    top:20%;
+    color: var(--txtColor);
 }
 
 .login-form{
@@ -198,6 +199,8 @@ main{
 }
 
 .login-form input{
+    background-color: #F2FDF4;
+    border: none;
     outline: 0;
     padding: 0px 3px 2px;
 }
@@ -385,4 +388,68 @@ main{
 
 .blankRow td{
     background-color: transparent;
+}
+
+/* Formulario de consulta*/
+
+.mainConsulta > div{
+    background-color: var(--primaryColor);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.background-consulta {
+    display: flex;
+    width: 30%;
+    height: 80%;
+    margin-top: 70px;
+    border-radius: 5%;
+}
+
+#consultaTitle{
+    position:relative;
+    top:20%;
+    color: var(--txtColor);
+}
+
+.consultaForm{
+    transform: scale(2);
+    margin-top: 40%;
+    position:relative;
+    top: 1%;
+}
+
+.consultaForm input, select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    border: none;
+    padding: 4px;
+    margin: 6px;
+    box-sizing: border-box;
+}
+
+.consultaForm input, select{
+    color: #252525;
+    background-color: #F2FDF4;
+    border-radius: 0.25rem;
+    font: 1.25rem;
+    width: 100%;
+    height: 30px;
+}
+
+#cursoField {
+    margin-top: 15px;
+}
+
+.mainConsulta #send-button{
+    position:relative;
+    top:20%;
+}
+
+input::placeholder  {
+  opacity: 1;
+  color: #524949;
 }

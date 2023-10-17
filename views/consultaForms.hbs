@@ -1,0 +1,36 @@
+!DOCTYPE html>
+<html lang="en">
+{{> head }}
+<body>
+    {{> header }}
+    <main class="mainConsulta">
+        <div class="background-consulta">
+            <h1 id="consultaTitle">HORÁRIOS</h1>
+
+            <form class="consultaForm" action="" method="">
+                <div id="cursoField">
+                    <input type="text" id="nomeCurso" name="nomeCurso" placeholder="Curso:" required>
+                </div>
+                
+                <div id="materiaField">
+                    <input type="text" id="nomeMateria" name="nomeMateria" placeholder="Matéria:" required>            
+                </div>
+                
+                <div id="coiField">
+                    <select name="coi" class="coi" aria-placeholder="COI:">
+                        <option value="" disabled selected>COI:</option>
+                        <option value="lab1">Laboratorio 1</option>
+                        <option value="lab2">Laboratorio 2</option>
+                        <option value="lab3">Laboratorio 3</option>
+                        <option value="lab4">Laboratorio 4</option>
+                    </select>
+                </div>
+            </form>
+
+            <button id = "send-button" class = "btnIndex"> <p>Buscar</p> </button>
+
+        </div>
+    </main>
+    {{> footer }}
+</body>
+</html>
