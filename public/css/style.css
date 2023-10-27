@@ -405,14 +405,17 @@ main{
 }
 
 #consultaTitle{
-    position:relative;
-    top:20%;
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20%;
     color: var(--txtColor);
 }
 
 .consultaForm{
+    display: flex;
+    flex-direction: column;
     transform: scale(2);
-    margin-top: 40%;
+    margin-top: 20%;
     position:relative;
     top: 1%;
 }
@@ -442,11 +445,112 @@ main{
 }
 
 .mainConsulta #send-button{
-    position:relative;
+    display: flex;
     top:20%;
 }
 
 input::placeholder  {
   opacity: 1;
   color: #524949;
+}
+
+/* minhas reposições */
+
+.mainMinhasRepos, .mainNotFound{
+    background-color: var(--bgColor);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.minhasRepos-txt{
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.emptyContentRepos, .notFoundContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center ;
+    width: 80%;
+    height: 70%;
+    border-radius: 20px;
+    background-color: var(--primaryColor);
+}
+
+.emptyContentRepos h2{
+    font-size: 40px;
+    margin-top: 5%;
+}
+
+.emptyContentRepos #send-button {
+    margin-top: 5%;
+    width: 20%;
+}
+
+
+/* not found */
+
+.notFoundContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+}
+
+.notFoundContent h2{
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+.notFoundContent #send-button {
+    width: 20%;
+}
+
+/* minhas reposições */
+
+.mainMinhasRepos{
+    width: 100%;
+}
+
+.reposTable {
+    display: flex;
+    width: 80%;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 20px;
+    margin-bottom: 2%;
+}
+
+.reposTable table{
+    width: 90%;
+    align-items: center;
+    justify-content: center ;
+}
+
+.reposTable th, td {
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    background-color: var(--primaryColor);
+    border-bottom: 1px green;
+}
+
+.reposTable td, th {
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 10px;
+    height: 40px;
+    text-align: center;
+    border-bottom: 5px;
+}
+
+.reposTable th{
+    font-size: 60;
+    font-weight: bolder;
 }
