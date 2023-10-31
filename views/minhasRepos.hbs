@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-{{> head }}
+{{> headController }}
 <body>
-    {{> header }}
+    {{> headerController }}
      <main class="mainMinhasRepos">
         <div class="minhasRepos-txt">
             <h1>Minhas Reposições</h1>
         </div>
 
-        <div class="reposTable">
-            <table>
-                <tr>
-                    <th>Matéria</th>
-                    <th>Curso</th>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Local</th>
-                    <th>Ações</th>
-                </tr>
-                <tr>
-                    <td>Redes</td>
-                    <td>Computação</td>
-                    <td>20/25/26</td>
-                    <td>4:20</td>
-                    <td>lab2</td>
-                    <td>
-                        <div>
-                            <a href="">s</a>
-                            <a href="">p</a>
-                            <a href="">x</a>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        {{#if repos}}
+            <div class="reposTable">
+                <table>
+                    <tr>
+                        <th>Matéria</th>
+                        <th>Curso</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Local</th>
+                        <th>Ações</th>
+                    </tr>
+                    {{#repos}}
+                        {{#each this}}
+                            <tr>
+                                <td>{{materia}}</td>
+                                <td>{{curso}}</td>
+                                <td>{{data}}</td>
+                                <td>{{horario}}</td>
+                                <td>{{local}}</td>
+                                <td>
+                                    <div>
+                                        <a href="">s</a>
+                                        <a href="">p</a>
+                                        <a href="">x</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    {{/repos}}
+                </table>
+            </div>
+        {{else}}
+            <div class="emptyContentRepos">
+                <h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2>
+                <button id = "send-button" class = "btnIndex">Marcar Reposição</button>
+            </div>
+        {{/if}}
     </main>
     {{> footer }}
 </body>

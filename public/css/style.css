@@ -522,7 +522,7 @@ input::placeholder  {
     display: flex;
     width: 80%;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     border-radius: 20px;
     margin-bottom: 2%;
 }

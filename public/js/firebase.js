@@ -22,7 +22,7 @@ export function authState(){
     if(user){
       var login = document.querySelector('#headerLogin');
       if(login){
-        login.setAttribute('href', '/account');
+        login.setAttribute('href', '/user/account');
         login.innerHTML = user.displayName;
       }
     }
