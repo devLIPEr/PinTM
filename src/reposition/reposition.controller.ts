@@ -2,7 +2,7 @@ import { Get, Post, Body, Res, Controller, Render, Response } from '@nestjs/comm
 import { RepositionFormDTO } from './dto/repositionForm.dto';
 import { RepositionDTO } from './dto/reposition.dto';
 
-@Controller()
+@Controller('reposition')
 export class RepositionController {
   @Get('/scheduleForm')
   @Render('consultaForms')

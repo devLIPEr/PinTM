@@ -5,4 +5,8 @@ export class AppController {
   @Get()
   @Render('index')
   root() {}
+
+  @Get('/404')
+  @Render('notFound')
+  notFounf() {}
 }

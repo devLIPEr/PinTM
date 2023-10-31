@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-{{> head }}
+{{> headController }}
 <body>
-    {{> header }}
+    {{> headerController }}
     <main class="mainLogin">
         <div id = "background-login">
             <h1 id = "login-txt">Sign Up</h1>
@@ -26,7 +26,7 @@
 </body>
 <script type="module">
   import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
-  import { auth } from './js/firebase.js';
+  import { auth } from '../js/firebase.js';
 
   const createUser = async (email, password, name) => {
     try{
@@ -34,7 +34,7 @@
       await updateProfile(userCredential.user, {
         displayName: name
       });
-      window.location.href = '/account';
+      window.location.href = '/user/account';
     }catch(err){
       console.error(err);
     }

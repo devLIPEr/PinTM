@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-{{> head }}
+{{> headController }}
 <body>
-    {{> header }}
+    {{> headerController }}
     <main class="mainLogin">
         <div id = "background-login">
             <h1 id = "login-txt">Login</h1>
@@ -24,12 +24,12 @@
 </body>
 <script type="module">
   import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
-  import { auth } from './js/firebase.js';
+  import { auth } from '../js/firebase.js';
 
   const signIn = async (email, password) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = '/account';
+      window.location.href = '/user/account';
     } catch (error) {
       console.error(error);
     }

@@ -1,6 +1,6 @@
 import { Get, Controller, Render } from '@nestjs/common';
 
-@Controller()
+@Controller('user')
 export class UserController {
   @Get('/login')
   @Render('login')
@@ -9,4 +9,22 @@ export class UserController {
   @Get('/signup')
   @Render('signup')
   branchSignup() {}
+
+  @Get('/account')
+  @Render('minhasRepos')
+  branchMinhasRepos() {
+    return {
+      repos: [
+        [
+          {
+            materia: "Redes",
+            curso: "Computação",
+            data: "20/09/2023",
+            horario: "16:20",
+            local: "Lab2"
+          }
+        ]
+      ]
+    };
+  }
 }
