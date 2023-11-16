@@ -6,7 +6,7 @@ import * as hbs from 'hbs';
 import * as dotenv from 'dotenv';
 
 import * as admin from 'firebase-admin';
-import { firebaseConfig } from './firebaseConfig';
+// import { firebaseConfig } from './firebaseConfig';
 
 dotenv.config();
 
@@ -14,8 +14,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(firebaseConfig)),
-    databaseURL: process.env.DATABASE_URL
+    // credential: admin.credential.cert(JSON.parse(firebaseConfig)),
+    // databaseURL: process.env.DATABASE_URL
   })
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
