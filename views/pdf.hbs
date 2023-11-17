@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body>
+<body onload = 'downloadPDF()'>
     <header class="pdfHeader">
         <a href="/"><img src="./images/UnicentroLogo.png" alt="Logo UNICENTRO"></a>
         <div>
@@ -37,96 +37,24 @@
         </div>
     </main>
     {{> footer }}
-</body>
-<script>
-    window.addEventListener('load', branchPDF());
-</script>
-{{!-- <script type = "module">
-    
-
-    function teste(){
-        console.log("Foi (?)");
-        var fonts = {
-            K2D:{
-            normal: 'K2D',
-            bold: 'K2D',
-            italics: 'K2D',
-            bolditalics: 'K2D'}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src = "https://github.com/niklasvh/html2canvas/releases/download/v1.4.1/html2canvas.js"></script>
+    <script>
+        function downloadPDF() {
+            var body = document.body;
+            var originalWidth = body.offsetWidth;    
+            var originalHeight = body.offsetHeight;  
+            body.style.width = '1171.8px';
+            body.style.height = '792.935px';         
+            html2canvas(body, {scale: 1}).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/png');
+                var doc = new jspdf.jsPDF('l', 'mm');
+                doc.addImage(imgData, 'PNG', 0, 0);
+                doc.save('Reposicao.pdf');
+                body.style.width = '';
+                body.style.height = '';
+            });
         }
-        var printer = new PdfPrinter(fonts);
-
-        var docDefinition = {
-            content: [
-                'pdfmake (since it\'s based on pdfkit) supports JPEG and PNG format',
-                'If no width/height/fit is provided, image original size will be used',
-                {
-                    image: 'fonts/sampleImage.jpg',
-                },
-                'If you specify width, image will scale proportionally',
-                {
-                    image: 'fonts/sampleImage.jpg',
-                    width: 150
-                },
-                'If you specify both width and height - image will be stretched',
-                {
-                    image: 'fonts/sampleImage.jpg',
-                    width: 150,
-                    height: 150,
-                },
-                'You can also fit the image inside a rectangle',
-                {
-                    image: 'fonts/sampleImage.jpg',
-                    fit: [100, 100],
-                    pageBreak: 'after'
-                },
-                'You can also cover the image inside a rectangle',
-                {
-                    image: 'fonts/sampleImage.jpg',
-                    cover: { width: 100, height: 100, valign: "bottom", align: "right" },
-                    pageBreak: 'after'
-                },
-                'Images can be also provided in dataURL format\n(the one below was taken from http://www.clipartbest.com/clipart-dT7zx5rT9)',
-                {
-                    image: testImageDataUrl,
-                    width: 200
-                },
-                'or be defined in the "images" dictionary, which can be referenced by name:',
-                {
-                    image: 'bee',
-                    width: 200
-                },
-                'and opacity is supported:',
-                {
-                    image: 'fonts/sampleImage.jpg',
-                    width: 150,
-                    opacity: 0.5
-                },
-            ],
-                images: {
-                    bee: testImageDataUrl
-                }
-        };
-        var pdfDoc = printer.createPdfKitDocument(docDefinition);
-        pdfDoc.pipe(fs.createWriteStream('pdfs/images.pdf'));
-        pdfDoc.end();
-    }
-
-    window.addEventListener('load', teste)
-</script> --}}
-{{!-- <script>
-    function exportHTMLtoPDF(){
-        let htmlElement = document.getElementsByTagName('body')[0];
-        let opt = {
-            margin: [0,0,-10,0],
-            filename: 'Reposição.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2},
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-        };
-
-        html2pdf().set(opt).from(htmlElement).save();
-    }
-
-    window.addEventListener('load', exportHTMLtoPDF)
-</script> --}}
+    </script>
+</body>
 </html>
