@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body>
+<body onload = 'downloadPDF()'>
     <header class="pdfHeader">
         <a href="/"><img src="./images/UnicentroLogo.png" alt="Logo UNICENTRO"></a>
         <div>
@@ -37,5 +37,24 @@
         </div>
     </main>
     {{> footer }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src = "https://github.com/niklasvh/html2canvas/releases/download/v1.4.1/html2canvas.js"></script>
+    <script>
+        function downloadPDF() {
+            var body = document.body;
+            var originalWidth = body.offsetWidth;    
+            var originalHeight = body.offsetHeight;  
+            body.style.width = '1171.8px';
+            body.style.height = '792.935px';         
+            html2canvas(body, {scale: 1}).then(function(canvas) {
+                var imgData = canvas.toDataURL('image/png');
+                var doc = new jspdf.jsPDF('l', 'mm');
+                doc.addImage(imgData, 'PNG', 0, 0);
+                doc.save('Reposicao.pdf');
+                body.style.width = '';
+                body.style.height = '';
+            });
+        }
+    </script>
 </body>
 </html>

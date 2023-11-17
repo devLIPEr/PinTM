@@ -15,8 +15,12 @@ export class RepositionController {
 
   @Get('/pdf')
   @Render('pdf')
-  branchPDF() {
-    return {materia: 'Engenharia de Software I', data: '12/02/2023', sala: 'Sala 1 Bloco 2', horario: '08:20 - 10:00'};
+  branchPDF(){
+    var materia = 'Engenharia de Software I';
+    var data = '12/02/2023';
+    var sala = 'Sala 1 Bloco 2';
+    var horario = '08:20 - 10:00';
+    return {materia: materia, data: data, sala: sala, horario: horario};
   }
 
   @Post('/selectSchedule')
