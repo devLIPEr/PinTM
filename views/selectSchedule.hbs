@@ -25,7 +25,7 @@
                     <tr>
                         <td>{{horario}}</td> {{!-- Horário do Período (07:30) --}}
                         {{#qualities}} {{!-- Array de qualidades (gerado pelo algoritmo) --}}
-                            <td selected="0" quality={{quality}}></td> {{!-- Qualidade do horário --}}
+                            <td selected="0" quality="{{quality}}"></td> {{!-- Qualidade do horário --}}
                         {{/qualities}}
                     </tr>
                 {{/each}}
@@ -33,15 +33,16 @@
         </table>
         <div class="formSelectHorario">
             <select name="salaInput" id="salaInput">
+                <option value="" disabled selected>Sala:</option>
                 {{#salas}}
-                    <option value={{sala}}>{{sala}}</option>
+                    <option value="{{sala}}">{{sala}}</option>
                 {{/salas}}
             </select>
             <div class="compartilharBtn">
-                <img src="./images/compartilharPDF.png" alt="Compartilhar via PDF">
+                <img src="../images/compartilharPDF.png" alt="Compartilhar via PDF">
             </div>
             <div class="compartilharBtn">
-                <img src="./images/compartilharEmail.png" alt="Compartilhar via E-mail">
+                <img src="../images/compartilharEmail.png" alt="Compartilhar via E-mail">
             </div>
         </div>
     </main>

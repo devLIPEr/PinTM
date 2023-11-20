@@ -1,12 +1,50 @@
-import { Get, Post, Body, Res, Controller, Render, Response } from '@nestjs/common';
+import { Get, Post, Body, Res, Controller, Render } from '@nestjs/common';
+import { Response } from 'express';
 import { RepositionFormDTO } from './dto/repositionForm.dto';
 import { RepositionDTO } from './dto/reposition.dto';
+import { GetMateriaDTO } from './dto/getMateria.dto';
+
+import { firebaseDB } from 'src/firebase';
 
 @Controller('reposition')
 export class RepositionController {
   @Get('/scheduleForm')
   @Render('consultaForms')
-  branchConsultaForms(){}
+  async branchConsultaForms(){
+    const query = `cursos`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    const cursosData = Object.entries(data).map(([key, value]) => { return {key, nome: value['nome']}; });
+
+    return { cursos: cursosData };
+  }
+
+  @Post('/getMaterias')
+  async getMaterias(@Body() body: GetMateriaDTO, @Res() res: Response){
+    const query = `cursos/${body.nomeCurso}/materias`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    const materiasData = Object.entries(data).map(([key, value]) => { return {key, nome: value['nome']}; });
+
+    res.send(materiasData);
+  }
+
+  @Post('/createReposition')
+  async createReposition(@Body() reposition: RepositionDTO, @Res() res: Response){
+    // Create reposition based on UID
+  }
+
+  @Post('/getRepositions')
+  async getRepositions(@Body() reposition: RepositionDTO, @Res() res: Response){
+    // Get repositions based on UID
+  }
+
+  @Post('/deleteReposition')
+  async deleteReposition(@Body() reposition: RepositionDTO, @Res() res: Response){
+    // Delete reposition based on UID
+  }
 
   @Post('/pdf')
   sharePDF(@Body() reposition: RepositionDTO, @Res() res: Response){
@@ -24,8 +62,28 @@ export class RepositionController {
   }
 
   @Post('/selectSchedule')
-  selectSchedule(@Body() reposition: RepositionFormDTO){
+  async selectSchedule(@Body() reposition: RepositionFormDTO, @Res() res: Response){
+    const querySalas = `salas`;
+    const snapshotSalas = await firebaseDB.ref(querySalas).once('value');
+    const dataSalas = snapshotSalas.val();
+    const salas = Object.entries(dataSalas).map(([key, value]) => { return {sala: key}; });
+
+    const serie = await this.getSerieByMateria(reposition.nomeCurso, reposition.nomeMateria);
+    const queryHorarios = `cursos/${reposition.nomeCurso}/horarios/${serie}`;
+    const snapshotHorarios = await firebaseDB.ref(queryHorarios).once('value');
+    const dataHorarios = snapshotHorarios.val();
+
     // Algoritmo pra selecionar horário
+
+    res.render('selectSchedule', { salas: salas, horarios: [] });
+  }
+
+  async getSerieByMateria(curso: string, materia: string){
+    const query = `cursos/${curso}/materias/${materia}`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    return data['serie'];
   }
 
   @Get('/selectSchedule')
