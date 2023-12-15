@@ -1,5 +1,5 @@
 export class RepositionFormDTO{
-  curso: string;
-  materia: string;
-  turma: string;
+  nomeCurso: string;
+  nomeMateria: string;
+  coi: string;
 }

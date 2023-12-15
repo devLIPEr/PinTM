@@ -1,28 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body>
+<body onload="getData()">
     {{> headerController }}
     <main class="mainConsulta">
         <div class="background-consulta">
             <h1 id="consultaTitle">HORÁRIOS</h1>
 
-            <form class="consultaForm" action="/selectSchedule" method="POST">
+            <form class="consultaForm" action="/reposition/selectSchedule" method="POST">
                 <div id="cursoField">
-                    <input type="text" id="nomeCurso" name="nomeCurso" placeholder="Curso:" required>
+                    <select name="nomeCurso" id="nomeCurso" aria-placeholder="Curso:">
+                        <option value="" disabled selected>Curso:</option>
+                        {{#cursos}}
+                            <option value="{{key}}">{{nome}}</option>
+                        {{/cursos}}
+                    </select>
                 </div>
                 
                 <div id="materiaField">
-                    <input type="text" id="nomeMateria" name="nomeMateria" placeholder="Matéria:" required>            
+                    <select name="nomeMateria" id="nomeMateria">
+                        <option value="" disabled selected>Matéria:</option>
+                    </select>
                 </div>
                 
                 <div id="coiField">
-                    <select name="coi" class="coi" aria-placeholder="COI:">
-                        <option value="coi">COI</option>
-                        <option value="coi">COI-A</option>
-                        <option value="coi">COI-B</option>
-                        <option value="coi">COI-C</option>
-                        <option value="coi">COI-D</option>
+                    <select name="coi" class="coi">
+                        <option value=" ">COI</option>
+                        <option value="TA">COI-A</option>
+                        <option value="TB">COI-B</option>
+                        <option value="TC">COI-C</option>
+                        <option value="TD">COI-D</option>
                     </select>
                 </div>
                 <input style = "display : none;" type="submit" value = "enviar" id = "submit-button">
@@ -33,5 +40,30 @@
         </div>
     </main>
     {{> footer }}
+    <script>
+        function getData(){
+            var materiasDropDown = document.querySelector("#nomeMateria");
+            var cursosDropDown = document.querySelector("#nomeCurso");
+            cursosDropDown.addEventListener('change', () => {
+                fetch('getMaterias', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({nomeCurso: document.querySelector("#nomeCurso").value}),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    materiasDropDown.innerHTML = "<option value='' disabled selected>Matéria:</option>";
+                    data.forEach((e) => {
+                        materiasDropDown.innerHTML += `<option value="${e.key}">${e.nome}</option>`;
+                    })
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
