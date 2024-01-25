@@ -353,17 +353,27 @@ main{
 }
 
 .formSelectHorario{
-    width: 30%;
+    width: 40%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
+}
+
+.formSelectHorario input{
+    margin:10px 10px 10px 10px;
+    background-color: var(--primaryColor);
+    border-radius: 8px;
+    padding: 1.5%;
+    outline: 0;
+    border: 0;
 }
 
 .formSelectHorario select{
     outline: 0;
     padding: 5px;
     background-color: var(--primaryColor);
-    width: 45%;
+    width: 30%;
     border-radius: 16px;
     cursor: pointer;
 }
@@ -496,6 +506,16 @@ input::placeholder  {
 .emptyContentRepos #send-button {
     margin-top: 5%;
     width: 20%;
+}
+
+.repositionActions{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.repositionActions img{
+    transform: scale(0.75);
+    cursor: pointer;
 }
 
 
