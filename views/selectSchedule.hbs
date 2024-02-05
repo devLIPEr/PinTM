@@ -43,7 +43,8 @@
                 <img src="../images/compartilharPDF.png" alt="Compartilhar via PDF">
             </div>
             <div class="compartilharBtn">
-                <img src="../images/compartilharEmail.png" alt="Compartilhar via E-mail">
+                <img src="../images/compartilharEmail.png" alt="Compartilhar por mensagem" onclick="copiarAreaTransferencia()">
+                {{!-- FALTA ADICIONAR OS PARÂMETROS, EU NÃO FAÇO IDEIA DE COMO EXTRAIR OS DADOS QUE A GENTE PRECISA --}}
             </div>
         </div>
     </main>
@@ -79,6 +80,11 @@
         function bodyLoad(){
             setClicks();
             setDate();
+        }
+        function copiarAreaTransferencia(materia, curso, data, horario, local){
+            texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
+            navigator.clipboard.writeText(texto);
+            alert("Texto copiado para a área de transferência.");
         }
     </script>
 </body>

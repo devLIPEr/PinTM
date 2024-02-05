@@ -53,6 +53,9 @@ header{
     list-style:none;
     justify-content: space-evenly;
 }
+#headerLogin{
+    cursor: pointer;
+}
 .nav a{
     text-decoration: none;
     color: white;
@@ -61,15 +64,39 @@ header{
     height: 100%;
     line-height: 40px;
 }
-.nav:hover .navButton:hover{
-    transform: scale(1.2);
-    font-weight: bold;
-}
+
 
 .sepBar{
     width: 2px;
     background-color: white;
     border: 50%;
+}
+
+.accountActions{
+    position: absolute;
+    flex-direction: column;
+}
+
+.accountActionsBtn{
+    background-color: var(--bgColor);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 10px 0px;
+
+    font-family: 'K2D';
+    font-size: 10;
+    cursor: pointer;
+    align-self: auto;
+}
+
+.accountActionsBtn:hover{
+    transform: scale(1);
+    font-weight: normal;
+}
+
+.nav:hover .navButton:hover{
+    transform: scale(1.2);
+    font-weight: bold;
 }
 
 /* Footer */
@@ -578,4 +605,54 @@ input::placeholder  {
 .reposTable th{
     font-size: 60;
     font-weight: bolder;
+}
+
+/*Minha Conta*/
+
+.telaAcc{
+    display: flex;
+    flex-direction: column;
+    padding: 5%;
+    /* min-width: 50%; */
+    width: 100%;
+    align-self: center;
+    align-items: center;
+}
+
+.accTitleAndEdit{
+    margin:5%;
+    display: flex;
+    min-width: 50%;
+    align-self: center;
+}
+.accInfoDiv{
+    display: flex;
+    flex-direction: column;
+}
+
+.accInfo{
+    font-size: large;
+}
+
+.accNome{
+    margin-bottom:10%;
+}
+
+.editBtn{
+    cursor:pointer;
+    width: 32px;
+    height: 32px;
+}
+
+.linha1{
+    height: 5%;
+    width: 35%;
+    background-color: #252525;
+    margin-top: 2.5%;
+}
+.linha2{
+    height: 5%;
+    width: calc(25% - 32px);
+    background-color: #252525;
+    margin-top: 2.5%;
 }

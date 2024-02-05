@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> headController }}
+<body>
+    {{> headerController}}
+    <main>
+        {{#if informations}}
+        {{#informations}}
+            <div class = "telaAcc">
+                <div class="accTitleAndEdit">
+                    <img class = "linha1"></img>
+                    <h2 class="accTitle">Minha conta</h2>
+                    <img class = "linha2"></img>
+                    <img src="../images/edit.png" alt="Editar informações da conta" title="Editar informações da conta" onclick="edit()" class="editBtn">
+                </div>
+                <div class = "accInfoDiv">
+                    <div class = "accNome">
+                        <p class="accInfo">Nome: {{nome}}</p>
+                    </div>
+                    <div class="accEmail">
+                        <p class="accInfo">email: {{email}}</p>
+                    </div>
+                </div>    
+            </div>
+        {{/informations}}
+        {{else}}
+            <h2 class="accTitle">Minha conta</h2>
+            <p>Erro ao obter informações da conta.</p>
+        {{/if}}
+    </main>
+    {{> footer}}
+</body>
+<script>
+    function edit(){
+        document.getElementsByClassName("accTitleAndEdit")[0].remove(document.getElementsByClassName("editBtn")[0]);
+        var divNome = document.getElementsByClassName("accNome")[0];
+        divNome.innerHTML = "<p class='accInfo'>Nome: </p><input type='text'>";
+        var divEmail = document.getElementsByClassName("accEmail")[0]; 
+
+        divEmail.innerHTML = "";
+        /* Acho que a gente não vai querer mudar o email do usuário, então sla, agora essa tela parece meio inútil como dizia o velho ditado, ...
+        divEmail.innerHTML = "<p class='accInfo'>Email: </p><input type='text'>"; */ 
+
+        var btnSubmit = document.createElement('button');
+        btnSubmit.innerHTML = "Enviar";
+        document.getElementsByClassName("telaAcc")[0].appendChild(btnSubmit);
+    }
+</script>
+</html>
