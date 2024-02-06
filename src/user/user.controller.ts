@@ -27,4 +27,16 @@ export class UserController {
       ]
     };
   }
+  @Get('/accountInfo')
+  @Render('minhaConta')
+  branchMinhaConta() {
+    return{
+      informations:[
+        {
+          nome:  "Mickey Mouse",
+          email: "mck.mouse@disneymail.com"
+        }
+      ]
+    };
+  }
 }

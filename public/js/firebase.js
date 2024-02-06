@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-analytics.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getAuth, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbLFlTxsmqNklacg5jHm_ciJ8S33fRDeA",
@@ -17,14 +17,58 @@ export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 
+const validateEmail = (email) => {
+  return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+};
+
+export function resetarSenha(email){
+  if(validateEmail(email)){
+    sendPasswordResetEmail(auth,email).then(()=>{
+      console.log("Sucesso");
+    }).catch((error)=>{
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(error);
+    });  
+  }
+}
+
+
+export function logOut(){
+  var login = document.querySelector('#headerLogin');
+  signOut(auth).then(()=>{
+    login.innerHTML = "Login";
+    console.assert("Log out feito com sucesso.");
+  }).catch((error)=>{
+    console.error(error);
+  });
+}
+
 export function authState(){
   auth.onAuthStateChanged(function(user) {
     if(user){
       var login = document.querySelector('#headerLogin');
       if(login){
-        login.setAttribute('href', '/user/account');
+        login.removeAttribute('href');
         login.innerHTML = user.displayName;
+
+        var dropDown = document.createElement("div");
+        dropDown.setAttribute('class', "accountActions")
+        dropDown.innerHTML = "<button name = 'aaBtn1' class = 'accountActionsBtn' onclick = \"location.href='/user/account'\">Minhas reposições</button><button name = 'aaBtn2' class = 'accountActionsBtn' onclick = \"location.href='/user/accountInfo'\">Minha conta</button><button name = 'aaBtn3' class = 'accountActionsBtn' onclick = \"logOut()\">Sair</button>";
+        login.addEventListener("click", function(){
+          if(!login.contains(dropDown)){
+            login.appendChild(dropDown);
+          }
+        });
+        document.addEventListener("click", function(event){
+          if(event.target !== login && event.target !== dropDown && event.target !== dropDown.childNodes){
+            if(login.contains(dropDown)){
+              login.removeChild(dropDown);
+            }
+          }
+        });
       }
     }
   });
 }
+

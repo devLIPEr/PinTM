@@ -29,7 +29,7 @@
                                 <td>{{local}}</td>
                                 <td>
                                     <div class="repositionActions">
-                                        <img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem">
+                                        <img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem" onclick="copiarAreaTransferencia('{{materia}}', '{{curso}}', '{{data}}', '{{horario}}', '{{local}}')">
                                         <img src="../images/compartilharPDF.png" title="Compartilhar como PDF" alt="Compartilhar como PDF">
                                         <img src="../images/deletarReposicao32.png" title="Deletar reposição" alt="Deletar reposição">
                                     </div>
@@ -48,4 +48,11 @@
     </main>
     {{> footer }}
 </body>
+<script>
+    function copiarAreaTransferencia(materia, curso, data, horario, local){
+        texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
+        navigator.clipboard.writeText(texto);
+        alert("Texto copiado para a área de transferência.");
+    }
+</script>
 </html>
