@@ -9,6 +9,7 @@
     --quality2: #6B8F17;
     --quality3: #5EA717;
     --quality4: #47D018;
+    --whiteText: #c4c4c4;
 }
 
 /* Base CSS */
@@ -73,6 +74,7 @@ header{
 }
 
 .accountActions{
+    display: flex;
     position: absolute;
     flex-direction: column;
 }
@@ -80,7 +82,6 @@ header{
 .accountActionsBtn{
     background-color: var(--bgColor);
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     padding: 10px 0px;
 
     font-family: 'K2D';
@@ -90,11 +91,10 @@ header{
 }
 
 .accountActionsBtn:hover{
-    transform: scale(1);
     font-weight: normal;
 }
 
-.nav:hover .navButton:hover{
+.navButtonContainer:hover{
     transform: scale(1.2);
     font-weight: bold;
 }
@@ -667,4 +667,54 @@ input::placeholder  {
     width: calc(25% - 32px);
     background-color: #252525;
     margin-top: 2.5%;
+}
+
+/* Reset Password */
+.resetPassContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.resetPassForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    background-color: rgba(61, 173, 22, .65);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.resetPassForm h2 p{
+    color: #252525;
+    font: 'K2D';
+}
+
+.resetPassForm input{
+    width: 80%;
+    padding: 5px;
+    outline: 0;
+    border: 0;
+    margin: 15px;
+    border-radius: 5px;
+}
+
+.resetPassForm button{
+    width: 25%;
+    border-radius: 15px;
+    padding: 5px;
+    outline: 0;
+    border: 0;
+    background-color: var(--btnColor);
+    cursor: pointer;
+    color: white;
+}
+
+.resetPassForm button:hover p{
+    cursor: pointer;
+    transform: scale(1.1);
+    font-weight: bold;
 }
