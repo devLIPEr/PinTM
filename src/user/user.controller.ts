@@ -39,4 +39,8 @@ export class UserController {
       ]
     };
   }
+  
+  @Get('/resetPassword')
+  @Render('resetPassword')
+  branchResetPass() {}
 }

@@ -7,7 +7,8 @@
     <link rel="icon" type="image/x-icon" href="./images/PinTMLogo.png">
 </head>
 <script type="module">
-    import { authState, logOut } from '../js/firebase.js';
+    import { authState, logOut, resetPassword } from '../js/firebase.js';
     authState();
     window.logOut = logOut;
+    window.resetPassword = resetPassword;
 </script>

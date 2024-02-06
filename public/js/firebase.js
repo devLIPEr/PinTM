@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-analytics.js";
-import { getAuth, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getAuth, signOut, signInWithEmailAndPassword, sendPasswordResetEmail, verifyPasswordResetCode, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbLFlTxsmqNklacg5jHm_ciJ8S33fRDeA",
@@ -42,6 +42,7 @@ export function logOut(){
   }).catch((error)=>{
     console.error(error);
   });
+  window.location.href = window.location.href.split('/user')[0];
 }
 
 export function authState(){
@@ -57,13 +58,13 @@ export function authState(){
         dropDown.innerHTML = "<button name = 'aaBtn1' class = 'accountActionsBtn' onclick = \"location.href='/user/account'\">Minhas reposições</button><button name = 'aaBtn2' class = 'accountActionsBtn' onclick = \"location.href='/user/accountInfo'\">Minha conta</button><button name = 'aaBtn3' class = 'accountActionsBtn' onclick = \"logOut()\">Sair</button>";
         login.addEventListener("click", function(){
           if(!login.contains(dropDown)){
-            login.appendChild(dropDown);
+            login.parentElement.parentElement.appendChild(dropDown);
           }
         });
         document.addEventListener("click", function(event){
           if(event.target !== login && event.target !== dropDown && event.target !== dropDown.childNodes){
-            if(login.contains(dropDown)){
-              login.removeChild(dropDown);
+            if(login.parentElement.parentElement.contains(dropDown)){
+              login.parentElement.parentElement.removeChild(dropDown);
             }
           }
         });
@@ -72,3 +73,18 @@ export function authState(){
   });
 }
 
+export function resetPassword(actionCode, newPassword){
+  verifyPasswordResetCode(auth, actionCode).then((email) => {
+    const accountEmail = email;
+
+    confirmPasswordReset(auth, actionCode, newPassword).then(async (resp) => {
+      var login = await signInWithEmailAndPassword(auth, accountEmail, newPassword);
+
+      window.location.href = window.location.href.split('/user')[0];
+    }).catch((error) => {
+      console.error(error);
+    });
+  }).catch((error) => {
+    console.error(error);
+  });
+}

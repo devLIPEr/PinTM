@@ -8,7 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 </head>
 <script type="module">
-    import { authState, logOut } from '../js/firebase.js';
+    import { authState, logOut, resetPassword } from '../js/firebase.js';
     authState();
     window.logOut = logOut;
+    window.resetPassword = resetPassword;
 </script>
