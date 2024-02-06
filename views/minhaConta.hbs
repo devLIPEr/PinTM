@@ -36,11 +36,7 @@
         var divNome = document.getElementsByClassName("accNome")[0];
         divNome.innerHTML = "<p class='accInfo'>Nome: </p><input type='text'>";
         var divEmail = document.getElementsByClassName("accEmail")[0]; 
-
         divEmail.innerHTML = "";
-        /* Acho que a gente não vai querer mudar o email do usuário, então sla, agora essa tela parece meio inútil como dizia o velho ditado, ...
-        divEmail.innerHTML = "<p class='accInfo'>Email: </p><input type='text'>"; */ 
-
         var btnSubmit = document.createElement('button');
         btnSubmit.innerHTML = "Enviar";
         document.getElementsByClassName("telaAcc")[0].appendChild(btnSubmit);

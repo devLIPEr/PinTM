@@ -17,6 +17,11 @@
             </form>
 
             <button onclick="document.querySelector('#submit-button').click()" id = "send-button" class = "btnIndex"> <p>Enviar</p> </button>
+            <div class ="secaoForgotPassword">
+              <a href = "#" onclick="resetDeSenha()" id = "forgotPassword">Esqueci a senha</a>
+              <br>
+            </div>
+            
             <a href="./signup" id = "signup-redirect">Não possui um cadastro? Clique aqui para criar sua conta!</a>
         </div>
     </main>
@@ -40,5 +45,27 @@
     var tgt = e.target;
     signIn(tgt.querySelector('#email').value, tgt.querySelector('#password').value)
   })
+</script>
+<script type = "module">
+  import { resetarSenha } from '../js/firebase.js';
+  const validateEmail = (email) => {
+    return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  };
+  function resetDeSenha(){
+    var email = document.getElementsByName("email")[0].value;
+    if(validateEmail(email)){
+      resetarSenha(email);
+      console.log("mandou");
+    } else {
+      var warn = document.createElement('div');
+      warn.setAttribute("class", "divWarn");
+      warn.innerHTML = "<p class = 'warn' style = 'color:red;'>Insira um email válido</p>";
+      if(document.getElementsByClassName("secaoForgotPassword")[0].querySelector('.divWarn')){
+      } else{
+        document.getElementsByClassName("secaoForgotPassword")[0].appendChild(warn);
+      }
+    }
+  }
+  window.resetDeSenha = resetDeSenha;
 </script>
 </html>

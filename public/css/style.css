@@ -230,8 +230,14 @@ main{
 }
 
 #signup-redirect,
-#login-redirect{
+#login-redirect,
+#forgotPassword{
     font-family: comic sans ms;
+}
+
+#signup-redirect{
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 #send-button{
@@ -244,6 +250,12 @@ main{
     cursor: pointer;
     transform: scale(1.1);
     font-weight: bold;
+}
+
+.secaoForgotPassword{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* PDF */
