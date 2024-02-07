@@ -21,6 +21,13 @@ const validateEmail = (email) => {
   return String(email).toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 };
 
+export function getUserId(){
+  if(auth.currentUser != null){
+    return auth.currentUser.uid;
+  }
+  return undefined;
+}
+
 export function resetarSenha(email){
   if(validateEmail(email)){
     sendPasswordResetEmail(auth,email).then(()=>{
@@ -32,7 +39,6 @@ export function resetarSenha(email){
     });  
   }
 }
-
 
 export function logOut(){
   var login = document.querySelector('#headerLogin');
@@ -48,6 +54,8 @@ export function logOut(){
 export function authState(){
   auth.onAuthStateChanged(function(user) {
     if(user){
+      document.querySelectorAll('.sepBar')[1].style = 'display: inherit;'
+      document.querySelectorAll('.navButton')[0].style = 'display: inherit;'
       var login = document.querySelector('#headerLogin');
       if(login){
         login.removeAttribute('href');

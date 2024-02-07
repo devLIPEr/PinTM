@@ -40,11 +40,10 @@
                 {{/salas}}
             </select>
             <div class="compartilharBtn">
-                <img src="../images/compartilharPDF.png" alt="Compartilhar via PDF">
+                <img src="../images/compartilharPDF.png" alt="Compartilhar via PDF" onclick="goToPDF();">
             </div>
             <div class="compartilharBtn">
-                <img src="../images/compartilharEmail.png" alt="Compartilhar por mensagem" onclick="copiarAreaTransferencia()">
-                {{!-- FALTA ADICIONAR OS PARÂMETROS, EU NÃO FAÇO IDEIA DE COMO EXTRAIR OS DADOS QUE A GENTE PRECISA --}}
+                <img src="../images/compartilharEmail.png" alt="Compartilhar por mensagem" onclick="copiarAreaTransferencia('{{materia}}', '{{curso}}');">
             </div>
         </div>
     </main>
@@ -69,6 +68,7 @@
             [0, 0, 0, 0, 0, 0]
         ];
         var times = ['07:30', '08:20', '09:10', '10:10', '11:00', '13:20', '14:10', '15:00', '16:00', '16:50', '17:40', '18:50', '19:40', '20:30', '21:30', '22:20'];
+        var schedules = [];
 
         function setClicks(){
             var tds = document.querySelectorAll('td[selected="0"]');
@@ -104,24 +104,52 @@
         }
 
         function createRepositions(){
-            var transposedSchedule = selectedClasses[0].map((_, colIndex) => selectedClasses.map(row => row[colIndex]));
-            var schedules = [];
-            var schedule = {subject: 'materia', course: 'curso', date: '06/06/9420', start: '00:00', end: '00:00', classroom: 'Lab1'};
+            var sala = document.getElementById('salaInput').value;
+            if(sala != ''){
+                var transposedSchedule = selectedClasses[0].map((_, colIndex) => selectedClasses.map(row => row[colIndex]));
+                schedules = [];
+                var schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
 
-            for(var i = 0; i < 6; i++){
-                for(var j = 0; j < 16; j++){
-                    if(transposedSchedule[i][j]){
-                        if(schedule['start'] == '00:00'){
-                            schedule['start'] = times[j];
-                        }
-                    }else{
-                        if(schedule['start'] != '00:00'){
-                            schedule['end'] = times[j];
-                            schedules.push(schedule);
-                            schedule = {subject: 'materia', course: 'curso', date: '06/06/9420', start: '00:00', end: '00:00', classroom: 'Lab1'};
+                for(var i = 0; i < 6; i++){
+                    for(var j = 0; j < 16; j++){
+                        if(transposedSchedule[i][j]){
+                            if(schedule['start'] == '00:00'){
+                                schedule['start'] = times[j];
+                                var newDate = new Date(document.getElementById('week').valueAsNumber);
+                                newDate.setDate(newDate.getDate()+i+1);
+                                schedule['date'] = `${("0" + newDate.getDate()).slice(-2)}/${("0" + (newDate.getMonth() + 1)).slice(-2)}/${newDate.getFullYear()}`;
+                            }
+                        }else{
+                            if(schedule['start'] != '00:00'){
+                                schedule['end'] = times[j];
+                                schedules.push(schedule);
+                                schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
+                            }
                         }
                     }
                 }
+
+                // Post to save on BD
+                if(getUserId() != undefined){
+                    schedules.forEach((e) => {
+                        fetch('createReposition', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({userId: getUserId(), materia: e.subject, curso: e.course, data: e.date, start: e.start, end: e.end, sala: e.classroom})
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            e.repoId = data.repoId;
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    });
+                }
+            }else{
+                alert('Selecione uma sala');
             }
         }
 
@@ -129,11 +157,52 @@
             setClicks();
             setDate();
         }
+
+        function waitForId(obj, timeout = 30000){
+            return new Promise((resolve, reject) => {
+                let interval = setInterval(() => {
+                    if (obj['repoId'] !== '') {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 100);
+
+                setTimeout(() => {
+                    clearInterval(interval);
+                    reject(new Error('Timeout waiting for property value'));
+                }, timeout);
+            });
+        }
+
+        function goToPDF(){
+            createRepositions();
+            if(schedules.length > 0){
+                var lastRepo = schedules[schedules.length-1];
+
+                waitForId(lastRepo)
+                .then(() => {
+                    var form = '<form action="' + '/reposition/pdf' + '" method="post">' +
+                    '<input type="text" name="userId" value="' + getUserId() + '" />' +
+                    '<input type="text" name="repositionId" value="' + lastRepo.repoId + '" />' +
+                    '</form>';
+                    document.getElementsByTagName('body')[0].innerHTML+=form;
+                    document.getElementsByTagName('form')[0].submit();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+        }
         
-        function copiarAreaTransferencia(materia, curso, data, horario, local){
-            texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
-            navigator.clipboard.writeText(texto);
-            alert("Texto copiado para a área de transferência.");
+        function copiarAreaTransferencia(){
+            createRepositions();
+            if(schedules.length > 0){
+                var lastRepo = schedules[schedules.length-1];
+                texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";
+                navigator.clipboard.writeText(texto);
+                alert("Texto copiado para a área de transferência.");
+                window.location.href = '/user/account';
+            }
         }
     </script>
 </body>
