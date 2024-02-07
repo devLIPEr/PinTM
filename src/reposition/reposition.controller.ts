@@ -34,21 +34,59 @@ export class RepositionController {
   @Post('/createReposition')
   async createReposition(@Body() reposition: RepositionDTO, @Res() res: Response){
     // Create reposition based on UID
+    const query = `reposicoes/${reposition.userId}`;
+    const reposicoes = firebaseDB.ref(query);
+
+    var newRepo = reposicoes.push({
+      materia: reposition.materia,
+      curso: reposition.curso,
+      data: reposition.data,
+      start: reposition.start,
+      end: reposition.end,
+      sala: reposition.sala
+    }, (error) => {
+      if(error){
+        console.log(error);
+      }
+    });
+
+    res.send({repoId: newRepo.key});
   }
 
   @Post('/getRepositions')
   async getRepositions(@Body() reposition: RepositionDTO, @Res() res: Response){
     // Get repositions based on UID
+    const query = `reposicoes/${reposition.userId}`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    res.send({repositions: data});
+  }
+
+  async getReposition(reposition: RepositionDTO){
+    // Get reposition based on UID
+    const query = `reposicoes/${reposition.userId}/${reposition.repositionId}`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    return data;
   }
 
   @Post('/deleteReposition')
   async deleteReposition(@Body() reposition: RepositionDTO, @Res() res: Response){
     // Delete reposition based on UID
+    const query = `reposicoes/${reposition.userId}/${reposition.repositionId}`;
+    const reposicoes = firebaseDB.ref(query);
+    reposicoes.remove();
   }
 
   @Post('/pdf')
-  sharePDF(@Body() reposition: RepositionDTO, @Res() res: Response){
+  async sharePDF(@Body() reposition: RepositionDTO, @Res() res: Response){
     // Redirect to pdf with reposition info
+    const reposicao = await this.getReposition(reposition);
+    const horario = `${reposicao.start} - ${reposicao.end}`;
+
+    res.render('pdf', { materia: reposicao.materia, data: reposicao.data, sala: reposicao.sala, horario: horario });
   }
 
   @Get('/pdf')
@@ -162,8 +200,23 @@ export class RepositionController {
       ]
     ]
 
-    res.render('selectSchedule', { salas: salas, horarios: Horario });
+    res.render('selectSchedule', { salas: salas, horarios: Horario, materia: await this.getMateriaName(reposition.nomeCurso, reposition.nomeMateria), curso: await this.getCourseName(reposition.nomeCurso) });
+  }
 
+  async getCourseName(curso: string){
+    const query = `cursos/${curso}`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    return data['nome'];
+  }
+
+  async getMateriaName(curso: string, materia: string){
+    const query = `cursos/${curso}/materias/${materia}`;
+    const snapshot = await firebaseDB.ref(query).once('value');
+    const data = snapshot.val();
+
+    return data['nome'];
   }
 
   async getSerieByMateria(curso: string, materia: string){
