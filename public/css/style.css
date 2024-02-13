@@ -625,49 +625,66 @@ input::placeholder  {
 .telaAcc{
     display: flex;
     flex-direction: column;
-    padding: 5%;
-    /* min-width: 50%; */
-    width: 100%;
+    width: 80%;
+    height: 80%;
     align-self: center;
     align-items: center;
+    border-radius: 10%;
 }
 
 .accTitleAndEdit{
     margin:5%;
     display: flex;
-    min-width: 50%;
+    min-width: 100%;
     align-self: center;
+    align-items: center;
 }
 .accInfoDiv{
     display: flex;
     flex-direction: column;
+    width:25%;
 }
 
 .accInfo{
     font-size: large;
+    width: 100%;
 }
 
 .accNome{
     margin-bottom:10%;
+    width:100%;
 }
 
 .editBtn{
     cursor:pointer;
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    height: 50px;
 }
 
 .linha1{
-    height: 5%;
-    width: 35%;
+    height: 10%;
+    /* width: 35%; */
+    width: 40%;
     background-color: #252525;
-    margin-top: 2.5%;
+    /* margin-top: 2.5%; */
+    /* background-color: #524949; */
+
 }
 .linha2{
-    height: 5%;
-    width: calc(25% - 32px);
+    height: 10%;
+    /* width: calc(25% - 32px); */
+    width: calc(40% - 50px);
     background-color: #252525;
-    margin-top: 2.5%;
+    /* margin-top: 2.5%; */
+
+    /* background-color: #524949; */
+}
+
+.accTitle{
+    align-self: center;
+    text-align: center;
+    font-size: 35px;
+    min-width: 20%;
 }
 
 /* Reset Password */

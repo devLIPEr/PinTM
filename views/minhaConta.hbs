@@ -4,42 +4,87 @@
 <body>
     {{> headerController}}
     <main>
-        {{#if informations}}
-        {{#informations}}
-            <div class = "telaAcc">
-                <div class="accTitleAndEdit">
-                    <img class = "linha1"></img>
-                    <h2 class="accTitle">Minha conta</h2>
-                    <img class = "linha2"></img>
-                    <img src="../images/edit.png" alt="Editar informações da conta" title="Editar informações da conta" onclick="edit()" class="editBtn">
-                </div>
-                <div class = "accInfoDiv">
-                    <div class = "accNome">
-                        <p class="accInfo">Nome: {{nome}}</p>
-                    </div>
-                    <div class="accEmail">
-                        <p class="accInfo">email: {{email}}</p>
-                    </div>
-                </div>    
+        <div class = "telaAcc">
+            <div class="accTitleAndEdit">
+                <img class = "linha1"></img>
+                <h2 class="accTitle">Minha conta</h2>
+                <img class = "linha2"></img>
+                <img src="../images/edit.png" alt="Editar informações da conta" title="Editar informações da conta" onclick="edit()" class="editBtn">
             </div>
-        {{/informations}}
-        {{else}}
-            <h2 class="accTitle">Minha conta</h2>
-            <p>Erro ao obter informações da conta.</p>
-        {{/if}}
+            <div class = "accInfoDiv">
+                <div class = "accNome">
+                    <p class="accInfo"></p>
+                </div>
+                <div class="accEmail">
+                    <p class="accInfo"></p>
+                </div>
+            </div>    
+        </div>
     </main>
     {{> footer}}
 </body>
-<script>
+<script type = "module">
+    import { atualizarNomeUsuario, auth } from '../js/firebase.js';
+
+
+    auth.onAuthStateChanged(async (usuario) => {
+        if (usuario) {
+            var nome = usuario.displayName;
+            var divNome = document.getElementsByClassName("accNome")[0];
+            divNome.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
+            var email = usuario.email;
+            var divEmail = document.getElementsByClassName("accEmail")[0];
+            divEmail.getElementsByClassName("accInfo")[0].innerHTML = "Email: " + email;
+        }
+    });
+
+    /*async function inicializa(){
+        var usuario = await auth.currentUser;
+        var nome = usuario.displayName;
+        var divNome = document.getElementsByClassName("accNome")[0];
+        divNome.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
+        var email = usuario.email;
+        var divEmail = document.getElementsByClassName("accEmail")[0];
+        divEmail.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
+    }*/
+
     function edit(){
         document.getElementsByClassName("accTitleAndEdit")[0].remove(document.getElementsByClassName("editBtn")[0]);
         var divNome = document.getElementsByClassName("accNome")[0];
-        divNome.innerHTML = "<p class='accInfo'>Nome: </p><input type='text'>";
+        divNome.innerHTML = "<p class='accInfo', style='font-size:20px; width:100%;'>Nome: </p><input type='text' style = 'width:100%;' class = 'tfName'>";
+        divNome.setAttribute("style", "margin-top:30%; width:100%;");
         var divEmail = document.getElementsByClassName("accEmail")[0]; 
         divEmail.innerHTML = "";
         var btnSubmit = document.createElement('button');
-        btnSubmit.innerHTML = "Enviar";
+        btnSubmit.innerHTML = "<p>Enviar</p>";
+        btnSubmit.setAttribute("class", "btnIndex");
+        btnSubmit.setAttribute("onclick", "atualizar()");
         document.getElementsByClassName("telaAcc")[0].appendChild(btnSubmit);
     }
+
+    async function atualizar(){
+        var tfName = document.getElementsByClassName("tfName")[0];
+        var newName = tfName.value;
+        let retorno;
+
+        if (newName != ""){
+            retorno = await atualizarNomeUsuario(newName); 
+        } else {
+            retorno = false;
+        }
+        
+        if(retorno){
+            var warn1 = document.createElement('p');
+            window.location.href = window.location.href;
+        } else {
+            var warn = document.createElement('p');
+            warn.innerHTML = "Erro na atualização de informações";
+            warn.setAttribute("style", "color:red;");
+            document.getElementsByClassName("telaAcc")[0].appendChild(warn);
+        }
+    }
+    
+    window.edit = edit;
+    window.atualizar = atualizar;
 </script>
 </html>
