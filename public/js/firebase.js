@@ -29,8 +29,6 @@ export async function atualizarNomeUsuario(nome){
     valor = false;
   }
 
-  console.log("Valor: " + valor);
-
   return valor;
 }
 
@@ -48,7 +46,7 @@ export function getUserId(){
 export function resetarSenha(email){
   if(validateEmail(email)){
     sendPasswordResetEmail(auth,email).then(()=>{
-      console.log("Sucesso");
+      console.log("Senha redefinida com sucesso.");
     }).catch((error)=>{
       const errorCode = error.code;
       const errorMessage = error.message;

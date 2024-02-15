@@ -26,7 +26,6 @@
 <script type = "module">
     import { atualizarNomeUsuario, auth } from '../js/firebase.js';
 
-
     auth.onAuthStateChanged(async (usuario) => {
         if (usuario) {
             var nome = usuario.displayName;
@@ -37,16 +36,6 @@
             divEmail.getElementsByClassName("accInfo")[0].innerHTML = "Email: " + email;
         }
     });
-
-    /*async function inicializa(){
-        var usuario = await auth.currentUser;
-        var nome = usuario.displayName;
-        var divNome = document.getElementsByClassName("accNome")[0];
-        divNome.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
-        var email = usuario.email;
-        var divEmail = document.getElementsByClassName("accEmail")[0];
-        divEmail.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
-    }*/
 
     function edit(){
         document.getElementsByClassName("accTitleAndEdit")[0].remove(document.getElementsByClassName("editBtn")[0]);
