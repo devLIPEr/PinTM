@@ -10,6 +10,7 @@
     --quality3: #5EA717;
     --quality4: #47D018;
     --whiteText: #c4c4c4;
+    --selectedColor: #faed36;
 }
 
 /* Base CSS */
@@ -380,7 +381,7 @@ main{
     background-color: var(--primaryColor);
 }
 .mainSelectHorario td[selected="1"]{
-    background-color: var(--secondaryColor) !important;
+    background-color: var(--selectedColor) !important;
 }
 
 .h2SelectHorario{
