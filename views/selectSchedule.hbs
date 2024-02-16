@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="bodyLoad()">
+<body onload="bodyLoad(); verificaUsuario()">
     {{> headerController }}
     <main class="mainSelectHorario">
         <div class="h2SelectHorario">
@@ -206,6 +206,11 @@
                 });
             }
         }
+    </script>
+    <script type="module">
+        import { verificaUsuario } from "../js/firebase.js";
+
+        window.verificaUsuario = verificaUsuario;
     </script>
 </body>
 </html>
