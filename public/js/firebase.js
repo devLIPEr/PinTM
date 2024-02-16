@@ -43,11 +43,49 @@ export function getUserId(){
   return undefined;
 }
 
-export async function verificaUsuario(){
-  userId = await getUserId();
-  if(userId === undefined){
-    window.location.href = '../user/login';
-  }
+export function verificaUsuario(){
+  auth.onAuthStateChanged((user) => {
+    if(!user){
+      window.location.href = '../user/login';
+    }
+  });
+}
+
+export function loadRepositions(){
+  auth.onAuthStateChanged((user) => {
+    if(user){
+      fetch('../reposition/getRepositions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userId: user.uid})
+      })
+      .then(response => response.json())
+      .then(repositions => {
+        if(repositions['repositions']){
+          document.getElementById('emptyRepos').remove();
+          var main = document.getElementById('main');
+          var table = document.createElement('table');
+          var div = document.createElement("div");
+          div.setAttribute('class', 'reposTable');
+          table.innerHTML += '<tr><th>Matéria</th><th>Curso</th><th>Data</th><th>Horário</th><th>Local</th><th>Ações</th></tr>';
+          Object.entries(repositions['repositions']).forEach(([k,v]) => {
+            var repo = document.createElement('tr');
+            repo.setAttribute('id', `repo${k}`);
+            repo.innerHTML = `<td>${v.materia}</td><td>${v.curso}</td><td>${v.data}</td><td>${v.start}</td><td>${v.sala}</td>`;
+            repo.innerHTML += `<td><div class="repositionActions"><img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem" onclick="copiarAreaTransferencia('${v.materia}', '${v.curso}', '${v.data}', '${v.start}', '${v.sala}')"><img src="../images/compartilharPDF.png" title="Compartilhar como PDF" alt="Compartilhar como PDF" onclick="printPDF('${user.uid}', '${k}')"><img src="../images/deletarReposicao32.png" title="Deletar reposição" alt="Deletar reposição" onclick="deleteReposition('${user.uid}', '${k}')"></div></td>`;
+            table.appendChild(repo);
+          });
+          div.appendChild(table);
+          main.appendChild(div);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+  });
 }
 
 export function resetarSenha(email){

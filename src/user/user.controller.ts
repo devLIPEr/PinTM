@@ -12,21 +12,8 @@ export class UserController {
 
   @Get('/account')
   @Render('minhasRepos')
-  branchMinhasRepos() {
-    return {
-      repos: [
-        [
-          {
-            materia: "Redes",
-            curso: "Computação",
-            data: "20/09/2023",
-            horario: "16:20",
-            local: "Lab2"
-          }
-        ]
-      ]
-    };
-  }
+  branchMinhasRepos() {}
+
   @Get('/accountInfo')
   @Render('minhaConta')
   branchMinhaConta() {}

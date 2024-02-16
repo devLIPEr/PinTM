@@ -1,50 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verificaUsuario()">
+<body onload="verificaUsuario(); loadRepositions()">
     {{> headerController }}
-     <main class="mainMinhasRepos">
+     <main class="mainMinhasRepos" id="main">
         <div class="minhasRepos-txt">
             <h1>Minhas Reposições</h1>
         </div>
 
-        {{#if repos}}
-            <div class="reposTable">
-                <table>
-                    <tr>
-                        <th>Matéria</th>
-                        <th>Curso</th>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Local</th>
-                        <th>Ações</th>
-                    </tr>
-                    {{#repos}}
-                        {{#each this}}
-                            <tr>
-                                <td>{{materia}}</td>
-                                <td>{{curso}}</td>
-                                <td>{{data}}</td>
-                                <td>{{horario}}</td>
-                                <td>{{local}}</td>
-                                <td>
-                                    <div class="repositionActions">
-                                        <img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem" onclick="copiarAreaTransferencia('{{materia}}', '{{curso}}', '{{data}}', '{{horario}}', '{{local}}')">
-                                        <img src="../images/compartilharPDF.png" title="Compartilhar como PDF" alt="Compartilhar como PDF">
-                                        <img src="../images/deletarReposicao32.png" title="Deletar reposição" alt="Deletar reposição">
-                                    </div>
-                                </td>
-                            </tr>
-                        {{/each}}
-                    {{/repos}}
-                </table>
-            </div>
-        {{else}}
-            <div class="emptyContentRepos">
-                <h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2>
-                <button id = "send-button" class = "btnIndex">Marcar Reposição</button>
-            </div>
-        {{/if}}
+        <div class="emptyContentRepos" id="emptyRepos">
+            <h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2>
+            <button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button>
+        </div>
     </main>
     {{> footer }}
     <script>
@@ -53,11 +20,37 @@
             navigator.clipboard.writeText(texto);
             alert("Texto copiado para a área de transferência.");
         }
+
+        function printPDF(uid, rid){
+            var form = '<form action="' + '/reposition/pdf' + '" method="post">' +
+                        '<input type="text" name="userId" value="' + uid + '" />' +
+                        '<input type="text" name="repositionId" value="' + rid + '" />' +
+                        '</form>';
+            document.getElementsByTagName('body')[0].innerHTML+=form;
+            document.getElementsByTagName('form')[0].submit();
+        }
+
+        function deleteReposition(uid, rid){
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '../reposition/deleteReposition', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                userId: uid,
+                repositionId: rid
+            }));
+            document.querySelector(`#repo${rid}`).remove();
+            var table = document.getElementsByTagName('table')[0];
+            if(table.children.length == 1){
+                table.remove();
+                document.getElementById('main').innerHTML += `<div class="emptyContentRepos" id="emptyRepos"><h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2><button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button></div>`;
+            }
+        }
     </script>
     <script type="module">
-        import { verificaUsuario } from "../js/firebase.js";
+        import { verificaUsuario, loadRepositions } from "../js/firebase.js";
 
         window.verificaUsuario = verificaUsuario;
+        window.loadRepositions = loadRepositions;
     </script>
 </body>
 </html>
