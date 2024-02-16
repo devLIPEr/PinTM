@@ -4,10 +4,10 @@
     --primaryColor: #D2F3C6;
     --secondaryColor: #3DAD16;
     --btnColor: #DBCF2F;
-    --quality0: #AD1616;
+    --quality0: #b41c1c;
     --quality1: #7B7117;
     --quality2: #6B8F17;
-    --quality3: #5EA717;
+    --quality3: #5Ea717;
     --quality4: #47D018;
     --whiteText: #c4c4c4;
 }
@@ -446,6 +446,11 @@ main{
     align-items: center;
 }
 
+.mainConsulta #send-button{
+    margin-top: 20%;
+
+}
+
 .background-consulta {
     display: flex;
     width: 30%;
@@ -501,7 +506,7 @@ option[value=""][disabled] {
 
 .mainConsulta #send-button{
     display: flex;
-    top:20%;
+    top:40%;
 }
 
 input::placeholder  {

@@ -116,10 +116,65 @@ export class RepositionController {
     var qualities: Qualities = new Array(16).fill(0).map(() => new Array(6).fill(4));
     var horariosValues = Object.values(dataHorarios);
 
+    var correct;
+    const firstKey = Object.keys(dataHorarios)[0];
+    if (firstKey == '13h20min'){
+      correct = 5;
+    }else if (firstKey == '18h50min'){
+      correct = 11;
+    }else{
+      correct = 0;
+    }
+
+
     for (var i = 0; i < horariosValues.length; i++) {
       for (var j = 0; j < 6; j++) {
         if (horariosValues[i][j] != '') {
-          qualities[i][j] = 0;
+          qualities[i + correct][j] = 0;
+        }
+      }
+    }
+
+    const horariosOcupados = qualities.map((linha) => linha.includes(0));
+
+    for (let i = 0; i < qualities.length; i++) {
+      for (let j = 0; j < qualities[i].length; j++) {
+        if (qualities[i][j] === 4) {
+          var distanciaMinima = Infinity;
+          for (let k = 0; k < qualities.length; k++){
+            if (qualities[k][j] == 0){
+              if (Math.abs(i - k) < distanciaMinima){
+                distanciaMinima = Math.abs(i - k);
+              }
+            }
+          }
+          
+
+          if (correct == 0 && i > 10){
+            distanciaMinima += 10;
+          }else if (correct == 5 && i < 5) {
+            distanciaMinima += 10;
+          }else if (correct == 11 && i < 5) {
+            distanciaMinima += 10;
+          } else if (correct == 11 && i < 10) {
+            distanciaMinima += 2;
+          }else if (i == 0 || j == 5){
+            distanciaMinima += 10;
+          }
+
+          if (correct == 11 && i >= 10 && distanciaMinima > 3){
+            distanciaMinima = 3;
+          } 
+
+          if (distanciaMinima <= 3 ) {
+            qualities[i][j] = 4;
+          } else if (distanciaMinima <= 5) {
+            qualities[i][j] = 3;
+          } else if (distanciaMinima <= 7) {
+            qualities[i][j] = 2;
+          } else {
+            qualities[i][j] = 1;
+          }
         }
       }
     }
