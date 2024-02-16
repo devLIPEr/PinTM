@@ -43,8 +43,9 @@ export function getUserId(){
   return undefined;
 }
 
-export function verificaUsuario(){
-  if(getUserId() === undefined){
+export async function verificaUsuario(){
+  userId = await getUserId();
+  if(userId === undefined){
     window.location.href = '../user/login';
   }
 }
