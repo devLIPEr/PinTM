@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body>
+<body onload="verificaUsuario()">
     {{> headerController }}
      <main class="mainMinhasRepos">
         <div class="minhasRepos-txt">
@@ -47,12 +47,17 @@
         {{/if}}
     </main>
     {{> footer }}
+    <script>
+        function copiarAreaTransferencia(materia, curso, data, horario, local){
+            texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
+            navigator.clipboard.writeText(texto);
+            alert("Texto copiado para a área de transferência.");
+        }
+    </script>
+    <script type="module">
+        import { verificaUsuario } from "../js/firebase.js";
+
+        window.verificaUsuario = verificaUsuario;
+    </script>
 </body>
-<script>
-    function copiarAreaTransferencia(materia, curso, data, horario, local){
-        texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
-        navigator.clipboard.writeText(texto);
-        alert("Texto copiado para a área de transferência.");
-    }
-</script>
 </html>

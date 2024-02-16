@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="getData()">
+<body onload="getData(); verificaUsuario()">
     {{> headerController }}
     <main class="mainConsulta">
         <div class="background-consulta">
@@ -64,6 +64,11 @@
                 });
             });
         }
+    </script>
+    <script type="module">
+        import { verificaUsuario } from "../js/firebase.js";
+
+        window.verificaUsuario = verificaUsuario;
     </script>
 </body>
 </html>

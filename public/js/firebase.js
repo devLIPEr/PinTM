@@ -43,6 +43,12 @@ export function getUserId(){
   return undefined;
 }
 
+export function verificaUsuario(){
+  if(getUserId() === undefined){
+    window.location.href = '../user/login';
+  }
+}
+
 export function resetarSenha(email){
   if(validateEmail(email)){
     sendPasswordResetEmail(auth,email).then(()=>{
