@@ -77,7 +77,7 @@ export class RepositionController {
     // Delete reposition based on UID
     const query = `reposicoes/${reposition.userId}/${reposition.repositionId}`;
     const reposicoes = firebaseDB.ref(query);
-    reposicoes.remove();
+    await reposicoes.remove();
   }
 
   @Post('/pdf')
@@ -87,16 +87,6 @@ export class RepositionController {
     const horario = `${reposicao.start} - ${reposicao.end}`;
 
     res.render('pdf', { materia: reposicao.materia, data: reposicao.data, sala: reposicao.sala, horario: horario });
-  }
-
-  @Get('/pdf')
-  @Render('pdf')
-  branchPDF(){
-    var materia = 'Engenharia de Software I';
-    var data = '12/02/2023';
-    var sala = 'Sala 1 Bloco 2';
-    var horario = '08:20 - 10:00';
-    return {materia: materia, data: data, sala: sala, horario: horario};
   }
 
   @Post('/selectSchedule')
