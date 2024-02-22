@@ -22,25 +22,27 @@
                         <option value="" disabled selected>Matéria:</option>
                     </select>
                 </div>
-                
-                <div id="coiField">
-                    <select name="coi" class="coi">
-                        <option value=" ">COI</option>
-                        <option value="TA">COI-A</option>
-                        <option value="TB">COI-B</option>
-                        <option value="TC">COI-C</option>
-                        <option value="TD">COI-D</option>
-                    </select>
-                </div>
+
                 <input style = "display : none;" type="submit" value = "enviar" id = "submit-button">
             </form>
 
-            <button onclick="document.querySelector('#submit-button').click()"  id = "send-button" class = "btnIndex"> <p>Buscar</p> </button>
+            <button onclick="sendForm()"  id = "send-button" class = "btnIndex"> <p>Buscar</p> </button>
 
         </div>
     </main>
     {{> footer }}
     <script>
+        function sendForm(){
+            var cursoIpt = document.getElementById('nomeCurso');
+            var materiaIpt = document.getElementById('nomeMateria');
+
+            if(cursoIpt.value != '' && materiaIpt.value != ''){
+                document.querySelector('#submit-button').click();
+            }else{
+                alert("Preencha os dados requeridos.");
+            }
+        }
+
         function getData(){
             var materiasDropDown = document.querySelector("#nomeMateria");
             var cursosDropDown = document.querySelector("#nomeCurso");
