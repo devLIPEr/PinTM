@@ -124,7 +124,7 @@ main{
 
 /* Index */
 .mainIndex > div{
-    width: 80%;
+    width: 70%;
     background-color: var(--primaryColor);
     margin: 8px 0;
     display: flex;
