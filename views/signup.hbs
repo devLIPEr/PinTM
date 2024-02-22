@@ -30,13 +30,31 @@
 
   const createUser = async (email, password, name) => {
     try{
+      if(name.length == 0){
+        throw new Error("invalid name.")
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, {
         displayName: name
       });
       window.location.href = '/user/account';
     }catch(err){
-      console.error(err);
+      var message = err.message;
+      if(message == 'Firebase: Error (auth/invalid-email).'){
+        alert("Email inválido.");
+      }else if(message == 'Firebase: Error (auth/missing-password).'){
+        alert("Insira uma senha.");
+      }else if(message == 'Firebase: Error (auth/missing-email).'){
+        alert("Insira um email.");
+      }else if(message == 'Firebase: Error (auth/wrong-password).'){
+        alert("Senha incorreta");
+      }else if(message == 'Firebase: Error (auth/email-already-in-use).'){
+        alert("Email já em uso.");
+      }else if(message == 'Firebase: Password should be at least 6 characters (auth/weak-password).'){
+        alert("A senha precisar ter pelo menos 6 caracteres.");
+      }else if(message == 'invalid name.'){
+        alert("Insira um nome de usuário");
+      }
     }
   };
 
