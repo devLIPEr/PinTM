@@ -39,12 +39,12 @@
       var message = error.message;
       if(message == 'Firebase: Error (auth/invalid-email).'){
         alert("Email inválido.");
+      }else if(message == 'Firebase: Error (auth/user-not-found).'){
+        alert("Usuário inexistente");
       }else if(message == 'Firebase: Error (auth/missing-password).'){
         alert("Insira sua senha.");
       }else if(message == 'Firebase: Error (auth/wrong-password).'){
         alert("Senha incorreta");
-      }else if(message == 'Firebase: Error (auth/user-not-found).'){
-        alert("Usuário inexistente");
       }
     }
   };
