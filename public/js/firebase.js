@@ -90,9 +90,8 @@ export function loadRepositions(){
 
 export function resetarSenha(email){
   if(validateEmail(email)){
-    sendPasswordResetEmail(auth,email).then(()=>{
-      console.log("Senha redefinida com sucesso.");
-    }).catch((error)=>{
+    sendPasswordResetEmail(auth,email)
+    .catch((error)=>{
       const errorCode = error.code;
       const errorMessage = error.message;
       console.error(error);
@@ -150,9 +149,14 @@ export function resetPassword(actionCode, newPassword){
 
       window.location.href = window.location.href.split('/user')[0];
     }).catch((error) => {
-      console.error(error);
+      var message = error.message;
+      if(message == 'Firebase: Password should be at least 6 characters (auth/weak-password).'){
+        alert("A senha precisar ter pelo menos 6 caracteres.");
+      }else if(message == 'Firebase: Error (auth/weak-password).'){
+        alert("Insira uma senha.");
+      }
     });
   }).catch((error) => {
-    console.error(error);
+    alert("Código de verificação inválido.");
   });
 }

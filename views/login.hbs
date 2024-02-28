@@ -66,7 +66,6 @@
     var email = document.getElementsByName("email")[0].value;
     if(validateEmail(email)){
       resetarSenha(email);
-      console.log("mandou");
     } else {
       var warn = document.createElement('div');
       warn.setAttribute("class", "divWarn");
