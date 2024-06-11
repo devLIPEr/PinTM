@@ -8,5 +8,5 @@ export class AppController {
 
   @Get('/404')
   @Render('notFound')
-  notFounf() {}
+  notFound() {}
 }
