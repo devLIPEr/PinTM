@@ -9,7 +9,7 @@
 
             <form class="consultaForm" action="/reposition/selectSchedule" method="POST">
                 <div id="cursoField">
-                    <select name="nomeCurso" id="nomeCurso" aria-placeholder="Curso:">
+                    <select name="course" id="nomeCurso" aria-placeholder="Curso:">
                         <option value="" disabled selected>Curso:</option>
                         {{#cursos}}
                             <option value="{{key}}">{{nome}}</option>
@@ -18,7 +18,7 @@
                 </div>
                 
                 <div id="materiaField">
-                    <select name="nomeMateria" id="nomeMateria">
+                    <select name="subject" id="nomeMateria">
                         <option value="" disabled selected>Matéria:</option>
                     </select>
                 </div>
@@ -66,11 +66,6 @@
                 });
             });
         }
-    </script>
-    <script type="module">
-        import { verificaUsuario } from "../js/firebase.js";
-
-        window.verificaUsuario = verificaUsuario;
     </script>
 </body>
 </html>

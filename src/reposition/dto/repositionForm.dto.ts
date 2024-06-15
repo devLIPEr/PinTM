@@ -1,4 +1,4 @@
 export class RepositionFormDTO{
-  nomeCurso: string;
-  nomeMateria: string;
+  course: string;
+  subject: string;
 }
