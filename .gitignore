@@ -40,3 +40,5 @@ lerna-debug.log*
 # firebase
 serviceAccountKey.json
 firebaseConfig.ts
+
+models/

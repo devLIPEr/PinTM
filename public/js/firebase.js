@@ -1,3 +1,5 @@
+// tacar pro controller
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-analytics.js";
 import { getAuth, signOut, signInWithEmailAndPassword, sendPasswordResetEmail, verifyPasswordResetCode, confirmPasswordReset, updateProfile } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";

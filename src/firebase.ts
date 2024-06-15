@@ -1,9 +1,17 @@
 import * as admin from 'firebase-admin';
-import { firebaseConfig } from './firebaseConfig';
+import { firebaseConfig, databaseURL, userFirebaseConfig } from './firebaseConfig';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 
 admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(firebaseConfig)),
-  databaseURL: 'https://pintm-4b550-default-rtdb.firebaseio.com'
+  databaseURL: databaseURL
 });
 
-export const firebaseDB = admin.database();
+export const firebaseDB = admin.firestore();
+export const firebaseAuth = admin.auth();
+
+const app = initializeApp(userFirebaseConfig)
+export const verifyCustomToken = (token: string) => {
+  return signInWithCustomToken(getAuth(app), token)
+}
