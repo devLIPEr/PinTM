@@ -1,6 +1,6 @@
 import { Get, Post, Body, Res, Controller, Render, Req, Param, Delete } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { RepositionFormDTO } from './dto/repositionForm.dto';
+
 
 import RepositionService from './reposition.service';
 import RepositionRequestDTO from './dto/RepositionRequest.dto';
@@ -19,7 +19,7 @@ export class RepositionController {
       courses.forEach((course) => {
         data.push({
           key: course.id,
-          nome: course.data().nome
+          nome: course.data().name
         });
       });
       return { cursos: data };
@@ -108,7 +108,7 @@ export class RepositionController {
   }
 
   @Post('/selectSchedule')
-  async selectSchedule(@Body() reposition: RepositionFormDTO, @Res() res: Response){
+  async selectSchedule(@Body() reposition: RepositionRequestDTO, @Res() res: Response){
     res.render('selectSchedule', this.repositionService.generateSchedule(reposition));
   }
 }

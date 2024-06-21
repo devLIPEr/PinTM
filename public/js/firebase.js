@@ -45,14 +45,6 @@ export function getUserId(){
   return undefined;
 }
 
-export function verificaUsuario(){
-  auth.onAuthStateChanged((user) => {
-    if(!user){
-      window.location.href = '../user/login';
-    }
-  });
-}
-
 export function loadRepositions(){
   auth.onAuthStateChanged((user) => {
     if(user){
@@ -76,7 +68,7 @@ export function loadRepositions(){
             var repo = document.createElement('tr');
             repo.setAttribute('id', `repo${k}`);
             repo.innerHTML = `<td>${v.materia}</td><td>${v.curso}</td><td>${v.data}</td><td>${v.start}</td><td>${v.sala}</td>`;
-            repo.innerHTML += `<td><div class="repositionActions"><img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem" onclick="copiarAreaTransferencia('${v.materia}', '${v.curso}', '${v.data}', '${v.start}', '${v.sala}')"><img src="../images/compartilharPDF.png" title="Compartilhar como PDF" alt="Compartilhar como PDF" onclick="printPDF('${user.uid}', '${k}')"><img src="../images/deletarReposicao32.png" title="Deletar reposição" alt="Deletar reposição" onclick="deleteReposition('${user.uid}', '${k}')"></div></td>`;
+            repo.innerHTML += `<td><div class="repositionActions"><img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem" onclick="copyToClipboard('${v.materia}', '${v.curso}', '${v.data}', '${v.start}', '${v.sala}')"><img src="../images/compartilharPDF.png" title="Compartilhar como PDF" alt="Compartilhar como PDF" onclick="printPDF('${user.uid}', '${k}')"><img src="../images/deletarReposicao32.png" title="Deletar reposição" alt="Deletar reposição" onclick="deleteReposition('${user.uid}', '${k}')"></div></td>`;
             table.appendChild(repo);
           });
           div.appendChild(table);

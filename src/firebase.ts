@@ -13,5 +13,5 @@ export const firebaseAuth = admin.auth();
 
 const app = initializeApp(userFirebaseConfig)
 export const verifyCustomToken = (token: string) => {
-  return signInWithCustomToken(getAuth(app), token)
+  return signInWithCustomToken(getAuth(app), token);
 }

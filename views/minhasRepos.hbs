@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verificaUsuario(); loadRepositions()">
+<body onload="verifyToken(); loadRepositions()">
     {{> headerController }}
      <main class="mainMinhasRepos" id="main">
         <div class="minhasRepos-txt">
@@ -17,7 +17,7 @@
     </main>
     {{> footer }}
     <script>
-        function copiarAreaTransferencia(materia, curso, data, horario, local){
+        function copyToClipboard(materia, curso, data, horario, local){
             texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
             navigator.clipboard.writeText(texto);
             alert("Texto copiado para a área de transferência.");
@@ -48,11 +48,13 @@
             }
         }
     </script>
+    <script src="../js/index.js"></script>
     <script type="module">
-        import { verificaUsuario, loadRepositions } from "../js/firebase.js";
+        import {loadRepositions } from "../js/firebase.js";
 
-        window.verificaUsuario = verificaUsuario;
+        window.verifyToken = verifyToken;
         window.loadRepositions = loadRepositions;
     </script>
 </body>
 </html>
+                {{!-- credentials : "include" --}}

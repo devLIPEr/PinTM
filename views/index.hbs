@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> head }}
-<body>
+<body onload = "verifyToken()">
     {{> header }}
     <main class="mainIndex">
         <div>
@@ -37,5 +37,9 @@
         </div>
     </main>
     {{> footer }}
+    <script src="../js/index.js"></script>
+    <script>
+        window.verifyToken = verifyToken;
+    </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="getData(); verificaUsuario()">
+<body onload="verifyToken(); getData()">
     {{> headerController }}
     <main class="mainConsulta">
         <div class="background-consulta">
@@ -31,6 +31,7 @@
         </div>
     </main>
     {{> footer }}
+    <script src="../js/index.js"></script>
     <script>
         function sendForm(){
             var cursoIpt = document.getElementById('nomeCurso');
@@ -41,6 +42,24 @@
             }else{
                 alert("Preencha os dados requeridos.");
             }
+        }
+
+        function getData1(){
+            var materiasDropDown = document.querySelector("#nomeMateria");
+            var cursosDropDown = document.querySelector("#cursoField");
+            cursosDropDown.addEventListener('click', () => {
+                fetch('../courses', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {console.log("Convertendo pra JSON");return response.json()})
+                .then(response => console.log("Response: ", response))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
         }
 
         function getData(){
@@ -66,6 +85,8 @@
                 });
             });
         }
+        window.getData = getData;
+        window.verifyToken = verifyToken;
     </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import UserRequestDTO from './dto/UserRequest.dto';
 import { Request, Response } from 'express';
 import LoginRequestDTO from './dto/LoginRequest.dto';
 import { firebaseAuth } from 'src/firebase';
+import { RequestWithUser } from 'src/middleware/user.middleware';
 
 @Controller('user')
 export class UserController {
@@ -37,10 +38,11 @@ export class UserController {
     .then((response) => {
       if(response != null){
         res.cookie('token', response.token, {maxAge: 60*60*1000, httpOnly: true}); // 1 hour cookie
-        res.send(JSON.stringify({
+        var jsonResponse = JSON.stringify({
           username: response.userResponse.username,
           isColorBlind: response.userResponse.isColorBlind
-        }));
+        });
+        res.send(jsonResponse);
       }else{
         res.send({});
       }
@@ -85,4 +87,13 @@ export class UserController {
     }
     res.end();
   }
+
+  // Test token
+  @Post('/verifyToken')
+  verifyToken(@Req() req : RequestWithUser, @Res() res : Response){
+    if(!req.user){
+      return res.status(403).send({message : "No user found."});
+    }
+    res.json(req.user);
+  } 
 }
