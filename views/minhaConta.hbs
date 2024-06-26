@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body>
+<body onload = "verifyUser()">
     {{> headerController}}
     <main>
         <div class = "telaAcc">
@@ -25,6 +25,7 @@
     </main>
     {{> footer}}
 </body>
+<script src="../js/index.js"></script>
 <script type = "module">
     import { atualizarNomeUsuario, auth} from '../js/firebase.js';
 
@@ -75,6 +76,7 @@
         }
     }
     
+    window.verifyUser = verifyUser;
     window.edit = edit;
     window.atualizar = atualizar;
 </script>

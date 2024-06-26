@@ -81,6 +81,7 @@ function resetPassword(id, password){
 
 // Função retirada do firebase.js e modificada para atender às novas particularidades do projeto
 function authState(username){
+    sessionStorage.setItem("username", username);
     document.querySelectorAll('.sepBar')[1].style = 'display: inherit;'
     document.querySelectorAll('.navButton')[0].style = 'display: inherit;'
     var login = document.querySelector('#headerLogin');
@@ -106,6 +107,17 @@ function authState(username){
     }
 }
 
+function verifyUser(){
+    var username = sessionStorage.getItem("username");
+    console.log("Username: ", username)
+    if(username == "null" || username === undefined || username == null){
+        verifyToken();
+    } else {
+        // var isColorBlind = sessionStorage.getItem("isColorBlind");
+        return authState(username);
+    }
+}
+
 function verifyToken(){
     fetch("/user/verifyToken", {
         method: "POST",
@@ -118,6 +130,7 @@ function verifyToken(){
             return response.json();
         }
     }).then(username => {
+        console.log(username);
         if(!(username === undefined)){
             authState(username);
         }

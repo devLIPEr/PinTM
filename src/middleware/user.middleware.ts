@@ -7,6 +7,7 @@ import { userFirebaseConfig } from 'src/firebaseConfig';
 export interface RequestWithUser extends Request{
   user? : any;
   isColorBlind? : any;
+  isAdmin? : any;
 }
 
 @Injectable()
@@ -25,6 +26,7 @@ export class UserMiddleware implements NestMiddleware {
         console.log();
         console.log("Decoded token", decodedToken);
         (req as RequestWithUser).user = displayName;
+        (req as RequestWithUser).isAdmin = decodedToken["isAdmin"];
         next();
       })
       .catch((err) => {

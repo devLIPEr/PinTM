@@ -9,10 +9,6 @@ import { UserMiddleware } from './middleware/user.middleware';
 import { RepositionMiddleware } from './middleware/reposition.middleware';
 import UserService from './user/user.service';
 import RepositionService from './reposition/reposition.service';
-import CourseController from './course/course.controller';
-import CourseService from './course/course.service';
-import { AlsModule } from './als/als.module';
-import { AsyncLocalStorage } from 'async_hooks';
 
 export interface UserContext{
   username : string;
@@ -25,22 +21,13 @@ export interface UserContext{
       strategyInitializer: classes()
     }),
     ConfigModule.forRoot(),
-    AlsModule
   ],
-  controllers: [AppController, UserController, RepositionController, CourseController],
-  providers: [UserService, RepositionService, CourseService],
+  controllers: [AppController, UserController, RepositionController], 
+  providers: [UserService, RepositionService],
 })
 export class AppModule implements NestModule {
-  constructor(private readonly als : AsyncLocalStorage<UserContext>){}
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply((req, res, next) =>{
-        const store = {
-          username : req.headers["username"],
-          isColorBlind : req.headers["isColorBlind"],
-        };
-        this.als.run(store, () =>next());
-      }).forRoutes("*")
       .apply(UserMiddleware)
       .exclude(
         {path: "user", method:RequestMethod.GET}

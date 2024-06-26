@@ -7,14 +7,11 @@ import { Mapper } from "@automapper/core";
 import * as bcrypt from "bcrypt";
 import LoginRequestDTO from "./dto/LoginRequest.dto";
 import LoginResponseDTO from "./dto/LoginResponse.dto";
-import { AsyncLocalStorage } from "async_hooks";
-import { UserContext } from "src/app.module";
 
 @Injectable()
 export default class UserService{
     constructor(
         @InjectMapper() private mapper: Mapper,
-        private readonly als : AsyncLocalStorage<UserContext>
     ){}
 
     mapQueryUserResponse(query): UserResponseDTO{

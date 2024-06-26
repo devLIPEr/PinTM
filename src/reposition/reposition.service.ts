@@ -106,6 +106,8 @@ export default class RepositionService{
             if(!doc.exists){
                 throw new Error("Curso não existente");
             }
+            console.log("Matérias");
+            console.log(doc.get("subjects"));
             return doc.get("subjects");
         })
         .catch((err) => {

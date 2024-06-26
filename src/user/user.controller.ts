@@ -40,7 +40,8 @@ export class UserController {
         res.cookie('token', response.token, {maxAge: 60*60*1000, httpOnly: true}); // 1 hour cookie
         var jsonResponse = JSON.stringify({
           username: response.userResponse.username,
-          isColorBlind: response.userResponse.isColorBlind
+          isColorBlind: response.userResponse.isColorBlind,
+          isAdmin: response.userResponse.isAdmin
         });
         res.send(jsonResponse);
       }else{
