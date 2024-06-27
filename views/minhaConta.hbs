@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload = "verifyUser()">
+<body onload = "verifyAuthentication()">
     {{> headerController}}
     <main>
         <div class = "telaAcc">
@@ -75,6 +75,15 @@
             document.getElementsByClassName("telaAcc")[0].appendChild(warn);
         }
     }
+
+    function verifyAuthentication(){
+        var user = verifyUser();
+        if(user === undefined){
+            window.location.href = "/user/login"
+        }
+    }
+
+    window.verifyAuthentication = verifyAuthentication;
     
     window.verifyUser = verifyUser;
     window.edit = edit;

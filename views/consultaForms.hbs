@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verifyUser(); getData()">
+<body onload="verifyAuthentication(); getData()">
     {{> headerController }}
     <main class="mainConsulta">
         <div class="background-consulta">
@@ -49,13 +49,11 @@
             var materiasDropDown = document.querySelector("#nomeMateria");
             var cursosDropDown = document.querySelector("#nomeCurso");
             cursosDropDown.addEventListener('change', () => {
-                fetch('../getMaterias', {
+                fetch('../getMaterias/', {
                     method: "GET",
-                    //method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     }//,
-                    //body: JSON.stringify({nomeCurso: document.querySelector("#nomeCurso").value})
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -69,6 +67,15 @@
                 });
             });
         }
+
+        function verifyAuthentication(){
+            var user = verifyUser();
+            if(user === undefined){
+                window.location.href = "/user/login"
+            }
+        }
+
+        window.verifyAuthentication = verifyAuthentication;
         window.getData = getData;
         window.verifyUser = verifyUser;
     </script>

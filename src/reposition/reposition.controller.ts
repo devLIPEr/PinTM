@@ -31,6 +31,7 @@ export class RepositionController {
 
   @Get('/getMaterias/:course')
   async getMaterias(@Param() course: string, @Res() res: Response){
+    console.log("Get matérias");
     this.repositionService.getSubjects(course)
     .then((subjects) => {
       res.send(subjects);
@@ -80,8 +81,6 @@ export class RepositionController {
       .then((userCredential) => {
         this.repositionService.getById(id)
         .then((reposition) => {
-          console.log(reposition.id);
-          console.log(userCredential.user.uid);
           if(reposition.id == userCredential.user.uid){
             this.repositionService.delete(id);
           }

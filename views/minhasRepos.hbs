@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verifyUser(); loadRepositions()">
+<body onload="verifyAuthentication(); loadRepositions()">
     {{> headerController }}
      <main class="mainMinhasRepos" id="main">
         <div class="minhasRepos-txt">
@@ -52,6 +52,14 @@
     <script type="module">
         import {loadRepositions } from "../js/firebase.js";
 
+        function verifyAuthentication(){
+            var user = verifyUser();
+            if(user === undefined){
+                window.location.href = "/user/login"
+            }
+        }
+
+        window.verifyAuthentication = verifyAuthentication;
         window.verifyUser = verifyUser;
         window.loadRepositions = loadRepositions;
     </script>

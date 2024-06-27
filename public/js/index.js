@@ -109,12 +109,12 @@ function authState(username){
 
 function verifyUser(){
     var username = sessionStorage.getItem("username");
-    console.log("Username: ", username)
     if(username == "null" || username === undefined || username == null){
         verifyToken();
     } else {
         // var isColorBlind = sessionStorage.getItem("isColorBlind");
-        return authState(username);
+        authState(username)
+        return username;
     }
 }
 
@@ -124,15 +124,17 @@ function verifyToken(){
         credentials : "include"
     }).then(response => {
         if(response.status === 403){
-            console.log("Token inválido");
             return undefined;
         } else {
             return response.json();
         }
     }).then(username => {
-        console.log(username);
         if(!(username === undefined)){
             authState(username);
+            sessionStorage.setItem("debug", username);
+            return username;
+        } else {
+            return undefined;
         }
     }).catch(error => console.log("Erro: ", error));
 }

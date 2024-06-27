@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="bodyLoad(); verifyColorBlindness()">
+<body onload="bodyLoad(); verifyAuthentication(); verifyColorBlindness();">
     {{> headerController }}
     <main class="mainSelectHorario">
         <div class="h2SelectHorario">
@@ -215,6 +215,15 @@
                 });
             }
         }
+        function verifyAuthentication(){
+            var user = verifyUser();
+            if(user === undefined){
+                window.location.href = "/user/login"
+            }
+        }
+
+        window.verifyUser = verifyUser;
+        window.verifyAuthentication = verifyAuthentication;
     </script>
 </body>
 </html>
