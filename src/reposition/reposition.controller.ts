@@ -19,7 +19,7 @@ export class RepositionController {
       courses.forEach((course) => {
         data.push({
           key: course.id,
-          nome: course.data().nome
+          nome: course.data().name
         });
       });
       return { cursos: data };
@@ -29,8 +29,8 @@ export class RepositionController {
     });
   }
 
-  @Get('/getMaterias/:course')
-  async getMaterias(@Param() course: string, @Res() res: Response){
+  @Get('/getSubjects/:course')
+  async getSubjects(@Param() course: string, @Res() res: Response){
     this.repositionService.getSubjects(course)
     .then((subjects) => {
       res.send(subjects);

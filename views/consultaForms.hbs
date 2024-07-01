@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="getData(); verificaUsuario()">
+<body onload="setCourseListener()">
     {{> headerController }}
     <main class="mainConsulta">
         <div class="background-consulta">
@@ -43,23 +43,22 @@
             }
         }
 
-        function getData(){
+        function setCourseListener(){
             var materiasDropDown = document.querySelector("#nomeMateria");
             var cursosDropDown = document.querySelector("#nomeCurso");
             cursosDropDown.addEventListener('change', () => {
-                fetch('getMaterias', {
-                    method: 'POST',
+                fetch('getSubjects/'+cursosDropDown.value, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({nomeCurso: document.querySelector("#nomeCurso").value})
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     materiasDropDown.innerHTML = "<option value='' disabled selected>Matéria:</option>";
-                    data.forEach((e) => {
-                        materiasDropDown.innerHTML += `<option value="${e.key}">${e.nome}</option>`;
-                    })
+                    for(var key in data){
+                        materiasDropDown.innerHTML += `<option value="${data[key].key}">${data[key].nome}</option>`;
+                    }
                 })
                 .catch((error) => {
                     console.error('Error:', error);

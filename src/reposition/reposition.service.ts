@@ -102,7 +102,7 @@ export default class RepositionService{
     }
 
     async getSubjects(course: string): Promise<any>{
-        return firebaseDB.collection("Cursos").doc(course).get()
+        return firebaseDB.collection("Cursos").doc(course['course']).get()
         .then((doc) => {
             if(!doc.exists){
                 throw new Error("Curso não existente");
