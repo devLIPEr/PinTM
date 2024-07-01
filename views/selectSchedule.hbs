@@ -52,10 +52,14 @@
     <script>
         function verifyColorBlindness(){
             verifyToken();
-            const td = document.querySelectorAll('td');
-            td.forEach((cell) =>{
-                td.innerHTML = td.quality;
-            });
+            console.log("isColorBlind: ", sessionStorage.getItem("isColorBlind"));
+            var colorBlind = sessionStorage.getItem("isColorBlind");
+            if(colorBlind != undefined && colorBlind != "null" && colorBlind != null){
+                const td = document.querySelectorAll('td');
+                td.forEach((cell) =>{
+                    td.innerHTML = td.quality;
+                });
+            }
         }
 
         var selectedClasses = [

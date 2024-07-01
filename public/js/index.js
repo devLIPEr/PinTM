@@ -26,6 +26,7 @@ function signUp(email, password, username, isColorBlind = false){
     .then((data) => {
         setUI(data);
         if(Object.keys(data).length){
+            sessionStorage.setItem("isColorBlind", data.isColorBlind);
             window.location.href = '/user/account';
         }
     })
@@ -49,6 +50,7 @@ function signIn(email, password){
     .then((data) => {
         setUI(data);
         if(Object.keys(data).length){
+            sessionStorage.setItem("isColorBlind", data.isColorBlind);
             window.location.href = '/user/account';
         }
     })
@@ -109,6 +111,8 @@ function authState(username){
 
 function verifyUser(){
     var username = sessionStorage.getItem("username");
+    var isColorBlind = sessionStorage.getItem("isColorBlind");
+    console.log("isColorBlind:", isColorBlind);
     if(username == "null" || username === undefined || username == null){
         verifyToken();
     } else {
