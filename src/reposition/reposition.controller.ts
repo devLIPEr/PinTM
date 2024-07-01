@@ -29,9 +29,8 @@ export class RepositionController {
     });
   }
 
-  @Get('/getMaterias/:course')
-  async getMaterias(@Param() course: string, @Res() res: Response){
-    console.log("Get matérias");
+  @Get('/getSubjects/:course')
+  async getSubjects(@Param() course: string, @Res() res: Response){
     this.repositionService.getSubjects(course)
     .then((subjects) => {
       res.send(subjects);
