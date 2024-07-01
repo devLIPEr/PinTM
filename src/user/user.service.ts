@@ -10,7 +10,9 @@ import LoginResponseDTO from "./dto/LoginResponse.dto";
 
 @Injectable()
 export default class UserService{
-    constructor(@InjectMapper() private mapper: Mapper){}
+    constructor(
+        @InjectMapper() private mapper: Mapper,
+    ){}
 
     mapQueryUserResponse(query): UserResponseDTO{
         let user = {
@@ -149,4 +151,6 @@ export default class UserService{
             console.log(err);
         });
     }
+
+
 }

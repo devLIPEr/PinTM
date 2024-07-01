@@ -9,26 +9,40 @@ import { UserMiddleware } from './middleware/user.middleware';
 import { RepositionMiddleware } from './middleware/reposition.middleware';
 import UserService from './user/user.service';
 import RepositionService from './reposition/reposition.service';
+import { verifyCustomToken } from './firebase';
+
+export interface UserContext{
+  username : string;
+  isColorBlind : boolean;
+}
 
 @Module({
   imports: [
     AutomapperModule.forRoot({
       strategyInitializer: classes()
     }),
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
   ],
-  controllers: [AppController, UserController, RepositionController],
+  controllers: [AppController, UserController, RepositionController], 
   providers: [UserService, RepositionService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
+      .apply((req, res, next) => {
+        if(req.cookies && req.cookies['token']){
+          res.redirect("/")
+        } else {
+          next();
+        }
+      })
+      .forRoutes("/user/login")
       .apply(UserMiddleware)
       .exclude(
         {path: "user", method:RequestMethod.GET}
       )
       .forRoutes(UserController)
       .apply(RepositionMiddleware)
-      .forRoutes(RepositionMiddleware);
+      .forRoutes(RepositionController);
   }
 }

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verificaUsuario()">
+<body onload = "verifyAuthentication()">
     {{> headerController}}
     <main>
         <div class = "telaAcc">
@@ -25,8 +25,9 @@
     </main>
     {{> footer}}
 </body>
+<script src="../js/index.js"></script>
 <script type = "module">
-    import { atualizarNomeUsuario, auth, verificaUsuario } from '../js/firebase.js';
+    import { atualizarNomeUsuario, auth} from '../js/firebase.js';
 
     auth.onAuthStateChanged(async (usuario) => {
         if (usuario) {
@@ -74,9 +75,18 @@
             document.getElementsByClassName("telaAcc")[0].appendChild(warn);
         }
     }
+
+    function verifyAuthentication(){
+        var user = verifyUser();
+        if(user === undefined){
+            window.location.href = "/user/login"
+        }
+    }
+
+    window.verifyAuthentication = verifyAuthentication;
     
+    window.verifyUser = verifyUser;
     window.edit = edit;
     window.atualizar = atualizar;
-    window.verificaUsuario = verificaUsuario;
 </script>
 </html>
