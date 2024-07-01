@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="bodyLoad(); verificaUsuario()">
+<body onload="bodyLoad(); verifyAuthentication(); verifyColorBlindness();">
     {{> headerController }}
     <main class="mainSelectHorario">
         <div class="h2SelectHorario">
@@ -43,12 +43,25 @@
                 <img src="../images/compartilharPDF.png" alt="Compartilhar via PDF" onclick="goToPDF();">
             </div>
             <div class="compartilharBtn">
-                <img src="../images/compartilharEmail.png" alt="Compartilhar por mensagem" onclick="copiarAreaTransferencia('{{materia}}', '{{curso}}');">
+                <img src="../images/compartilharEmail.png" alt="Compartilhar por mensagem" onclick="copyToClipboard('{{materia}}', '{{curso}}');">
             </div>
         </div>
     </main>
     {{> footer }}
+    <script src="../js/index.js"></script>
     <script>
+        function verifyColorBlindness(){
+            verifyToken();
+            console.log("isColorBlind: ", sessionStorage.getItem("isColorBlind"));
+            var colorBlind = sessionStorage.getItem("isColorBlind");
+            if(colorBlind != undefined && colorBlind != "null" && colorBlind != null){
+                const td = document.querySelectorAll('td');
+                td.forEach((cell) =>{
+                    td.innerHTML = td.quality;
+                });
+            }
+        }
+
         var selectedClasses = [
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
@@ -194,7 +207,7 @@
             }
         }
         
-        function copiarAreaTransferencia(){
+        function copyToClipboard(){
             createRepositions();
             if(schedules.length > 0){
                 var lastRepo = schedules[schedules.length-1];
@@ -206,11 +219,15 @@
                 });
             }
         }
-    </script>
-    <script type="module">
-        import { verificaUsuario } from "../js/firebase.js";
+        function verifyAuthentication(){
+            var user = verifyUser();
+            if(user === undefined){
+                window.location.href = "/user/login"
+            }
+        }
 
-        window.verificaUsuario = verificaUsuario;
+        window.verifyUser = verifyUser;
+        window.verifyAuthentication = verifyAuthentication;
     </script>
 </body>
 </html>

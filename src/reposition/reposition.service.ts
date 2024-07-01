@@ -4,7 +4,6 @@ import { Injectable } from "@nestjs/common";
 import RepositionResponseDTO from "./dto/RepositionResponse.dto";
 import { firebaseDB } from "src/firebase";
 import RepositionRequestDTO from "./dto/RepositionRequest.dto";
-import { RepositionFormDTO } from "./dto/repositionForm.dto";
 
 @Injectable()
 export default class RepositionService{
@@ -107,6 +106,8 @@ export default class RepositionService{
             if(!doc.exists){
                 throw new Error("Curso não existente");
             }
+            console.log("Matérias");
+            console.log(doc.get("subjects"));
             return doc.get("subjects");
         })
         .catch((err) => {
@@ -207,7 +208,7 @@ export default class RepositionService{
         return mat;
     }
 
-    async generateSchedule(dto: RepositionFormDTO){
+    async generateSchedule(dto: RepositionRequestDTO){
         const classrooms = await this.getClassrooms();
 
         const subject = await this.getSubject(dto.course, dto.subject);

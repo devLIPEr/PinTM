@@ -31,6 +31,7 @@
         </div>
     </main>
     {{> footer }}
+    <script src="../js/index.js"></script>
     <script>
         function sendForm(){
             var cursoIpt = document.getElementById('nomeCurso');
@@ -65,6 +66,17 @@
                 });
             });
         }
+
+        function verifyAuthentication(){
+            var user = verifyUser();
+            if(user === undefined){
+                window.location.href = "/user/login"
+            }
+        }
+
+        window.verifyAuthentication = verifyAuthentication;
+        window.getData = getData;
+        window.verifyUser = verifyUser;
     </script>
 </body>
 </html>
