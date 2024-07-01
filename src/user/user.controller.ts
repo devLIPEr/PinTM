@@ -97,4 +97,9 @@ export class UserController {
     }
     res.json(req.user);
   } 
+
+  @Get('/deleteCookie')
+  async deleteCookie(@Req() req : Request, @Res() res : Response){
+    res.clearCookie('token', {httpOnly: true});
+  }
 }

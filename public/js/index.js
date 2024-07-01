@@ -142,3 +142,13 @@ function verifyToken(){
         }
     }).catch(error => console.log("Erro: ", error));
 }
+
+export function logOut(){
+    fetch('/deleteCookie', {
+        method: 'GET',
+        credentials: 'same-origin', // Isso permite que o cookie seja enviado junto com a solicitação
+    }).then(response => {
+        sessionStorage.clear();
+        window.location.href = "/";
+    }).catch(error => console.log(error));
+  }

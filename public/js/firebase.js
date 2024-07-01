@@ -93,16 +93,18 @@ export function resetarSenha(email){
   }
 }
 
-export function logOut(){
-  var login = document.querySelector('#headerLogin');
-  signOut(auth).then(()=>{
-    login.innerHTML = "Login";
-    console.assert("Log out feito com sucesso.");
-  }).catch((error)=>{
-    console.error(error);
-  });
-  window.location.href = window.location.href.split('/user')[0];
-}
+
+
+// export function logOut(){
+//   var login = document.querySelector('#headerLogin');
+//   signOut(auth).then(()=>{
+//     login.innerHTML = "Login";
+//     console.assert("Log out feito com sucesso.");
+//   }).catch((error)=>{
+//     console.error(error);
+//   });
+//   window.location.href = window.location.href.split('/user')[0];
+// }
 
 export function authState(){
   auth.onAuthStateChanged(function(user) {
