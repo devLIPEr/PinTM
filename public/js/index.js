@@ -146,7 +146,7 @@ function verifyToken(){
 function logOut(){
     fetch('/deleteCookie', {
         method: 'GET',
-        credentials: 'same-origin', // Isso permite que o cookie seja enviado junto com a solicitação
+        credentials: 'same-origin',
     }).then(response => {
         sessionStorage.clear();
         window.location.href = "/";
