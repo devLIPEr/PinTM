@@ -143,7 +143,7 @@ function verifyToken(){
     }).catch(error => console.log("Erro: ", error));
 }
 
-export function logOut(){
+function logOut(){
     fetch('/deleteCookie', {
         method: 'GET',
         credentials: 'same-origin', // Isso permite que o cookie seja enviado junto com a solicitação
