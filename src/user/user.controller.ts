@@ -44,9 +44,10 @@ export class UserController {
           isAdmin: response.userResponse.isAdmin
         });
         res.send(jsonResponse);
-      }else{
-        res.send({});
       }
+    })
+    .catch((err) => {
+      res.status(err.status).send({error: err.message});
     });
   }
   
@@ -61,6 +62,9 @@ export class UserController {
           isColorBlind: response.userResponse.isColorBlind
         }));
       }
+    })
+    .catch((err) => {
+      res.status(err.status).send({error: err.message});
     });
   }
 

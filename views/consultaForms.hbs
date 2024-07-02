@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="setCourseListener()">
+<body onload="setCourseListener(); verifyUser();">
     {{> headerController }}
     <main class="mainConsulta">
         <div class="background-consulta">
@@ -58,7 +58,7 @@
                 .then(data => {
                     materiasDropDown.innerHTML = "<option value='' disabled selected>Matéria:</option>";
                     for(var key in data){
-                        materiasDropDown.innerHTML += `<option value="${data[key].key}">${data[key].nome}</option>`;
+                        materiasDropDown.innerHTML += `<option value="${key}">${data[key].nome}</option>`;
                     }
                 })
                 .catch((error) => {
@@ -66,17 +66,6 @@
                 });
             });
         }
-
-        function verifyAuthentication(){
-            var user = verifyUser();
-            if(user === undefined){
-                window.location.href = "/user/login"
-            }
-        }
-
-        window.verifyAuthentication = verifyAuthentication;
-        window.getData = getData;
-        window.verifyUser = verifyUser;
     </script>
 </body>
 </html>

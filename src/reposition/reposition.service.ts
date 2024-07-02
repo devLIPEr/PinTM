@@ -106,8 +106,6 @@ export default class RepositionService{
             if(!doc.exists){
                 throw new Error("Curso não existente");
             }
-            console.log("Matérias");
-            console.log(doc.get("subjects"));
             return doc.get("subjects");
         })
         .catch((err) => {
@@ -204,7 +202,6 @@ export default class RepositionService{
             }
             mat.push(row);
         }
-        console.log(mat);
         return mat;
     }
 
@@ -238,8 +235,6 @@ export default class RepositionService{
                 }
             }
         }
-
-        console.log(qualities);
 
         const horariosOcupados = qualities.map((linha) => linha.includes(0));
 

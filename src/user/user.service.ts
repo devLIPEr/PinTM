@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import UserRequestDTO from "./dto/UserRequest.dto";
 import UserResponseDTO from "./dto/UserResponse.dto";
 import { firebaseAuth, firebaseDB } from "src/firebase";
@@ -35,17 +35,16 @@ export default class UserService{
         return response;
     }
 
-    async getById(id: string): Promise<UserResponseDTO | null>{
+    async getById(id: string): Promise<UserResponseDTO>{
         return firebaseDB.collection("Users").doc(id).get()
         .then((doc) => {
             if(!doc.exists){
-                throw new Error("Usuário não encontrado");
+                throw new HttpException(`Usuário com o id ${id} não encontrado.`, HttpStatus.NOT_FOUND);
             }
             return this.mapQueryUserResponse(doc);
         })
         .catch((err) => {
-            console.log(err);
-            return null;
+            throw new HttpException(`Usuário com o id ${id} não encontrado.`, HttpStatus.NOT_FOUND);
         });
     }
 
@@ -53,7 +52,7 @@ export default class UserService{
         const usersRef = firebaseDB.collection("Users");
         let snapshot = await usersRef.where("email", "==", email).get();
         if(snapshot.empty){
-            return null;
+            throw new HttpException(`Usuário com o email ${email} não encontrado.`, HttpStatus.NOT_FOUND);
         }
         return this.mapQueryUserResponse(snapshot.docs[0]);
     }
@@ -72,14 +71,19 @@ export default class UserService{
                         return response;
                     });
                 }
-                return null;
+                throw new HttpException("Senha incorreta.", HttpStatus.BAD_REQUEST);
             });
         }
-        return null;
     }
 
-    async signup(dto: LoginRequestDTO): Promise<LoginResponseDTO | null>{
-        const user = await this.getByEmail(dto.email);
+    async signup(dto: LoginRequestDTO): Promise<LoginResponseDTO>{
+        const user = await this.getByEmail(dto.email).catch((err) => {});
+        if(dto.username.length == 0){
+            throw new HttpException("Nome de usuário é obrigatório.", HttpStatus.BAD_REQUEST);
+        }
+        if(dto.password.length < 8){
+            throw new HttpException("Senha precisa ter no mínimo 8 caracteres.", HttpStatus.BAD_REQUEST);
+        }
         if(user == null){
             return bcrypt.genSalt(10)
             .then((salt) => bcrypt.hash(dto.password, salt))
@@ -102,15 +106,17 @@ export default class UserService{
                     return this.authenticate(dto);
                 })
                 .catch((err) => {
-                    console.log(err);
+                    if(err.code == "auth/invalid-email"){
+                        throw new HttpException("Email inválido.", HttpStatus.BAD_REQUEST);
+                    }
                 });
             });
         }
-        return null;
+        throw new HttpException("Usuário já existente.", HttpStatus.BAD_REQUEST);
     }
 
-    delete(id: string){
-        this.getById(id);
+    async delete(id: string){
+        await this.getById(id);
         firebaseAuth.updateUser(id, {
             disabled: true
         })
@@ -151,6 +157,4 @@ export default class UserService{
             console.log(err);
         });
     }
-
-
 }

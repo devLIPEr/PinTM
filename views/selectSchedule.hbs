@@ -35,9 +35,9 @@
             <input id="week" type="week">
             <select name="salaInput" id="salaInput">
                 <option value="" disabled selected>Sala:</option>
-                {{#salas}}
-                    <option value="{{sala}}">{{sala}}</option>
-                {{/salas}}
+                {{#each salas}}
+                    <option value="{{this}}">{{this}}</option>
+                {{/each}}
             </select>
             <div class="compartilharBtn">
                 <img src="../images/compartilharPDF.png" alt="Compartilhar via PDF" onclick="goToPDF();">
@@ -116,7 +116,7 @@
             document.getElementById("week").setAttribute("max", `${date.getFullYear() + 1}-W${weekNumber}`);
         }
 
-        function createRepositions(){
+        async function createRepositions(){
             var sala = document.getElementById('salaInput').value;
             if(sala != ''){
                 var transposedSchedule = selectedClasses[0].map((_, colIndex) => selectedClasses.map(row => row[colIndex]));
@@ -143,22 +143,21 @@
                 }
 
                 // Post to save on BD
-                if(getUserId() != undefined){
-                    schedules.forEach((e) => {
-                        fetch('createReposition', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({userId: getUserId(), materia: e.subject, curso: e.course, data: e.date, start: e.start, end: e.end, sala: e.classroom})
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            e.repoId = data.repoId;
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
+                for(var schedule of schedules){
+                    await fetch('createReposition', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials : "include",
+                        body: JSON.stringify({subject: schedule.subject, course: schedule.course, date: schedule.date, start: schedule.start, end: schedule.end, classroom: schedule.classroom})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        schedule.repoId = data._id;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
                     });
                 }
             }else{
@@ -174,7 +173,7 @@
         function waitForId(obj, timeout = 30000){
             return new Promise((resolve, reject) => {
                 let interval = setInterval(() => {
-                    if (obj['repoId'] !== '') {
+                    if (obj['id'] !== '') {
                         clearInterval(interval);
                         resolve();
                     }
@@ -187,28 +186,17 @@
             });
         }
 
-        function goToPDF(){
-            createRepositions();
+        async function goToPDF(){
+            await createRepositions();
             if(schedules.length > 0){
                 var lastRepo = schedules[schedules.length-1];
 
-                waitForId(lastRepo)
-                .then(() => {
-                    var form = '<form action="' + '/reposition/pdf' + '" method="post">' +
-                    '<input type="text" name="userId" value="' + getUserId() + '" />' +
-                    '<input type="text" name="repositionId" value="' + lastRepo.repoId + '" />' +
-                    '</form>';
-                    document.getElementsByTagName('body')[0].innerHTML+=form;
-                    document.getElementsByTagName('form')[0].submit();
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+                window.location.href = 'pdf/'+lastRepo.repoId;  
             }
         }
         
-        function copyToClipboard(){
-            createRepositions();
+        async function copyToClipboard(){
+            await createRepositions();
             if(schedules.length > 0){
                 var lastRepo = schedules[schedules.length-1];
                 texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";

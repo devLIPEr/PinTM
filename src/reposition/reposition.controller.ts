@@ -97,16 +97,16 @@ export class RepositionController {
     this.repositionService.getById(id)
     .then((reposition) => {
       res.render('pdf', {
-        materia: reposition['subject'],
-        data: reposition['date'],
-        sala: reposition['classroom'],
-        horario: `${reposition['start']} - ${reposition['end']}`,
+        materia: reposition['_subject'],
+        data: reposition['_date'],
+        sala: reposition['_classroom'],
+        horario: `${reposition['_start']} - ${reposition['_end']}`,
       });
     });
   }
 
   @Post('/selectSchedule')
   async selectSchedule(@Body() reposition: RepositionRequestDTO, @Res() res: Response){
-    res.render('selectSchedule', this.repositionService.generateSchedule(reposition));
+    res.render('selectSchedule', await this.repositionService.generateSchedule(reposition));
   }
 }
