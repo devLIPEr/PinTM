@@ -170,22 +170,6 @@
             setDate();
         }
 
-        function waitForId(obj, timeout = 30000){
-            return new Promise((resolve, reject) => {
-                let interval = setInterval(() => {
-                    if (obj['id'] !== '') {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 100);
-
-                setTimeout(() => {
-                    clearInterval(interval);
-                    reject(new Error('Timeout waiting for property value'));
-                }, timeout);
-            });
-        }
-
         async function goToPDF(){
             await createRepositions();
             if(schedules.length > 0){
