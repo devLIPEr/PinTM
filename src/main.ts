@@ -3,7 +3,6 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import hbs from 'hbs';
-// import * as cookieParser from 'cookie-parser';
 
 const cookieParser = require('cookie-parser');
 

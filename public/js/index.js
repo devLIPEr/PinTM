@@ -1,14 +1,3 @@
-function setUI(data){
-    console.log(data);
-    /**
-     * data = {
-     *      username: string,
-     *      isColorBlind: bool
-     * }
-     **/ 
-    // set interface based on user
-}
-
 function signUp(email, password, username, isColorBlind = false){
     fetch("/user/signup", {
         method: "POST",
@@ -24,10 +13,13 @@ function signUp(email, password, username, isColorBlind = false){
     })
     .then(response => response.json())
     .then((data) => {
-        setUI(data);
-        if(Object.keys(data).length){
-            sessionStorage.setItem("isColorBlind", data.isColorBlind);
-            window.location.href = '/user/account';
+        if(data['error']){
+            alert(data['error']);
+        }else{
+            if(Object.keys(data).length){
+                sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                window.location.href = '/user/account';
+            }
         }
     })
     .catch((err) => {
@@ -48,10 +40,13 @@ function signIn(email, password){
     })
     .then(response => response.json())
     .then((data) => {
-        setUI(data);
-        if(Object.keys(data).length){
-            sessionStorage.setItem("isColorBlind", data.isColorBlind);
-            window.location.href = '/user/account';
+        if(data['error']){
+            alert(data['error']);
+        }else{
+            if(Object.keys(data).length){
+                sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                window.location.href = '/user/account';
+            }
         }
     })
     .catch((err) => {
@@ -70,16 +65,14 @@ function resetPassword(id, password){
         })
     })
     .then((response) => {
-      if (response.redirected) {
-        window.location.href = response.url;
-      }
+        if(response.redirected){
+            window.location.href = response.url;
+        }
     })
     .catch((err) => {
         console.error(err);
     });
 }
-
-
 
 // Função retirada do firebase.js e modificada para atender às novas particularidades do projeto
 function authState(username){
@@ -146,9 +139,9 @@ function verifyToken(){
 function logOut(){
     fetch('/deleteCookie', {
         method: 'GET',
-        credentials: 'same-origin',
+        credentials: 'same-origin'
     }).then(response => {
         sessionStorage.clear();
         window.location.href = "/";
     }).catch(error => console.log(error));
-  }
+}
