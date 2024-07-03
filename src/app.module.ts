@@ -10,6 +10,8 @@ import { RepositionMiddleware } from './middleware/reposition.middleware';
 import UserService from './user/user.service';
 import RepositionService from './reposition/reposition.service';
 import { verifyCustomToken } from './firebase';
+import { AdminController } from './admin/admin.controller';
+import AdminService from './admin/admin.service';
 
 export interface UserContext{
   username : string;
@@ -23,8 +25,8 @@ export interface UserContext{
     }),
     ConfigModule.forRoot(),
   ],
-  controllers: [AppController, UserController, RepositionController], 
-  providers: [UserService, RepositionService],
+  controllers: [AppController, UserController, RepositionController, AdminController], 
+  providers: [UserService, RepositionService, AdminService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
