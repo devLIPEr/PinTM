@@ -3,8 +3,95 @@
 {{> headController }}
 <body onload = "verifyUser()">
     {{> headerController }}
-    <main class="reprovacaoAdmin">
+    <main>
+        <div class="reprovacaoAdmin">
+            <h2>Taxas de Reprovação</h2>
+            <div class="seletores-materia">
+                <select name="curso" id="nomeCurso">
+                    <option value="" disabled selected><p>Curso:</p></option>
+                    <option value="{{key}}">{{nome}}</option>
+                </select>
 
+                <select name="serie" id="nomeSerie">
+                    <option value="" disabled selected><p>Série:</p></option>
+                    <option value="{{key}}">{{nome}}</option>
+                </select>
+
+                <select name="materia" id="nomeMateria">
+                    <option value="" disabled selected><p>Matéria:</p></option>
+                    <option value="{{key}}">{{nome}}</option>
+                </select>
+                
+                <button><p>Buscar</p></button>
+            </div>
+
+
+            <div class="materias-content">
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+                <div class="materia">
+                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                    <div class="valor"><p>100%</p></div>
+                </div>
+
+            </div>   
+
+            <button><p>Salvar</p></button> 
+        </div>
     </main>
     {{> footer }}
     <script src="../js/index.js"></script>
