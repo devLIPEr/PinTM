@@ -3,26 +3,39 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload = "verifyAuthentication()">
+<body onload = "verifyAuthentication(); getUsername()">
     {{> headerController}}
-    <main>
-        <div class = "telaAcc">
-            <div class="accTitleAndEdit">
-                <img class = "linha1"></img>
-                <h2 class="accTitle">Minha conta</h2>
-                <img class = "linha2"></img>
-                <img src="../images/edit.png" alt="Editar informações da conta" title="Editar informações da conta" onclick="edit()" class="editBtn">
+    <main class="minha-conta">
+        <div class="minha-conta-index">
+            <h1>Minha Conta</h1>
+            <div class="minha-conta-content">
+                <div class="editar-conta">
+                    <h2 class="nome-de-usuario" id="nome-de-usuario"></h2>
+                    <button onclick="showEditAccountElement()" class="editar-button"><p>Editar</p></button>
+                </div>
             </div>
-            <div class = "accInfoDiv">
-                <div class = "accNome">
-                    <p class="accInfo"></p>
+        </div>
+
+        <div class="minha-conta-editar" style="display: none;">
+            <h2>Editar Dados da Conta</h2>
+            <form id="editar-form">
+                <div class="name-input">
+                    <input type="text" placeholder="Nome de usuário:">
                 </div>
-                <div class="accEmail">
-                    <p class="accInfo"></p>
+                <div class="daltonismo-checkbox">
+                    <label for="daltonismo">Daltonismo</label>
+                    <input type="checkbox" name="daltonismo" id="daltonismo">
                 </div>
-            </div>    
+                <input style="display: none;" type="submit" value="enviar" id="submit-button">
+            </form>
+
+            <div class="editar-buttons">
+                <button id="cancelar-button" onclick="hideEditAccountElement()"><p>Cancelar</p></button>
+                <button id="salvar-button"><p>Salvar</p></button>
+            </div>
         </div>
     </main>
+
     {{> footer}}
 </body>
 <script src="../js/index.js"></script>
@@ -88,5 +101,22 @@
     window.verifyUser = verifyUser;
     window.edit = edit;
     window.atualizar = atualizar;
+</script>
+<script>
+    function getUsername() {
+        var username = sessionStorage.getItem("username");
+        var elemento = document.getElementById("nome-de-usuario");
+        elemento.textContent = username;
+    }
+
+    function showEditAccountElement() {
+        document.getElementsByClassName("minha-conta-index")[0].style.display = 'none';
+        document.getElementsByClassName("minha-conta-editar")[0].style.display = 'flex';
+    }
+
+    function hideEditAccountElement() {
+        document.getElementsByClassName("minha-conta-editar")[0].style.display = 'none';
+        document.getElementsByClassName("minha-conta-index")[0].style.display = 'flex';
+    }
 </script>
 </html>

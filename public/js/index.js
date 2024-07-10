@@ -1,4 +1,4 @@
-function signUp(email, password, username, isColorBlind = false){
+function signUp(email, password, username, isColorBlind){
     fetch("/user/signup", {
         method: "POST",
         headers: {

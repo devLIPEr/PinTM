@@ -9,7 +9,9 @@
             <div class="seletores-materia">
                 <select name="curso" id="nomeCurso">
                     <option value="" disabled selected><p>Curso:</p></option>
-                    <option value="{{key}}">{{nome}}</option>
+                    {{#cursos}}
+                        <option value="{{key}}">{{nome}}</option>
+                    {{/cursos}}
                 </select>
 
                 <select name="serie" id="nomeSerie">
@@ -21,82 +23,46 @@
                     <option value="" disabled selected><p>Matéria:</p></option>
                     <option value="{{key}}">{{nome}}</option>
                 </select>
-                
-                <button><p>Buscar</p></button>
+
+                <button  onclick="search()"><p>Buscar</p></button>
             </div>
 
 
             <div class="materias-content">
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
-
-                <div class="materia">
-                    <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                    <div class="valor"><p>100%</p></div>
-                </div>
+                
+                {{#materias}}
+                    <div class="materia">
+                        <div class="nome"><p>Programação Orientada a Objetos III</p></div>
+                        <div class="valor">
+                            <input type='number' id="teste" step='1.0' value='0' min="0" max="100"/>
+                            <p>%</p>
+                        </div>
+                    </div>
+                {{/materias}}
 
             </div>   
 
-            <button><p>Salvar</p></button> 
+            <button style="display: none;" id="salvar-reprovacao-button"><p>Salvar</p></button> 
         </div>
     </main>
     {{> footer }}
     <script src="../js/index.js"></script>
     <script>
         window.verifyUser = verifyUser;
+
+        function getMaterias(){
+
+        }
+
+        function search(){
+            var materias = document.getElementsByClassName("materias")[0]
+            var curso = 
+            var serie = 
+            var materia =
+            getMaterias()
+
+            document.getElementById("salvar-reprovacao-button").style.display = 'block'
+        }
     </script>
 </body>
 </html>
