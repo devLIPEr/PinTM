@@ -1,9 +1,9 @@
-import { Get, Controller, Render, Post, Body, Put, Delete, Param, Res, Req } from '@nestjs/common';
+import { Get, Controller, Render, Post, Body, Put, Delete, Param, Res, Req, HttpException, HttpStatus } from '@nestjs/common';
 import UserService from './user.service';
 import UserRequestDTO from './dto/UserRequest.dto';
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import LoginRequestDTO from './dto/LoginRequest.dto';
-import { firebaseAuth, verifyCustomToken } from 'src/firebase';
+import { firebaseAuth, sendPassEmail, verifyCustomToken } from 'src/firebase';
 import { RequestWithUser } from 'src/middleware/user.middleware';
 
 @Controller('user')
@@ -64,21 +64,54 @@ export class UserController {
     });
   }
 
-  @Put("/edit/:id")
-  async edit(@Param("id") id: string, @Body() dto: UserRequestDTO, @Res() res: Response){
-    await this.userService.edit(id, dto);
+  @Get("/resetPasswordMail/:email")
+  resetPassMail(@Param("email") email: string, @Req() req: Request, @Res() res: Response){
+    sendPassEmail(email)
+    .catch((err) => {
+      throw new HttpException("Não foi possível enviar o email de recuperação de senha", HttpStatus.INTERNAL_SERVER_ERROR);
+    })
+    res.end();
   }
 
-  @Put("/resetPassword/:id")
-  resetPass(@Param("id") id: string, @Body() dto: UserRequestDTO, @Res() res: Response){
-    this.userService.edit(id, dto)
-    .then((user) => {
-      res.clearCookie('token');
-      res.redirect("/user/login");
+  @Put("/edit")
+  edit(@Body() dto: UserRequestDTO, @Req() req: Request, @Res() res: Response){
+    if((req.cookies && req.cookies['token'])){
+      verifyCustomToken(req.cookies['token'])
+      .then(async (userCredential) => {
+        await this.userService.edit(userCredential.user.uid, dto);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
+      });
+    }
+    res.end();
+  }
+
+  @Put("/resetPassword/:email/:code")
+  async resetPass(@Param('email') email, @Param('code') code: string, @Body() dto: UserRequestDTO, @Res() res: Response){
+    await this.userService.resetPass(email, code, dto)
+    .then((response) => {
+      if(response){
+        res.cookie('token', response.token, {maxAge: 60*60*1000, httpOnly: true}); // 1 hour cookie
+        res.send(JSON.stringify({
+          username: response.userResponse.username,
+          isColorBlind: response.userResponse.isColorBlind
+        }));
+      }
     })
     .catch((err) => {
-      console.log(err);
+      res.status(err.status).send({error: err.message});
     });
+    res.end();
+    // this.userService.edit(id, dto)
+    // .then((user) => {
+    //   res.clearCookie('token');
+    //   res.redirect("/user/login");
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
   }
 
   @Delete(":id")

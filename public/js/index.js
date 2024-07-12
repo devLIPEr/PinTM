@@ -54,8 +54,9 @@ function signIn(email, password){
     });
 }
 
-function resetPassword(id, password){
-    fetch(`/user/resetPassword/${id}`, {
+function resetPassword(password, email, code){
+    let path = `/user/resetPassword/${email}/${code}`;
+    fetch(path, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json'
@@ -64,9 +65,15 @@ function resetPassword(id, password){
             password: password
         })
     })
-    .then((response) => {
-        if(response.redirected){
-            window.location.href = response.url;
+    .then(response => response.json())
+    .then((data) => {
+        if(data['error']){
+            alert(data['error']);
+        }else{
+            if(Object.keys(data).length){
+                sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                window.location.href = '../reposition/account';
+            }
         }
     })
     .catch((err) => {
