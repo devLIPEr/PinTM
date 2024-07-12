@@ -142,7 +142,7 @@
                     }
                 }
 
-                // Post to save on BD
+                // Post to save on DB
                 for(var schedule of schedules){
                     await fetch('createReposition', {
                         method: 'POST',
@@ -191,16 +191,6 @@
                 });
             }
         }
-        
-        function verifyAuthentication(){
-            var user = verifyUser();
-            if(user === undefined){
-                window.location.href = "/user/login"
-            }
-        }
-
-        window.verifyUser = verifyUser;
-        window.verifyAuthentication = verifyAuthentication;
     </script>
 </body>
 </html>

@@ -1,5 +1,3 @@
-{{!-- Métodos pra controller --}}
-
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
@@ -77,37 +75,8 @@
             .catch((error) => {
                 console.error('Error:', error);
             });
-            
-            /* var xhr = new XMLHttpRequest();
-            xhr.open("POST", '../reposition/deleteReposition', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({
-                userId: uid,
-                repositionId: rid
-            }));
-            document.querySelector(`#repo${rid}`).remove();
-            var table = document.getElementsByTagName('table')[0];
-            if(table.children.length == 1 || (table.children.length == 2 && table.children[1].innerHTML == '')){
-                table.remove();
-                document.getElementById('main').innerHTML += `<div class="emptyContentRepos" id="emptyRepos"><h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2><button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button></div>`;
-            } */
         }
     </script>
     <script src="../js/index.js"></script>
-    {{!-- <script type="module">
-        import {loadRepositions } from "../js/firebase.js";
-
-        function verifyAuthentication(){
-            var user = verifyUser();
-            if(user === undefined){
-                window.location.href = "/user/login"
-            }
-        }
-
-        window.verifyAuthentication = verifyAuthentication;
-        window.verifyUser = verifyUser;
-        window.loadRepositions = loadRepositions;
-    </script> --}}
 </body>
 </html>
-                {{!-- credentials : "include" --}}

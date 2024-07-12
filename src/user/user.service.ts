@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import UserRequestDTO from "./dto/UserRequest.dto";
 import UserResponseDTO from "./dto/UserResponse.dto";
-import { firebaseAuth, firebaseDB } from "src/firebase";
+import { auth, firebaseAuth, firebaseDB, verifyPassCode } from "src/firebase";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import * as bcrypt from "bcrypt";
 import LoginRequestDTO from "./dto/LoginRequest.dto";
 import LoginResponseDTO from "./dto/LoginResponse.dto";
-import User from "./models/User";
 
 @Injectable()
 export default class UserService{
@@ -49,7 +48,7 @@ export default class UserService{
         });
     }
 
-    async getByEmail(email: string): Promise<UserResponseDTO | null>{
+    async getByEmail(email: string): Promise<UserResponseDTO>{
         const usersRef = firebaseDB.collection("Users");
         let snapshot = await usersRef.where("email", "==", email).get();
         if(snapshot.empty){
@@ -135,17 +134,6 @@ export default class UserService{
         return this.getById(id)
         .then(async (user) => {
             let updatedUser = {};
-            if(dto.password){
-                bcrypt.genSalt(10)
-                .then((salt) => bcrypt.hash(dto.password, salt))
-                .then(async (hash) => {
-                    updatedUser["password"] = hash;
-                    user.password = hash;
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            }
             if(dto.username){
                 updatedUser["username"] = dto.username;
                 user.username = dto.username;
@@ -170,31 +158,39 @@ export default class UserService{
         })
     }
 
-    // async resetPass(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
-    //     return this.getById(id)
-    //     .then(async (user) => {
-    //         return bcrypt.genSalt(10)
-    //         .then((salt) => bcrypt.hash(dto.password, salt))
-    //         .then(async (hash) => {
-    //             return firebaseAuth.updateUser(id, {
-    //                 password: hash
-    //             })
-    //             .then(async (userRecord) => {
-    //                 const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
-    //                     password: hash,
-    //                 });
-    //                 return this.getById(userRecord.uid);
-    //             })
-    //             .catch((err) => {
-    //                 console.log(err);
-    //             });
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //     });
-    // }
+    async resetPass(email: string, code: string, dto: UserRequestDTO): Promise<LoginResponseDTO>{
+        return verifyPassCode(code)
+        .then(() => {
+            return bcrypt.genSalt(10)
+            .then((salt) => bcrypt.hash(dto.password, salt))
+            .then(async (hash) => {
+                return await this.getByEmail(email)
+                .then(async (user) => {
+                    return firebaseAuth.updateUser(user.id, {
+                        password: hash
+                    })
+                    .then(async (userRecord) => {
+                        const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
+                            password: hash,
+                        });
+                        let loginRequest = new LoginRequestDTO();
+                        loginRequest.email = email;
+                        loginRequest.password = dto.password;
+                        return await this.authenticate(loginRequest);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        throw new HttpException("Erro ao alterar usuário", HttpStatus.INTERNAL_SERVER_ERROR);
+                    });
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            throw new HttpException("Código inválido", HttpStatus.BAD_REQUEST);
+        });
+    }
 }

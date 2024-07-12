@@ -54,8 +54,9 @@ function signIn(email, password){
     });
 }
 
-function resetPassword(id, password){
-    fetch(`/user/resetPassword/${id}`, {
+function resetPassword(password, email, code){
+    let path = `/user/resetPassword/${email}/${code}`;
+    fetch(path, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json'
@@ -64,9 +65,15 @@ function resetPassword(id, password){
             password: password
         })
     })
-    .then((response) => {
-        if(response.redirected){
-            window.location.href = response.url;
+    .then(response => response.json())
+    .then((data) => {
+        if(data['error']){
+            alert(data['error']);
+        }else{
+            if(Object.keys(data).length){
+                sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                window.location.href = '../reposition/account';
+            }
         }
     })
     .catch((err) => {
@@ -102,12 +109,12 @@ function authState(username){
     }
 }
 
-function verifyUser(){
+async function verifyUser(){
     var username = sessionStorage.getItem("username");
     var isColorBlind = sessionStorage.getItem("isColorBlind");
     console.log("isColorBlind:", isColorBlind);
     if(username == "null" || username === undefined || username == null){
-        verifyToken();
+        return await verifyToken();
     } else {
         // var isColorBlind = sessionStorage.getItem("isColorBlind");
         authState(username)
@@ -115,9 +122,9 @@ function verifyUser(){
     }
 }
 
-function verifyToken(){
-    fetch("/user/verifyToken", {
-        method: "POST",
+async function verifyToken(){
+    return fetch("/user/verifyToken", {
+        method: "GET",
         credentials : "include"
     }).then(response => {
         if(response.status === 403){
@@ -137,17 +144,18 @@ function verifyToken(){
 }
 
 function logOut(){
-    fetch('/deleteCookie', {
+    fetch('/user/deleteCookie', {
         method: 'GET',
-        credentials: 'same-origin'
+        credentials: 'include'
     }).then(response => {
+        console.log(response)
         sessionStorage.clear();
         window.location.href = "/";
     }).catch(error => console.log(error));
 }
 
-function verifyAuthentication(){
-    var user = verifyUser();
+async function verifyAuthentication(){
+    var user = await verifyUser();
     if(user === undefined){
         window.location.href = "/user/login"
     }
