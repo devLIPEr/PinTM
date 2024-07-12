@@ -3,17 +3,48 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verifyAuthentication(); loadRepositions()">
+<body onload="verifyAuthentication()">
     {{> headerController }}
      <main class="mainMinhasRepos" id="main">
         <div class="minhasRepos-txt">
             <h1>Minhas Reposições</h1>
         </div>
 
-        <div class="emptyContentRepos" id="emptyRepos">
-            <h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2>
-            <button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button>
-        </div>
+        {{#if repositions}}
+            <div class="reposTable">
+                <table>
+                    <tr>
+                        <th>Matéria</th>
+                        <th>Curso</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Local</th>
+                        <th>Ações</th>
+                    </tr>
+                    {{#repositions}}
+                        <tr id="repo{{id}}">
+                            <td>{{subject}}</td>
+                            <td>{{course}}</td>
+                            <td>{{date}}</td>
+                            <td>{{start}}</td>
+                            <td>{{classroom}}</td>
+                            <td>
+                                <div class="repositionActions">
+                                    <img src="../images/compartilharEmail.png" title="Compartilhar como mensagem" alt="Compartilhar como mensagem" onclick="copyToClipboard('{{subject}}', '{{course}}', '{{date}}', '{{start}}', '{{classroom}}')">
+                                    <img src="../images/compartilharPDF.png" title="Compartilhar como PDF" alt="Compartilhar como PDF" onclick="goToPDF('{{id}}')">
+                                    <img src="../images/deletarReposicao32.png" title="Deletar reposição" alt="Deletar reposição" onclick="deleteReposition('{{id}}')">
+                                </div>
+                            </td>
+                        </tr>
+                    {{/repositions}}
+                </table>
+            </div>
+        {{else}}
+            <div class="emptyContentRepos" id="emptyRepos">
+                <h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2>
+                <button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button>
+            </div>
+        {{/if}}
     </main>
     {{> footer }}
     <script>
@@ -23,17 +54,31 @@
             alert("Texto copiado para a área de transferência.");
         }
 
-        function printPDF(uid, rid){
-            var form = '<form style="display: none" action="' + '/reposition/pdf' + '" method="post">' +
-                        '<input type="text" name="userId" value="' + uid + '" />' +
-                        '<input type="text" name="repositionId" value="' + rid + '" />' +
-                        '</form>';
-            document.getElementsByTagName('body')[0].innerHTML+=form;
-            document.getElementsByTagName('form')[0].submit();
+        async function goToPDF(repoId){
+            window.location.href = 'pdf/'+repoId;  
         }
 
-        function deleteReposition(uid, rid){
-            var xhr = new XMLHttpRequest();
+        function deleteReposition(rid){
+            fetch('deleteReposition/'+rid, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials : "include"
+            })
+            .then(() => {
+                document.querySelector(`#repo${rid}`).remove();
+                var table = document.getElementsByTagName('table')[0];
+                if(table.children.length == 1 || (table.children.length == 2 && table.children[1].innerHTML == '')){
+                    table.remove();
+                    document.getElementById('main').innerHTML += `<div class="emptyContentRepos" id="emptyRepos"><h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2><button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button></div>`;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            
+            /* var xhr = new XMLHttpRequest();
             xhr.open("POST", '../reposition/deleteReposition', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({
@@ -45,11 +90,11 @@
             if(table.children.length == 1 || (table.children.length == 2 && table.children[1].innerHTML == '')){
                 table.remove();
                 document.getElementById('main').innerHTML += `<div class="emptyContentRepos" id="emptyRepos"><h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2><button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button></div>`;
-            }
+            } */
         }
     </script>
     <script src="../js/index.js"></script>
-    <script type="module">
+    {{!-- <script type="module">
         import {loadRepositions } from "../js/firebase.js";
 
         function verifyAuthentication(){
@@ -62,7 +107,7 @@
         window.verifyAuthentication = verifyAuthentication;
         window.verifyUser = verifyUser;
         window.loadRepositions = loadRepositions;
-    </script>
+    </script> --}}
 </body>
 </html>
                 {{!-- credentials : "include" --}}

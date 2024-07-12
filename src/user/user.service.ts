@@ -7,6 +7,7 @@ import { Mapper } from "@automapper/core";
 import * as bcrypt from "bcrypt";
 import LoginRequestDTO from "./dto/LoginRequest.dto";
 import LoginResponseDTO from "./dto/LoginResponse.dto";
+import User from "./models/User";
 
 @Injectable()
 export default class UserService{
@@ -130,31 +131,70 @@ export default class UserService{
         });
     }
 
-    async resetPass(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
+    async edit(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
         return this.getById(id)
         .then(async (user) => {
-            return bcrypt.genSalt(10)
-            .then((salt) => bcrypt.hash(dto.password, salt))
-            .then(async (hash) => {
-                return firebaseAuth.updateUser(id, {
-                    password: hash
-                })
-                .then(async (userRecord) => {
-                    const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
-                        password: hash,
-                    });
-                    return this.getById(userRecord.uid);
+            let updatedUser = {};
+            if(dto.password){
+                bcrypt.genSalt(10)
+                .then((salt) => bcrypt.hash(dto.password, salt))
+                .then(async (hash) => {
+                    updatedUser["password"] = hash;
+                    user.password = hash;
                 })
                 .catch((err) => {
                     console.log(err);
                 });
+            }
+            if(dto.username){
+                updatedUser["username"] = dto.username;
+                user.username = dto.username;
+            }
+            if(dto.isColorBlind){
+                updatedUser["isColorBlind"] = dto.isColorBlind;
+                user.isColorBlind = dto.isColorBlind;
+            }
+            return firebaseAuth.updateUser(id, updatedUser)
+            .then(async (userRecord) => {
+                const res = await firebaseDB.collection("Users").doc(userRecord.uid).update(updatedUser);
+                return user;
             })
             .catch((err) => {
                 console.log(err);
+                throw new HttpException("Erro ao atualizar usuário", HttpStatus.INTERNAL_SERVER_ERROR);
             });
         })
         .catch((err) => {
             console.log(err);
-        });
+            throw new HttpException(`Usuário com o id: ${id} não encontrado`, HttpStatus.NOT_FOUND);
+        })
     }
+
+    // async resetPass(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
+    //     return this.getById(id)
+    //     .then(async (user) => {
+    //         return bcrypt.genSalt(10)
+    //         .then((salt) => bcrypt.hash(dto.password, salt))
+    //         .then(async (hash) => {
+    //             return firebaseAuth.updateUser(id, {
+    //                 password: hash
+    //             })
+    //             .then(async (userRecord) => {
+    //                 const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
+    //                     password: hash,
+    //                 });
+    //                 return this.getById(userRecord.uid);
+    //             })
+    //             .catch((err) => {
+    //                 console.log(err);
+    //             });
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
+    // }
 }

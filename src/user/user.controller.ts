@@ -3,7 +3,7 @@ import UserService from './user.service';
 import UserRequestDTO from './dto/UserRequest.dto';
 import { Request, Response } from 'express';
 import LoginRequestDTO from './dto/LoginRequest.dto';
-import { firebaseAuth } from 'src/firebase';
+import { firebaseAuth, verifyCustomToken } from 'src/firebase';
 import { RequestWithUser } from 'src/middleware/user.middleware';
 
 @Controller('user')
@@ -18,10 +18,6 @@ export class UserController {
   @Get('/signup')
   @Render('signup')
   branchSignup(){}
-
-  @Get('/account')
-  @Render('minhasRepos')
-  branchMinhasRepos(){}
 
   @Get('/accountInfo')
   @Render('minhaConta')
@@ -68,9 +64,14 @@ export class UserController {
     });
   }
 
+  @Put("/edit/:id")
+  async edit(@Param("id") id: string, @Body() dto: UserRequestDTO, @Res() res: Response){
+    await this.userService.edit(id, dto);
+  }
+
   @Put("/resetPassword/:id")
   resetPass(@Param("id") id: string, @Body() dto: UserRequestDTO, @Res() res: Response){
-    this.userService.resetPass(id, dto)
+    this.userService.edit(id, dto)
     .then((user) => {
       res.clearCookie('token');
       res.redirect("/user/login");
@@ -83,12 +84,15 @@ export class UserController {
   @Delete(":id")
   delete(@Param() id: string, @Req() req: Request, @Res() res: Response){
     if(req.cookies && req.cookies['token']){
-      firebaseAuth.verifyIdToken(req.cookies['token'])
-      .then((decodedToken) => {
-        if(decodedToken.uid == id){
-          this.userService.delete(decodedToken.uid);
+      verifyCustomToken(req.cookies['token'])
+      .then((userCredential) => {
+        if(userCredential.user.uid == id){
+          this.userService.delete(userCredential.user.uid);
         }
       })
+      .catch((err) => {
+        console.log(err);
+      });
     }
     res.end();
   }

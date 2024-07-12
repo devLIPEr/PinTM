@@ -1,6 +1,6 @@
 import { Mapper } from "@automapper/core";
 import { InjectMapper } from "@automapper/nestjs";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import RepositionResponseDTO from "./dto/RepositionResponse.dto";
 import { firebaseDB } from "src/firebase";
 import RepositionRequestDTO from "./dto/RepositionRequest.dto";
@@ -32,8 +32,8 @@ export default class RepositionService{
         return response;
     }
 
-    async getAll(uid: string): Promise<RepositionResponseDTO[] | null>{
-        return firebaseDB.collection("Reposicoes").where("userId", "==", uid).get()
+    async getAll(uid: string): Promise<RepositionResponseDTO[]>{
+        return firebaseDB.collection("Repositions").where("userId", "==", uid).get()
         .then((snapshot) => {
             let repositions: RepositionResponseDTO[] = [];
             snapshot.forEach((element) => {
@@ -43,12 +43,12 @@ export default class RepositionService{
         })
         .catch((err) => {
             console.log(err);
-            return null;
+            throw new HttpException(`Reposição não encontrada`, HttpStatus.NOT_FOUND);
         });
     }
 
     async getById(id: string): Promise<RepositionResponseDTO>{
-        return firebaseDB.collection("Reposicoes").doc(id).get()
+        return firebaseDB.collection("Repositions").doc(id).get()
         .then((snapshot) => {
             if(snapshot['_fieldsProto']){
                 let response = this.mapQueryRepositionResponse(snapshot);
@@ -59,12 +59,12 @@ export default class RepositionService{
         })
         .catch((err) => {
             console.log(err);
-            return new RepositionResponseDTO();
+            throw new HttpException(`Reposição com o id ${id} não encontrada`, HttpStatus.NOT_FOUND);
         });
     }
 
-    async create(uid: string, dto: RepositionRequestDTO): Promise<RepositionResponseDTO | null>{
-        let ref = firebaseDB.collection("Reposicoes").doc();
+    async create(uid: string, dto: RepositionRequestDTO): Promise<RepositionResponseDTO>{
+        let ref = firebaseDB.collection("Repositions").doc();
         let data = {
             userId: uid,
             course: dto.course,
@@ -88,95 +88,102 @@ export default class RepositionService{
         })
         .catch((err) => {
             console.log(err);
-            return null;
+            throw new HttpException("Erro ao cadastrar reposição", HttpStatus.INTERNAL_SERVER_ERROR);
         });
     }
 
     delete(id: string){
         this.getById(id);
-        firebaseDB.collection("Reposicoes").doc(id).delete()
+        firebaseDB.collection("Repositions").doc(id).delete()
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Erro ao deletar reposição", HttpStatus.INTERNAL_SERVER_ERROR);
         })
     }
 
     async getSubjects(course: string): Promise<any>{
-        return firebaseDB.collection("Cursos").doc(course['course']).get()
+        return firebaseDB.collection("Courses").doc(course['course']).get()
         .then((doc) => {
             if(!doc.exists){
-                throw new Error("Curso não existente");
+                throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
             }
             return doc.get("subjects");
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
         });
     }
 
     async getSubject(course: string, subject: string): Promise<any>{
-        return firebaseDB.collection("Cursos").doc(course).get()
+        return firebaseDB.collection("Courses").doc(course).get()
         .then((doc) => {
             if(!doc.exists){
-                throw new Error("Curso não existente");
+                throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
             }
             return doc.get("subjects")[subject];
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
         });
     }
 
     async getSchedules(course: string): Promise<any>{
-        return firebaseDB.collection("Cursos").doc(course).get()
+        return firebaseDB.collection("Courses").doc(course).get()
         .then((doc) => {
             if(!doc.exists){
-                throw new Error("Curso não existente");
+                throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
             }
             return doc.get("schedules");
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
         });
     }
 
     async getSchedule(course: string, grade: string): Promise<any>{
-        return firebaseDB.collection("Cursos").doc(course).get()
+        return firebaseDB.collection("Courses").doc(course).get()
         .then((doc) => {
             if(!doc.exists){
-                throw new Error("Curso não existente");
+                throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
             }
             return doc.get("schedules")[grade];
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
         });
     }
 
     async getCourses(): Promise<any>{
-        return firebaseDB.collection("Cursos").get()
+        return firebaseDB.collection("Courses").get()
         .then((coursesRef) => {
             return coursesRef.docs;
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Nenhum curso encontrado", HttpStatus.NOT_FOUND);
         });
     }
 
     async getCourseName(course: string): Promise<string>{
-        return firebaseDB.collection("Cursos").doc(course).get()
+        return firebaseDB.collection("Courses").doc(course).get()
         .then((doc) => {
             if(!doc.exists){
-                throw new Error("Curso não existente");
+                throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
             }
             return doc['_fieldsProto']['name']['stringValue'];
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
         });
     }
 
     async getClassrooms(): Promise<any>{
-        return firebaseDB.collection("Salas").get()
+        return firebaseDB.collection("Classrooms").get()
         .then((doc) => {
             let classrooms = [];
             doc.forEach((classroom) => {
@@ -186,6 +193,7 @@ export default class RepositionService{
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Sala não encontrada", HttpStatus.NOT_FOUND);
         });
     }
 
@@ -209,7 +217,7 @@ export default class RepositionService{
         const classrooms = await this.getClassrooms();
 
         const subject = await this.getSubject(dto.course, dto.subject);
-        const grade = subject["serie"];
+        const grade = subject["grade"];
         const schedule = await this.getSchedule(dto.course, grade);
         
         type Qualities = number[][];
@@ -239,45 +247,44 @@ export default class RepositionService{
         const horariosOcupados = qualities.map((linha) => linha.includes(0));
 
         for (let i = 0; i < qualities.length; i++) {
-        for (let j = 0; j < qualities[i].length; j++) {
-            if (qualities[i][j] === 4) {
-                var distanciaMinima = Infinity;
-                for (let k = 0; k < qualities.length; k++){
-                    if (qualities[k][j] == 0){
-                        if (Math.abs(i - k) < distanciaMinima){
-                            distanciaMinima = Math.abs(i - k);
+            for (let j = 0; j < qualities[i].length; j++) {
+                if (qualities[i][j] === 4) {
+                    var distanciaMinima = Infinity;
+                    for (let k = 0; k < qualities.length; k++){
+                        if (qualities[k][j] == 0){
+                            if (Math.abs(i - k) < distanciaMinima){
+                                distanciaMinima = Math.abs(i - k);
+                            }
                         }
                     }
+
+                    if (correct == 0 && i > 10){
+                        distanciaMinima += 10;
+                    }else if (correct == 5 && i < 5) {
+                        distanciaMinima += 10;
+                    }else if (correct == 11 && i < 5) {
+                        distanciaMinima += 10;
+                    } else if (correct == 11 && i < 10) {
+                        distanciaMinima += 2;
+                    }else if (i == 0 || j == 5){
+                        distanciaMinima += 10;
+                    }
+
+                    if (correct == 11 && i >= 10 && distanciaMinima > 3){
+                        distanciaMinima = 3;
+                    } 
+
+                    if (distanciaMinima <= 3 ) {
+                        qualities[i][j] = 4;
+                    } else if (distanciaMinima <= 5) {
+                        qualities[i][j] = 3;
+                    } else if (distanciaMinima <= 7) {
+                        qualities[i][j] = 2;
+                    } else {
+                        qualities[i][j] = 1;
+                    }
                 }
-            
-
-            if (correct == 0 && i > 10){
-                distanciaMinima += 10;
-            }else if (correct == 5 && i < 5) {
-                distanciaMinima += 10;
-            }else if (correct == 11 && i < 5) {
-                distanciaMinima += 10;
-            } else if (correct == 11 && i < 10) {
-                distanciaMinima += 2;
-            }else if (i == 0 || j == 5){
-                distanciaMinima += 10;
             }
-
-            if (correct == 11 && i >= 10 && distanciaMinima > 3){
-                distanciaMinima = 3;
-            } 
-
-            if (distanciaMinima <= 3 ) {
-                qualities[i][j] = 4;
-            } else if (distanciaMinima <= 5) {
-                qualities[i][j] = 3;
-            } else if (distanciaMinima <= 7) {
-                qualities[i][j] = 2;
-            } else {
-                qualities[i][j] = 1;
-            }
-            }
-        }
         }
 
         var Horario = [
@@ -356,6 +363,6 @@ export default class RepositionService{
         ]
         ];
 
-        return { salas: classrooms, horarios: Horario, materia: subject["nome"], curso: await this.getCourseName(dto.course) }
+        return { salas: classrooms, horarios: Horario, materia: subject["name"], curso: await this.getCourseName(dto.course) }
     }
 }
