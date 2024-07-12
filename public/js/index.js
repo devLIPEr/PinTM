@@ -109,12 +109,12 @@ function authState(username){
     }
 }
 
-function verifyUser(){
+async function verifyUser(){
     var username = sessionStorage.getItem("username");
     var isColorBlind = sessionStorage.getItem("isColorBlind");
     console.log("isColorBlind:", isColorBlind);
     if(username == "null" || username === undefined || username == null){
-        verifyToken();
+        return await verifyToken();
     } else {
         // var isColorBlind = sessionStorage.getItem("isColorBlind");
         authState(username)
@@ -122,8 +122,8 @@ function verifyUser(){
     }
 }
 
-function verifyToken(){
-    fetch("/user/verifyToken", {
+async function verifyToken(){
+    return fetch("/user/verifyToken", {
         method: "GET",
         credentials : "include"
     }).then(response => {
@@ -144,17 +144,18 @@ function verifyToken(){
 }
 
 function logOut(){
-    fetch('/deleteCookie', {
+    fetch('/user/deleteCookie', {
         method: 'GET',
-        credentials: 'same-origin'
+        credentials: 'include'
     }).then(response => {
+        console.log(response)
         sessionStorage.clear();
         window.location.href = "/";
     }).catch(error => console.log(error));
 }
 
-function verifyAuthentication(){
-    var user = verifyUser();
+async function verifyAuthentication(){
+    var user = await verifyUser();
     if(user === undefined){
         window.location.href = "/user/login"
     }

@@ -59,8 +59,8 @@ export class RepositionController {
   
   @Post('/createReposition')
   async createReposition(@Body() dto: RepositionRequestDTO, @Req() req: Request, @Res() res: Response){
-    if(req.headers.cookie && req.headers.cookie.split('token=')[1].length){
-      verifyCustomToken(req.headers.cookie.split('token=')[1])
+    if(req.cookies && req.cookies['token']){
+      verifyCustomToken(req.cookies['token'])
       .then((userCredential) => {
         this.repositionService.create(userCredential.user.uid, dto)
         .then((reposition) => {
@@ -75,8 +75,8 @@ export class RepositionController {
 
   @Get('/getRepositions')
   async getRepositions(@Req() req: Request, @Res() res: Response){
-    if(req.headers.cookie && req.headers.cookie.split('token=')[1].length){
-      verifyCustomToken(req.headers.cookie.split('token=')[1])
+    if(req.cookies && req.cookies['token']){
+      verifyCustomToken(req.cookies['token'])
       .then((userCredential) => {
         this.repositionService.getAll(userCredential.user.uid)
         .then((repositions) => {
@@ -91,8 +91,8 @@ export class RepositionController {
 
   @Delete('/deleteReposition/:id')
   async deleteReposition(@Param("id") id: string, @Req() req: Request, @Res() res: Response){
-    if(req.headers.cookie && req.headers.cookie.split('token=')[1].length){
-      verifyCustomToken(req.headers.cookie.split('token=')[1])
+    if(req.cookies && req.cookies['token']){
+      verifyCustomToken(req.cookies['token'])
       .then((userCredential) => {
         this.repositionService.getById(id)
         .then((reposition) => {

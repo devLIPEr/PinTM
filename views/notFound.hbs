@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload="verifyAuthentication()">
+<body>
     {{> headerController }}
     <main class="mainNotFound">
-
         <div class="notFoundContent">
             <h2>Erro 404 - Página não encontrada!</h2>
-            <button id = "send-button" class = "btnIndex">Voltar ao início</button>
+            <button id = "send-button" class = "btnIndex" onclick="window.location.href='/'">Voltar ao início</button>
         </div>
-
     </main>
     {{> footer }}
-    <script src="../js/index.js"></script>
 </body>
 </html>

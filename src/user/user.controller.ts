@@ -3,7 +3,7 @@ import UserService from './user.service';
 import UserRequestDTO from './dto/UserRequest.dto';
 import { Request, response, Response } from 'express';
 import LoginRequestDTO from './dto/LoginRequest.dto';
-import { firebaseAuth, sendPassEmail, verifyCustomToken } from 'src/firebase';
+import { sendPassEmail, verifyCustomToken } from 'src/firebase';
 import { RequestWithUser } from 'src/middleware/user.middleware';
 
 @Controller('user')
@@ -43,7 +43,7 @@ export class UserController {
       }
     })
     .catch((err) => {
-      res.status(err.status).send({error: err.message});
+      res.status(400).send({error: err.message});
     });
   }
   
@@ -60,7 +60,7 @@ export class UserController {
       }
     })
     .catch((err) => {
-      res.status(err.status).send({error: err.message});
+      res.status(400).send({error: err.message});
     });
   }
 
@@ -68,24 +68,12 @@ export class UserController {
   resetPassMail(@Param("email") email: string, @Req() req: Request, @Res() res: Response){
     sendPassEmail(email)
     .catch((err) => {
-      throw new HttpException("Não foi possível enviar o email de recuperação de senha", HttpStatus.INTERNAL_SERVER_ERROR);
+      let message = "Não foi possível enviar o email de recuperação de senha";
+      if(err.code == "auth/invalid-email"){
+        message = "Email inválido";
+      }
+      res.status(500).send({error: message});
     })
-    res.end();
-  }
-
-  @Put("/edit")
-  edit(@Body() dto: UserRequestDTO, @Req() req: Request, @Res() res: Response){
-    if((req.cookies && req.cookies['token'])){
-      verifyCustomToken(req.cookies['token'])
-      .then(async (userCredential) => {
-        await this.userService.edit(userCredential.user.uid, dto);
-      })
-      .catch((err) => {
-        console.log(err);
-        throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
-      });
-    }
-    res.end();
   }
 
   @Put("/resetPassword/:email/:code")
@@ -103,15 +91,21 @@ export class UserController {
     .catch((err) => {
       res.status(err.status).send({error: err.message});
     });
+  }
+
+  @Put("/edit")
+  edit(@Body() dto: UserRequestDTO, @Req() req: Request, @Res() res: Response){
+    if((req.cookies && req.cookies['token'])){
+      verifyCustomToken(req.cookies['token'])
+      .then(async (userCredential) => {
+        await this.userService.edit(userCredential.user.uid, dto);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
+      });
+    }
     res.end();
-    // this.userService.edit(id, dto)
-    // .then((user) => {
-    //   res.clearCookie('token');
-    //   res.redirect("/user/login");
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
   }
 
   @Delete(":id")
@@ -137,10 +131,11 @@ export class UserController {
       return res.status(403).send({message : "No user found."});
     }
     res.json(req.user);
-  } 
+  }
 
   @Get('/deleteCookie')
   async deleteCookie(@Req() req : Request, @Res() res : Response){
     res.clearCookie('token', {httpOnly: true});
+    res.end();
   }
 }

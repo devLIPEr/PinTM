@@ -11,7 +11,6 @@ import UserService from './user/user.service';
 import RepositionService from './reposition/reposition.service';
 import { NotFoundExceptionFilter } from './exceptions/NotFoundExceptionFilter';
 import { APP_FILTER } from '@nestjs/core';
-import { ErrorController } from './error/error.controller';
 
 export interface UserContext{
   username : string;
@@ -25,7 +24,7 @@ export interface UserContext{
     }),
     ConfigModule.forRoot(),
   ],
-  controllers: [AppController, UserController, RepositionController, ErrorController], 
+  controllers: [AppController, UserController, RepositionController], 
   providers: [
     UserService,
     RepositionService,
@@ -45,7 +44,7 @@ export class AppModule implements NestModule {
           next();
         }
       })
-      .forRoutes("/user/login")
+      .forRoutes("/user/login", "/user/signup")
       .apply(UserMiddleware)
       .exclude(
         {path: "user", method:RequestMethod.GET}

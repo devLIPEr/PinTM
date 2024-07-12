@@ -43,8 +43,19 @@
               'Content-Type': 'application/json'
             }
           })
+          .then(response => response.json())
+          .then((data) => {
+              if(data['error']){
+                  alert(data['error']);
+              }else{
+                  if(Object.keys(data).length){
+                      sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                      window.location.href = '../reposition/account';
+                  }
+              }
+          })
           .catch((err) => {
-            alert(err.message);
+              console.error(err);
           });
         }else{
           alert("Preencha o email");

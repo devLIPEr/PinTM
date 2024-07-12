@@ -192,30 +192,5 @@ export default class UserService{
             console.log(err);
             throw new HttpException("Código inválido", HttpStatus.BAD_REQUEST);
         });
-        // return this.getById(id)
-        // .then(async (user) => {
-        //     return bcrypt.genSalt(10)
-        //     .then((salt) => bcrypt.hash(dto.password, salt))
-        //     .then(async (hash) => {
-        //         return firebaseAuth.updateUser(id, {
-        //             password: hash
-        //         })
-        //         .then(async (userRecord) => {
-        //             const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
-        //                 password: hash,
-        //             });
-        //             return this.getById(userRecord.uid);
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         });
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
     }
 }
