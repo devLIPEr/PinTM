@@ -18,7 +18,7 @@ function signUp(email, password, username, isColorBlind = false){
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
-                window.location.href = '/user/account';
+                window.location.href = '../reposition/account';
             }
         }
     })
@@ -45,7 +45,7 @@ function signIn(email, password){
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
-                window.location.href = '/user/account';
+                window.location.href = '../reposition/account';
             }
         }
     })
@@ -86,7 +86,7 @@ function authState(username){
 
         var dropDown = document.createElement("div");
         dropDown.setAttribute('class', "accountActions")
-        dropDown.innerHTML = "<button name = 'aaBtn1' class = 'accountActionsBtn' onclick = \"location.href='/user/account'\">Minhas reposições</button><button name = 'aaBtn2' class = 'accountActionsBtn' onclick = \"location.href='/user/accountInfo'\">Minha conta</button><button name = 'aaBtn3' class = 'accountActionsBtn' onclick = \"logOut()\">Sair</button>";
+        dropDown.innerHTML = "<button name = 'aaBtn1' class = 'accountActionsBtn' onclick = \"location.href='../reposition/account'\">Minhas reposições</button><button name = 'aaBtn2' class = 'accountActionsBtn' onclick = \"location.href='/user/accountInfo'\">Minha conta</button><button name = 'aaBtn3' class = 'accountActionsBtn' onclick = \"logOut()\">Sair</button>";
         login.addEventListener("click", function(){
         if(!login.contains(dropDown)){
             login.parentElement.parentElement.appendChild(dropDown);
@@ -144,4 +144,11 @@ function logOut(){
         sessionStorage.clear();
         window.location.href = "/";
     }).catch(error => console.log(error));
+}
+
+function verifyAuthentication(){
+    var user = verifyUser();
+    if(user === undefined){
+        window.location.href = "/user/login"
+    }
 }

@@ -1,14 +1,30 @@
-import { Get, Post, Body, Res, Controller, Render, Req, Param, Delete } from '@nestjs/common';
+import { Get, Post, Body, Res, Controller, Render, Req, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 
 import RepositionService from './reposition.service';
 import RepositionRequestDTO from './dto/RepositionRequest.dto';
 import { verifyCustomToken } from 'src/firebase';
+import RepositionResponseDTO from './dto/RepositionResponse.dto';
 
 @Controller('reposition')
 export class RepositionController {
   constructor(private repositionService: RepositionService){}
+
+  @Get('/account')
+  async branchMinhasRepos(@Req() req: Request, @Res() res: Response){
+    let repositions: RepositionResponseDTO[] = [];
+    if(req.cookies && req.cookies['token']){
+      await verifyCustomToken(req.cookies['token'])
+      .then(async (userCredential) => {
+        repositions = await this.repositionService.getAll(userCredential.user.uid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+    res.render('minhasRepos', { repositions: repositions });
+  }
 
   @Get('/scheduleForm')
   @Render('consultaForms')
@@ -87,6 +103,7 @@ export class RepositionController {
       })
       .catch((err) => {
         console.log(err);
+        throw new HttpException("Não foi possível deletar a reposição", HttpStatus.INTERNAL_SERVER_ERROR);
       });
     }
     res.end();
