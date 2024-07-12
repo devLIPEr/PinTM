@@ -117,7 +117,7 @@ function verifyUser(){
 
 function verifyToken(){
     fetch("/user/verifyToken", {
-        method: "POST",
+        method: "GET",
         credentials : "include"
     }).then(response => {
         if(response.status === 403){

@@ -9,7 +9,9 @@ import { UserMiddleware } from './middleware/user.middleware';
 import { RepositionMiddleware } from './middleware/reposition.middleware';
 import UserService from './user/user.service';
 import RepositionService from './reposition/reposition.service';
-import { verifyCustomToken } from './firebase';
+import { NotFoundExceptionFilter } from './exceptions/NotFoundExceptionFilter';
+import { APP_FILTER } from '@nestjs/core';
+import { ErrorController } from './error/error.controller';
 
 export interface UserContext{
   username : string;
@@ -23,8 +25,15 @@ export interface UserContext{
     }),
     ConfigModule.forRoot(),
   ],
-  controllers: [AppController, UserController, RepositionController], 
-  providers: [UserService, RepositionService],
+  controllers: [AppController, UserController, RepositionController, ErrorController], 
+  providers: [
+    UserService,
+    RepositionService,
+    {
+      provide: APP_FILTER,
+      useClass: NotFoundExceptionFilter,
+    }
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

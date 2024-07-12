@@ -98,7 +98,7 @@ export class UserController {
   }
 
   // Test token
-  @Post('/verifyToken')
+  @Get('/verifyToken')
   verifyToken(@Req() req : RequestWithUser, @Res() res : Response){
     if(!req.user){
       return res.status(403).send({message : "No user found."});
