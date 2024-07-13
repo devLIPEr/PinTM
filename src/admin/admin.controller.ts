@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Put, Query, Redirect, Render, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Param, Put, Render, Req, Res } from "@nestjs/common";
 import { Request, Response } from 'express';
 
 import AdminService from "./admin.service";
@@ -65,7 +65,8 @@ export class AdminController {
   async saveFailureRate(@Body() request: FailureRequest, @Req() req: Request, @Res() res: Response){
     try {
       this.adminService.saveFailureRate(request)
-      res.redirect('/admin/index');
+      // https://peterdaugaardrasmussen.com/2020/05/09/how-to-redirect-http-put-or-post-requests/
+      res.redirect(303, '/admin/index');
     } catch (err) {
       res.send({});
       console.log(err);
