@@ -115,7 +115,7 @@ function authState(username){
 async function verifyUser(){
     var username = sessionStorage.getItem("username");
     var isColorBlind = sessionStorage.getItem("isColorBlind");
-    console.log("isColorBlind:", isColorBlind);
+    // console.log("isColorBlind:", isColorBlind);
     if(username == "null" || username === undefined || username == null){
         return await verifyToken();
     } else {
@@ -138,7 +138,6 @@ async function verifyToken(){
     }).then(username => {
         if(!(username === undefined)){
             authState(username);
-            sessionStorage.setItem("debug", username);
             return username;
         } else {
             return undefined;
@@ -151,7 +150,7 @@ function logOut(){
         method: 'GET',
         credentials: 'include'
     }).then(response => {
-        console.log(response)
+        // console.log(response)
         sessionStorage.clear();
         window.location.href = "/";
     }).catch(error => console.log(error));

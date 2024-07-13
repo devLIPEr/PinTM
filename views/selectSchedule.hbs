@@ -31,6 +31,9 @@
                 {{/each}}
             {{/horarios}}
         </table>
+        <div>
+            <p class = "description"></p>
+        </div>
         <div class="formSelectHorario">
             <input id="week" type="week">
             <select name="salaInput" id="salaInput">
@@ -51,14 +54,21 @@
     <script src="../js/index.js"></script>
     <script>
         function verifyColorBlindness(){
-            verifyToken();
-            console.log("isColorBlind: ", sessionStorage.getItem("isColorBlind"));
             var colorBlind = sessionStorage.getItem("isColorBlind");
+            var description = document.getElementsByClassName("description")[0];
             if(colorBlind != undefined && colorBlind != "null" && colorBlind != null){
                 const td = document.querySelectorAll('td');
                 td.forEach((cell) =>{
-                    td.innerHTML = td.quality;
+                    if(!cell.innerText){
+                        var quality = parseInt(cell.getAttribute("quality"));
+                        if(!isNaN(quality)){
+                            cell.innerText = quality + 1;
+                        }
+                    }
                 });
+                description.innerText = "Legenda: valores mais próximos do 1 são horários ruins, enquanto valores próximos de 5 são bons!";
+            } else {
+                description.innerText = "Legenda: células de cores mais próximas do vermelho são horários ruins, enquanto células com cores próximas do verde são bons!";
             }
         }
 
