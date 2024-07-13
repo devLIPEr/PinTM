@@ -11,6 +11,9 @@ import UserService from './user/user.service';
 import RepositionService from './reposition/reposition.service';
 import { NotFoundExceptionFilter } from './exceptions/NotFoundExceptionFilter';
 import { APP_FILTER } from '@nestjs/core';
+import { AdminController } from './admin/admin.controller';
+import AdminService from './admin/admin.service';
+import AdminMiddleware from './middleware/admin.middleware';
 
 export interface UserContext{
   username : string;
@@ -24,10 +27,11 @@ export interface UserContext{
     }),
     ConfigModule.forRoot(),
   ],
-  controllers: [AppController, UserController, RepositionController], 
+  controllers: [AppController, UserController, RepositionController, AdminController], 
   providers: [
     UserService,
     RepositionService,
+    AdminService,
     {
       provide: APP_FILTER,
       useClass: NotFoundExceptionFilter,
@@ -51,6 +55,8 @@ export class AppModule implements NestModule {
       )
       .forRoutes(UserController)
       .apply(RepositionMiddleware)
-      .forRoutes(RepositionController);
+      .forRoutes(RepositionController)
+      .apply(AdminMiddleware)
+      .forRoutes(AdminController);  
   }
 }

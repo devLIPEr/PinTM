@@ -16,6 +16,10 @@
                 <div class="login-form">
                     <input type="password" name = "password" id = "password" placeholder="senha">
                 </div>
+                <div class="login-form" id="color-blind-checkbox" onclick="select()">
+                    <label for="daltonismo">Modo Daltonismo</label>
+                    <input type="checkbox" name="color-blind" id="color-blind">
+                </div>
                 <input style = "display: none;" type="submit" value="enviar" id = "submit-button">
             </form>
             <button onclick="document.querySelector('#submit-button').click()" id = "send-button" class = "btnIndex"> <p>Criar cadastro</p> </button>
@@ -25,11 +29,14 @@
     {{> footer }}
     <script src="../js/index.js"></script>
     <script>
-      document.querySelector('#Login-Form').addEventListener('submit', (e) => {
+        document.querySelector('#Login-Form').addEventListener('submit', (e) => {
         e.preventDefault();
         var tgt = e.target;
-        signUp(tgt.querySelector('#email').value, tgt.querySelector('#password').value, tgt.querySelector('#name').value)
-      })
+        signUp(tgt.querySelector('#email').value, tgt.querySelector('#password').value, tgt.querySelector('#name').value, tgt.querySelector('#color-blind').checked);
+        });
+        function select(){
+            document.querySelector('#color-blind').checked = !(document.querySelector('#color-blind').checked);
+        }
     </script>
 </body>
 </html>
