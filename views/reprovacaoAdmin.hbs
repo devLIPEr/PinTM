@@ -1,68 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload = "verifyUser()">
-    {{> headerController }}
-    <main>
-        <div class="reprovacaoAdmin">
-            <h2>Taxas de Reprovação</h2>
-            <div class="seletores-materia">
-                <select name="curso" id="nomeCurso">
-                    <option value="" disabled selected><p>Curso:</p></option>
-                    {{#cursos}}
-                        <option value="{{key}}">{{nome}}</option>
-                    {{/cursos}}
-                </select>
 
-                <select name="serie" id="nomeSerie">
-                    <option value="" disabled selected><p>Série:</p></option>
-                    <option value="{{key}}">{{nome}}</option>
-                </select>
+<body onload="verifyUser(); setCourseListener()">
+  {{> headerController }}
+  <main>
+    <div class="reprovacaoAdmin">
+      <h2>Taxas de Reprovação</h2>
+      <div class="seletores-materia">
+        <select name="curso" id="nomeCurso">
+          <option value="" disabled selected>
+            <p>Curso:</p>
+          </option>
+          {{#cursos}}
+            <option value="{{key}}">{{nome}}</option>
+          {{/cursos}}
+        </select>
 
-                <select name="materia" id="nomeMateria">
-                    <option value="" disabled selected><p>Matéria:</p></option>
-                    <option value="{{key}}">{{nome}}</option>
-                </select>
+        <select name="materia" id="nomeMateria">
+          <option value="" disabled selected>
+            <p>Matéria:</p>
+          </option>
+        </select>
 
-                <button  onclick="search()"><p>Buscar</p></button>
+        <button onclick="search()">
+          <p>Buscar</p>
+        </button>
+      </div>
+
+
+      <div class="materias-content"></div>
+
+      <div class="admin-buttons" style="display: none;">
+        <button id="cancelar-reprovacao-button" onclick="cancel()">
+          <p>Cancelar</p>
+        </button>
+
+        <button id="salvar-reprovacao-button" onclick="save()">
+          <p>Salvar</p>
+        </button>
+      </div>
+
+    </div>
+  </main>
+  {{> footer }}
+  <script src="../js/index.js"></script>
+  <script>
+    window.verifyUser = verifyUser;
+
+    function setCourseListener() {
+      var cursosDropDown = document.querySelector("#nomeCurso");
+      var materiasDropDown = document.querySelector("#nomeMateria");
+      cursosDropDown.addEventListener('change', () => {
+        fetch('getSubjects/' + cursosDropDown.value, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          materiasDropDown.innerHTML += `<option value="">  </option>`;
+          for (var key in data) {
+            materiasDropDown.innerHTML += `<option value="${key}">${data[key].name}</option>`;
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      });
+    }
+
+    function getContent(course, subject){
+      var subjectContent = document.getElementsByClassName("materias-content")[0];
+      subjectContent.innerHTML = ''
+
+      fetch(`getSubjects/${course}/${subject}`, {
+        method: "GET",
+        headers: {'Content-Type': 'application/json'}
+      })
+      .then(response => response.json())
+      .then((s) => {
+        for (var key in s){
+          subjectContent.innerHTML += `
+          <div class="materia">
+            <div class="nome">
+              <p>${s[key].name}</p>
             </div>
-
-
-            <div class="materias-content">
-                
-                {{#materias}}
-                    <div class="materia">
-                        <div class="nome"><p>Programação Orientada a Objetos III</p></div>
-                        <div class="valor">
-                            <input type='number' id="teste" step='1.0' value='0' min="0" max="100"/>
-                            <p>%</p>
-                        </div>
-                    </div>
-                {{/materias}}
-
-            </div>   
-
-            <button style="display: none;" id="salvar-reprovacao-button"><p>Salvar</p></button> 
-        </div>
-    </main>
-    {{> footer }}
-    <script src="../js/index.js"></script>
-    <script>
-        window.verifyUser = verifyUser;
-
-        function getMaterias(){
-
+            <div class="valor">
+              <input type='number' id=${key} step='1.0' value=${s[key].failureRate} min="0" max="100" />
+              <p>%</p>
+            </div>
+          </div>`
         }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
 
-        function search(){
-            var materias = document.getElementsByClassName("materias")[0]
-            var curso = 
-            var serie = 
-            var materia =
-            getMaterias()
+    function search() {
+      var course = document.querySelector('#nomeCurso').value;
+      var subject = document.querySelector("#nomeMateria").value;
+      if (course != ''){
+        document.querySelector('#nomeCurso').value = '';
+        document.querySelector("#nomeMateria").value = '';
+        getContent(course, subject);
+        document.getElementsByClassName("admin-buttons")[0].style.display = 'flex';
+      }else{
+        window.alert("Preencha ao menos um dos campo!");
+      }
+    }
 
-            document.getElementById("salvar-reprovacao-button").style.display = 'block'
+    function cancel(){
+      document.getElementsByClassName("materias-content")[0].innerHTML = '';
+      document.getElementsByClassName("admin-buttons")[0].style.display = 'none';
+      window.location.href = "/admin/index"
+    }
+
+    function save(){
+      const materias = document.querySelectorAll('.materia');
+      const materiasData = [];
+      materias.forEach(materia => {
+        const input = materia.querySelector('input');
+        if (input) {
+          const id = input.id;
+          const value = Number(input.value);
+          materiasData.push({"key": id, "failureRate": value})
         }
-    </script>
+      });
+      
+      fetch('saveFailureRate/', {
+        method: "PUT", 
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          // #ToDo Pegar nome do curso com variável
+          "course": "cienciaDaComputacao", 
+          "subjects": materiasData})
+      })
+      .then( (response) => {
+        if(response.redirected){
+          window.location.href = response.url;
+        } else {
+          response.json();
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
 </body>
 </html>

@@ -16,7 +16,7 @@
                 <div class="login-form">
                     <input type="password" name = "password" id = "password" placeholder="senha">
                 </div>
-                <div class="login-form" id="color-blind-checkbox">
+                <div class="login-form" id="color-blind-checkbox" onclick="select()">
                     <label for="daltonismo">Modo Daltonismo</label>
                     <input type="checkbox" name="color-blind" id="color-blind">
                 </div>
@@ -32,8 +32,11 @@
         document.querySelector('#Login-Form').addEventListener('submit', (e) => {
         e.preventDefault();
         var tgt = e.target;
-        signUp(tgt.querySelector('#email').value, tgt.querySelector('#password').value, tgt.querySelector('#name').value, tgt.querySelector('#color-blind').checked)
-      })
+        signUp(tgt.querySelector('#email').value, tgt.querySelector('#password').value, tgt.querySelector('#name').value, tgt.querySelector('#color-blind').checked);
+        });
+        function select(){
+            document.querySelector('#color-blind').checked = !(document.querySelector('#color-blind').checked);
+        }
     </script>
 </body>
 </html>

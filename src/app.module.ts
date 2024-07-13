@@ -12,6 +12,7 @@ import RepositionService from './reposition/reposition.service';
 import { verifyCustomToken } from './firebase';
 import { AdminController } from './admin/admin.controller';
 import AdminService from './admin/admin.service';
+import AdminMiddleware from './middleware/admin.middleware';
 
 export interface UserContext{
   username : string;
@@ -45,6 +46,8 @@ export class AppModule implements NestModule {
       )
       .forRoutes(UserController)
       .apply(RepositionMiddleware)
-      .forRoutes(RepositionController);
+      .forRoutes(RepositionController)
+      .apply(AdminMiddleware)
+      .forRoutes(AdminController);  
   }
 }
