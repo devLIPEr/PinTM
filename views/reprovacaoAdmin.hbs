@@ -46,13 +46,11 @@
   {{> footer }}
   <script src="../js/index.js"></script>
   <script>
-    window.verifyUser = verifyUser;
-
     function setCourseListener() {
       var cursosDropDown = document.querySelector("#nomeCurso");
       var materiasDropDown = document.querySelector("#nomeMateria");
       cursosDropDown.addEventListener('change', () => {
-        fetch('getSubjects/' + cursosDropDown.value, {
+        fetch('/admin/getSubjects/' + cursosDropDown.value, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -61,8 +59,10 @@
         .then(response => response.json())
         .then(data => {
           materiasDropDown.innerHTML += `<option value="">  </option>`;
-          for (var key in data) {
-            materiasDropDown.innerHTML += `<option value="${key}">${data[key].name}</option>`;
+          let entries = Object.entries(data);
+          entries.sort((a, b) => a[1].name.localeCompare(b[1].name));
+          for(var entry of entries){
+            materiasDropDown.innerHTML += `<option value="${entry[0]}">${entry[1].name}</option>`;
           }
         })
         .catch((error) => {
@@ -75,20 +75,23 @@
       var subjectContent = document.getElementsByClassName("materias-content")[0];
       subjectContent.innerHTML = ''
 
-      fetch(`getSubjects/${course}/${subject}`, {
+      fetch(`/admin/getSubjects/${course}/${subject}`, {
         method: "GET",
         headers: {'Content-Type': 'application/json'}
       })
       .then(response => response.json())
-      .then((s) => {
-        for (var key in s){
+      .then((data) => {
+        let entries = Object.entries(data);
+        entries.sort((a, b) => a[1].name.localeCompare(b[1].name));
+        for(var entry of entries){
+          //materiasDropDown.innerHTML += `<option value="${entry[0]}">${entry[1].name}</option>`;
           subjectContent.innerHTML += `
           <div class="materia">
             <div class="nome">
-              <p>${s[key].name}</p>
+              <p>${entry[1].name}</p>
             </div>
             <div class="valor">
-              <input type='number' id=${key} step='1.0' value=${s[key].failureRate} min="0" max="100" />
+              <input type='number' id=${entry[0]} step='1.0' value=${entry[1].failureRate} min="0" max="100" />
               <p>%</p>
             </div>
           </div>`
@@ -130,9 +133,10 @@
         }
       });
       
-      fetch('saveFailureRate/', {
+      fetch('/admin/saveFailureRate/', {
         method: "PUT", 
         headers: {'Content-Type': 'application/json'},
+        credentials: 'include',
         body: JSON.stringify({
           // #ToDo Pegar nome do curso com variável
           "course": "cienciaDaComputacao", 

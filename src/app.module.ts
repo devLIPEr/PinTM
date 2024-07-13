@@ -57,6 +57,6 @@ export class AppModule implements NestModule {
       .apply(RepositionMiddleware)
       .forRoutes(RepositionController)
       .apply(AdminMiddleware)
-      .forRoutes(AdminController);  
+      .forRoutes(AdminController);
   }
 }

@@ -57,8 +57,10 @@
                 .then(response => response.json())
                 .then(data => {
                     materiasDropDown.innerHTML = "<option value='' disabled selected>Matéria:</option>";
-                    for(var key in data){
-                        materiasDropDown.innerHTML += `<option value="${key}">${data[key].name}</option>`;
+                    let entries = Object.entries(data);
+                    entries.sort((a, b) => a[1].name.localeCompare(b[1].name));
+                    for(var entry of entries){
+                        materiasDropDown.innerHTML += `<option value="${entry[0]}">${entry[1].name}</option>`;
                     }
                 })
                 .catch((error) => {

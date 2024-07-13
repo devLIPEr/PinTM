@@ -14,6 +14,9 @@ export default class AdminMiddleware implements NestMiddleware {
       .then(token => firebaseAuth.verifyIdToken(token))
       .then((decodedToken) => {
         (req as RequestWithUser).user = displayName;
+        if(!decodedToken['isAdmin']){
+          throw new Error("Usuário não administrativo");
+        }
         next();
       })
       .catch((err) => {

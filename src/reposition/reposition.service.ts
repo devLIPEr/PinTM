@@ -32,14 +32,28 @@ export default class RepositionService{
         return response;
     }
 
+    string2Date(text: string): Date{
+        const parts = text.split('/');
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return new Date(`${month}/${day}/${year}`);
+    }
+
     async getAll(uid: string): Promise<RepositionResponseDTO[]>{
-        return firebaseDB.collection("Repositions").where("userId", "==", uid).get()
+        return firebaseDB.collection("Repositions").where("userId", "==", uid).limit(15).get()
         .then((snapshot) => {
             let repositions: RepositionResponseDTO[] = [];
+            let currDate = new Date();
+            currDate.setHours(0,0,0,0);
             snapshot.forEach((element) => {
                 repositions.push(this.mapQueryRepositionResponse(element));
             });
-            return repositions;
+            repositions = repositions.filter((repo) => {
+                let repoDate = this.string2Date(repo.date);
+                return repoDate >= currDate;
+            });
+            return repositions.reverse();
         })
         .catch((err) => {
             console.log(err);
