@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import UserRequestDTO from "./dto/UserRequest.dto";
 import UserResponseDTO from "./dto/UserResponse.dto";
-import { firebaseAuth, firebaseDB } from "src/firebase";
+import { auth, firebaseAuth, firebaseDB, verifyPassCode } from "src/firebase";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import * as bcrypt from "bcrypt";
@@ -48,7 +48,7 @@ export default class UserService{
         });
     }
 
-    async getByEmail(email: string): Promise<UserResponseDTO | null>{
+    async getByEmail(email: string): Promise<UserResponseDTO>{
         const usersRef = firebaseDB.collection("Users");
         let snapshot = await usersRef.where("email", "==", email).get();
         if(snapshot.empty){
@@ -130,24 +130,59 @@ export default class UserService{
         });
     }
 
-    async resetPass(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
+    async edit(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
         return this.getById(id)
         .then(async (user) => {
+            let updatedUser = {};
+            if(dto.username){
+                updatedUser["username"] = dto.username;
+                user.username = dto.username;
+            }
+            if(dto.isColorBlind){
+                updatedUser["isColorBlind"] = dto.isColorBlind;
+                user.isColorBlind = dto.isColorBlind;
+            }
+            return firebaseAuth.updateUser(id, updatedUser)
+            .then(async (userRecord) => {
+                const res = await firebaseDB.collection("Users").doc(userRecord.uid).update(updatedUser);
+                return user;
+            })
+            .catch((err) => {
+                console.log(err);
+                throw new HttpException("Erro ao atualizar usuário", HttpStatus.INTERNAL_SERVER_ERROR);
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            throw new HttpException(`Usuário com o id: ${id} não encontrado`, HttpStatus.NOT_FOUND);
+        })
+    }
+
+    async resetPass(email: string, code: string, dto: UserRequestDTO): Promise<LoginResponseDTO>{
+        return verifyPassCode(code)
+        .then(() => {
             return bcrypt.genSalt(10)
             .then((salt) => bcrypt.hash(dto.password, salt))
             .then(async (hash) => {
-                return firebaseAuth.updateUser(id, {
-                    password: hash
-                })
-                .then(async (userRecord) => {
-                    const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
-                        password: hash,
+                return await this.getByEmail(email)
+                .then(async (user) => {
+                    return firebaseAuth.updateUser(user.id, {
+                        password: hash
+                    })
+                    .then(async (userRecord) => {
+                        const res = await firebaseDB.collection("Users").doc(userRecord.uid).update({
+                            password: hash,
+                        });
+                        let loginRequest = new LoginRequestDTO();
+                        loginRequest.email = email;
+                        loginRequest.password = dto.password;
+                        return await this.authenticate(loginRequest);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        throw new HttpException("Erro ao alterar usuário", HttpStatus.INTERNAL_SERVER_ERROR);
                     });
-                    return this.getById(userRecord.uid);
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
             })
             .catch((err) => {
                 console.log(err);
@@ -155,6 +190,7 @@ export default class UserService{
         })
         .catch((err) => {
             console.log(err);
+            throw new HttpException("Código inválido", HttpStatus.BAD_REQUEST);
         });
     }
 }

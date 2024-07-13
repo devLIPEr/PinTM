@@ -18,7 +18,7 @@
 
             <button onclick="document.querySelector('#submit-button').click()" id = "send-button" class = "btnIndex"> <p>Enviar</p> </button>
             <div class ="secaoForgotPassword">
-              <a href = "#" onclick="resetDeSenha()" id = "forgotPassword">Esqueci a senha</a>
+              <a href = "#" onclick="sendResetPass()" id = "forgotPassword">Esqueci a senha</a>
               <br>
             </div>
             
@@ -33,6 +33,34 @@
         var tgt = e.target;
         signIn(tgt.querySelector('#email').value, tgt.querySelector('#password').value)
       });
+
+      function sendResetPass(){
+        let email = document.querySelector("#email").value;
+        if(email){
+          fetch(`/user/resetPasswordMail/${email}`, {
+            method: "GET",
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then((data) => {
+              if(data['error']){
+                  alert(data['error']);
+              }else{
+                  if(Object.keys(data).length){
+                      sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                      window.location.href = '../reposition/account';
+                  }
+              }
+          })
+          .catch((err) => {
+              console.error(err);
+          });
+        }else{
+          alert("Preencha o email");
+        }
+      }
     </script>
 </body>
 </html>

@@ -21,6 +21,7 @@ export class RepositionMiddleware implements NestMiddleware {
         console.log(err);
       })
     }else{
+      res.redirect('/user/login');
       next();
     }
   }

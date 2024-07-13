@@ -58,7 +58,7 @@
                 .then(data => {
                     materiasDropDown.innerHTML = "<option value='' disabled selected>Matéria:</option>";
                     for(var key in data){
-                        materiasDropDown.innerHTML += `<option value="${key}">${data[key].nome}</option>`;
+                        materiasDropDown.innerHTML += `<option value="${key}">${data[key].name}</option>`;
                     }
                 })
                 .catch((error) => {

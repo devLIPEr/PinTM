@@ -1,9 +1,9 @@
-import { Get, Controller, Render, Post, Body, Put, Delete, Param, Res, Req } from '@nestjs/common';
+import { Get, Controller, Render, Post, Body, Put, Delete, Param, Res, Req, HttpException, HttpStatus } from '@nestjs/common';
 import UserService from './user.service';
 import UserRequestDTO from './dto/UserRequest.dto';
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import LoginRequestDTO from './dto/LoginRequest.dto';
-import { firebaseAuth } from 'src/firebase';
+import { sendPassEmail, verifyCustomToken } from 'src/firebase';
 import { RequestWithUser } from 'src/middleware/user.middleware';
 
 @Controller('user')
@@ -18,10 +18,6 @@ export class UserController {
   @Get('/signup')
   @Render('signup')
   branchSignup(){}
-
-  @Get('/account')
-  @Render('minhasRepos')
-  branchMinhasRepos(){}
 
   @Get('/accountInfo')
   @Render('minhaConta')
@@ -47,7 +43,7 @@ export class UserController {
       }
     })
     .catch((err) => {
-      res.status(err.status).send({error: err.message});
+      res.status(400).send({error: err.message});
     });
   }
   
@@ -64,46 +60,82 @@ export class UserController {
       }
     })
     .catch((err) => {
+      res.status(400).send({error: err.message});
+    });
+  }
+
+  @Get("/resetPasswordMail/:email")
+  resetPassMail(@Param("email") email: string, @Req() req: Request, @Res() res: Response){
+    sendPassEmail(email)
+    .catch((err) => {
+      let message = "Não foi possível enviar o email de recuperação de senha";
+      if(err.code == "auth/invalid-email"){
+        message = "Email inválido";
+      }
+      res.status(500).send({error: message});
+    })
+  }
+
+  @Put("/resetPassword/:email/:code")
+  async resetPass(@Param('email') email, @Param('code') code: string, @Body() dto: UserRequestDTO, @Res() res: Response){
+    await this.userService.resetPass(email, code, dto)
+    .then((response) => {
+      if(response){
+        res.cookie('token', response.token, {maxAge: 60*60*1000, httpOnly: true}); // 1 hour cookie
+        res.send(JSON.stringify({
+          username: response.userResponse.username,
+          isColorBlind: response.userResponse.isColorBlind
+        }));
+      }
+    })
+    .catch((err) => {
       res.status(err.status).send({error: err.message});
     });
   }
 
-  @Put("/resetPassword/:id")
-  resetPass(@Param("id") id: string, @Body() dto: UserRequestDTO, @Res() res: Response){
-    this.userService.resetPass(id, dto)
-    .then((user) => {
-      res.clearCookie('token');
-      res.redirect("/user/login");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  @Put("/edit")
+  edit(@Body() dto: UserRequestDTO, @Req() req: Request, @Res() res: Response){
+    if((req.cookies && req.cookies['token'])){
+      verifyCustomToken(req.cookies['token'])
+      .then(async (userCredential) => {
+        await this.userService.edit(userCredential.user.uid, dto);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
+      });
+    }
+    res.end();
   }
 
   @Delete(":id")
   delete(@Param() id: string, @Req() req: Request, @Res() res: Response){
     if(req.cookies && req.cookies['token']){
-      firebaseAuth.verifyIdToken(req.cookies['token'])
-      .then((decodedToken) => {
-        if(decodedToken.uid == id){
-          this.userService.delete(decodedToken.uid);
+      verifyCustomToken(req.cookies['token'])
+      .then((userCredential) => {
+        if(userCredential.user.uid == id){
+          this.userService.delete(userCredential.user.uid);
         }
       })
+      .catch((err) => {
+        console.log(err);
+      });
     }
     res.end();
   }
 
   // Test token
-  @Post('/verifyToken')
+  @Get('/verifyToken')
   verifyToken(@Req() req : RequestWithUser, @Res() res : Response){
     if(!req.user){
       return res.status(403).send({message : "No user found."});
     }
     res.json(req.user);
-  } 
+  }
 
   @Get('/deleteCookie')
   async deleteCookie(@Req() req : Request, @Res() res : Response){
     res.clearCookie('token', {httpOnly: true});
+    res.end();
   }
 }
