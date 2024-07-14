@@ -1,3 +1,4 @@
+
 function signUp(email, password, username, isColorBlind){
     fetch("/user/signup", {
         method: "POST",
@@ -115,11 +116,9 @@ function authState(username){
 async function verifyUser(){
     var username = sessionStorage.getItem("username");
     var isColorBlind = sessionStorage.getItem("isColorBlind");
-    // console.log("isColorBlind:", isColorBlind);
     if(username == "null" || username === undefined || username == null){
         return await verifyToken();
     } else {
-        // var isColorBlind = sessionStorage.getItem("isColorBlind");
         authState(username)
         return username;
     }

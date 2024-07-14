@@ -56,7 +56,8 @@
         function verifyColorBlindness(){
             var colorBlind = sessionStorage.getItem("isColorBlind");
             var description = document.getElementsByClassName("description")[0];
-            if(colorBlind != undefined && colorBlind != "null" && colorBlind != null){
+            console.log(colorBlind);
+            if(colorBlind != undefined && colorBlind != "null" && colorBlind != null && colorBlind != false && colorBlind != "false"){
                 const td = document.querySelectorAll('td');
                 td.forEach((cell) =>{
                     if(!cell.innerText){
@@ -66,9 +67,9 @@
                         }
                     }
                 });
-                description.innerText = "Legenda: valores mais próximos do 1 são horários ruins, enquanto valores próximos de 5 são bons!";
+                description.innerText = "Legenda: valores mais próximos do 1 são horários ruins, enquanto valores próximos de 5 são horários bons!";
             } else {
-                description.innerText = "Legenda: células de cores mais próximas do vermelho são horários ruins, enquanto células com cores próximas do verde são bons!";
+                description.innerText = "Legenda: células de cores mais próximas do vermelho são horários ruins, enquanto células com cores próximas do verde são horários bons!";
             }
         }
 

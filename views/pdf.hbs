@@ -8,7 +8,7 @@
             <h2>
                 Reposição de Aula
             </h2>
-            <h3>
+            <h3 id = "nomeMateria">
                 {{materia}}
             </h3>
         </div>
@@ -40,20 +40,21 @@
     {{> footer }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src = "https://github.com/niklasvh/html2canvas/releases/download/v1.4.1/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.1/purify.min.js"></script>
     <script>
+        function calculaPosX(texto, docWidth, stringWidth, fontSize){
+            larguraTexto = stringWidth * fontSize;
+            posicaoX = (docWidth - larguraTexto) / 2;
+            return posicaoX;
+        }
+
         function downloadPDF() {
-            //var body = document.body;
-            var body = document.getElementById("test");
-            var originalBody = document.body;
-            body.innerHTML = test.innerHTML;
-            //var body = originalBody.cloneNode(true);
+            /*var body = document.body;
             var originalWidth = body.offsetWidth;    
             var originalHeight = body.offsetHeight;  
             body.style.width = '1171.8px';
             body.style.height = '792.935px';
-            //f.appendChild(body)     
             html2canvas(body, {scale: 1})
-            //.then((canvas) => {console.log(canvas); return canvas;})
             .then((canvas) => {
                 var imgData = canvas.toDataURL('image/png');
                 var doc = new jspdf.jsPDF('l', 'mm');
@@ -61,8 +62,55 @@
                 doc.save('Reposicao.pdf');
                 body.style.width = '';
                 body.style.height = '';
-            });
+            });*/
+
+            //var body = document.getElementById("test");
+            //var originalBody = document.body;
+            //body.innerHTML = test.innerHTML;
+            //var body = originalBody.cloneNode(true);
+            //f.appendChild(body)     
             //f.removeChild(body);
+
+
+            //var body = document.body;
+            //var doc = new jspdf.jsPDF(orientation="landscape", unit = "mm", format = "a4");
+            /*doc.html(body.innerHTML, {
+                callback: function(doc){
+                    doc.save("Reposicao.pdf");
+                }
+            });*/
+            /*doc.html('<header class="pdfHeader" style = "padding: 5px 8%;align-items: center;box-shadow: 0 5px 8px 1px rgba(0, 0, 0, 0.3);background-color: var(#3DAD16); height: 25%;"><div style = "background-color:pink;"><h2>Reposição de Aula</h2><h3 style = "color: purple;">Pesquisa Operacional</h3></div></header>'
+            ,{
+                callback: function(doc){
+                    doc.save("Reposicao.pdf");
+                }
+            });*/
+
+
+
+            var doc = new jspdf.jsPDF(orientation="landscape", unit = "mm", format = "a4");
+            console.log(doc.getFontList());
+            doc.setFontSize(20);
+            doc.setTextColor(255, 255, 255);
+            doc.setFillColor(61, 173, 22)
+            doc.rect(0, 0, doc.internal.pageSize.width, 50, 'F');
+            doc.rect(0, doc.internal.pageSize.height - 5, doc.internal.pageSize.width, 5, 'F')
+            doc.addImage("../../images/UnicentroLogo.png", 'PNG', 12.5, 12.5, 25, 25, "unicentrologo", 'NONE', 0);
+            doc.addImage("../../images/PinTMLogo.png", 'PNG', doc.internal.pageSize.width - 42.5, 12.5, 35, 25, "pinlogo", 'NONE', 0);
+
+            var texto = 'Reposição de Aula';
+            doc.text(texto, calculaPosX(texto, doc.internal.pageSize.width, doc.getStringUnitWidth(texto), doc.internal.getFontSize()), 30); // Texto do cabeçalho
+
+            texto = document.getElementById("nomeMateria").innerText;
+            doc.text(texto, calculaPosX(texto, doc.internal.pageSize.width, doc.getStringUnitWidth(texto), doc.internal.getFontSize()), 40); // Texto do cabeçalho
+
+            //doc.setTextColor(111, 111, 111);
+            doc.setFontSize(10);
+            texto = "Pin";
+            doc.text(texto, calculaPosX(texto, doc.internal.pageSize.width, doc.getStringUnitWidth(texto), doc.internal.getFontSize()), doc.internal.pageSize.height - 1.75); // Texto do cabeçalho
+
+            // Salve o PDF
+            doc.save('Reposicao.pdf');
         }
     </script>
 </body>

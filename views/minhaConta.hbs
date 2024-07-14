@@ -18,7 +18,7 @@
             <h2>Editar Dados da Conta</h2>
             <form id="editar-form">
                 <div class="name-input">
-                    <input type="text" placeholder="Nome de usuário:">
+                    <input type="text" placeholder="Nome de usuário:" class = "usernameEdit">
                 </div>
                 <div class="daltonismo-checkbox">
                     <label for="daltonismo">Daltonismo</label>
@@ -41,12 +41,18 @@
     function getUsername() {
         var username = sessionStorage.getItem("username");
         var elemento = document.getElementById("nome-de-usuario");
+        var elementoEdit = document.getElementsByClassName("usernameEdit")[0];
         elemento.textContent = username;
+        elementoEdit.value = username;
     }
 
     function showEditAccountElement() {
+        var colorBlind = sessionStorage.getItem("isColorBlind");
+        if(colorBlind){
+            document.getElementById("daltonismo").checked = true;
+        }  
         document.getElementsByClassName("minha-conta-index")[0].style.display = 'none';
-        document.getElementsByClassName("minha-conta-editar")[0].style.display = 'flex';
+        document.getElementsByClassName("minha-conta-editar")[0].style.display = 'flex';            
     }
 
     function hideEditAccountElement() {
