@@ -1,9 +1,5 @@
 import { AutoMap } from "@automapper/classes";
-
-class dataType{
-    key: number;
-    failureRate: number;
-} 
+import dataType from "./DataType";
 
 export default class FailureRequest{
     @AutoMap()

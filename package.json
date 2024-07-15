@@ -38,6 +38,7 @@
     "firebase-admin": "^11.11.0",
     "hbs": "^4.2.0",
     "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "pdfmake": "^0.2.8",
     "redis": "^4.6.14",
     "reflect-metadata": "^0.1.13",

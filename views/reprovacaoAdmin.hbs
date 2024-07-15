@@ -111,7 +111,7 @@
         getContent(course, subject);
         document.getElementsByClassName("admin-buttons")[0].style.display = 'flex';
       }else{
-        window.alert("Preencha ao menos um dos campo!");
+        createAlert("Preencha ao menos um dos campo!", 'danger');
       }
     }
 
@@ -142,11 +142,13 @@
           "course": "cienciaDaComputacao", 
           "subjects": materiasData})
       })
-      .then( (response) => {
-        if(response.redirected){
-          window.location.href = response.url;
-        } else {
-          response.json();
+      .then(response => response.json())
+      .then((data) => {
+        if(data['error']){
+          createAlert(data['error'], 'danger');
+        }
+        if(data['redirect']){
+          window.location.href = data['redirect'];
         }
       })
       .catch((error) => {

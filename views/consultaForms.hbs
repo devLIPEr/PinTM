@@ -27,7 +27,6 @@
             </form>
 
             <button onclick="sendForm()"  id = "send-button" class = "btnIndex"> <p>Buscar</p> </button>
-
         </div>
     </main>
     {{> footer }}
@@ -40,7 +39,7 @@
             if(cursoIpt.value != '' && materiaIpt.value != ''){
                 document.querySelector('#submit-button').click();
             }else{
-                alert("Preencha os dados requeridos.");
+                createAlert("Preencha os dados requeridos.", 'danger');
             }
         }
 

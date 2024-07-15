@@ -31,6 +31,9 @@
                 {{/each}}
             {{/horarios}}
         </table>
+        <div>
+            <p class = "description"></p>
+        </div>
         <div class="formSelectHorario">
             <input id="week" type="week">
             <select name="salaInput" id="salaInput">
@@ -51,14 +54,21 @@
     <script src="../js/index.js"></script>
     <script>
         function verifyColorBlindness(){
-            verifyToken();
-            console.log("isColorBlind: ", sessionStorage.getItem("isColorBlind"));
             var colorBlind = sessionStorage.getItem("isColorBlind");
-            if(colorBlind != undefined && colorBlind != "null" && colorBlind != null){
+            var description = document.getElementsByClassName("description")[0];
+            if(colorBlind != undefined && colorBlind != "null" && colorBlind != null && colorBlind != false && colorBlind != "false"){
                 const td = document.querySelectorAll('td');
                 td.forEach((cell) =>{
-                    td.innerHTML = td.quality;
+                    if(!cell.innerText){
+                        var quality = parseInt(cell.getAttribute("quality"));
+                        if(!isNaN(quality)){
+                            cell.innerText = quality + 1;
+                        }
+                    }
                 });
+                description.innerText = "Legenda: valores mais próximos do 1 são horários ruins, enquanto valores próximos de 5 são horários bons!";
+            } else {
+                description.innerText = "Legenda: células de cores mais próximas do vermelho são horários ruins, enquanto células com cores próximas do verde são horários bons!";
             }
         }
 
@@ -116,9 +126,11 @@
             document.getElementById("week").setAttribute("max", `${date.getFullYear() + 1}-W${weekNumber}`);
         }
 
+        var creating = false;
         async function createRepositions(){
-            var sala = document.getElementById('salaInput').value;
-            if(sala != ''){
+            if(!creating){
+                creating = true;
+                var sala = document.getElementById('salaInput').value;
                 var transposedSchedule = selectedClasses[0].map((_, colIndex) => selectedClasses.map(row => row[colIndex]));
                 schedules = [];
                 var schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
@@ -142,9 +154,14 @@
                     }
                 }
 
+                if(schedules.length == 0){
+                    createAlert("Selecione um horário para a reposição", 'danger');
+                }
                 // Post to save on DB
+                var created = true;
+                var message = false;
                 for(var schedule of schedules){
-                    await fetch('createReposition', {
+                    var creation = await fetch('createReposition', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -154,14 +171,26 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        schedule.repoId = data._id;
+                        if(!data.mensagem){
+                            schedule.repoId = data._id;
+                            return true;
+                        } else {
+                            if(!message){
+                                createAlert(data.mensagem, 'danger');
+                                message = true;
+                            }
+                            return false;
+                        }
                     })
                     .catch((error) => {
                         console.error('Error:', error);
+                        return false;
                     });
+                    if(!creation){
+                        created = false;
+                    }
                 }
-            }else{
-                alert('Selecione uma sala');
+                return created;
             }
         }
 
@@ -171,24 +200,32 @@
         }
 
         async function goToPDF(){
-            await createRepositions();
-            if(schedules.length > 0){
-                var lastRepo = schedules[schedules.length-1];
+            if(!creating){
+                var created = await createRepositions();
+                if(created && schedules.length > 0){
+                    var lastRepo = schedules[schedules.length-1];
 
-                window.location.href = 'pdf/'+lastRepo.repoId;  
+                    window.location.href = 'pdf/'+lastRepo.repoId;  
+                }else{
+                    creating = false;
+                }
             }
         }
         
         async function copyToClipboard(){
-            await createRepositions();
-            if(schedules.length > 0){
-                var lastRepo = schedules[schedules.length-1];
-                texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";
-                navigator.clipboard.writeText(texto)
-                .then(() => {
-                    alert("Texto copiado para a área de transferência.");
-                    window.location.href = '../reposition/account';
-                });
+            if(!creating){
+                var created = await createRepositions();
+                if(created && schedules.length > 0){
+                    var lastRepo = schedules[schedules.length-1];
+                    texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";
+                    navigator.clipboard.writeText(texto)
+                    .then(() => {
+                        createAlert("Texto copiado para a área de transferência.", 'dark');
+                        window.location.href = '../reposition/account';
+                    });
+                }else{
+                    creating = false;
+                }
             }
         }
     </script>

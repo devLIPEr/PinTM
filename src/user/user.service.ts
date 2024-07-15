@@ -136,12 +136,15 @@ export default class UserService{
         .then(async (user) => {
             console.log("tentou atualizar")
             let updatedUser = {};
+            let firebaseUpdatedUser = {};
             if(dto.username){
                 updatedUser["username"] = dto.username;
+                firebaseUpdatedUser["displayName"] = dto.username;
                 user.username = dto.username;
             }
-            if(dto.isColorBlind){
+            if(dto.isColorBlind != undefined){
                 updatedUser["isColorBlind"] = dto.isColorBlind;
+                firebaseUpdatedUser["isColorBlind"] = dto.isColorBlind;
                 user.isColorBlind = dto.isColorBlind;
             }
             return firebaseAuth.updateUser(id, updatedUser)
