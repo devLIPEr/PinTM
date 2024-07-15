@@ -99,6 +99,7 @@ export class UserController {
       verifyCustomToken(req.cookies['token'])
       .then(async (userCredential) => {
         await this.userService.edit(userCredential.user.uid, dto);
+        res.redirect("/user/accountInfo");
       })
       .catch((err) => {
         console.log(err);

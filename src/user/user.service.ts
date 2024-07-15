@@ -131,8 +131,10 @@ export default class UserService{
     }
 
     async edit(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
+        console.log("chegou na service")
         return this.getById(id)
         .then(async (user) => {
+            console.log("tentou atualizar")
             let updatedUser = {};
             if(dto.username){
                 updatedUser["username"] = dto.username;

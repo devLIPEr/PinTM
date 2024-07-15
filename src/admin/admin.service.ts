@@ -50,7 +50,6 @@ export default class AdminService {
     request.subjects.forEach( (subject) => {
       updates[`subjects.${subject["key"]}.failureRate`] = (subject["failureRate"] as number);
     })
-    console.log(updates)
     firebaseDB.collection("Courses").doc(request.course).update(updates)
     .catch((err) => {
       console.log(err);
