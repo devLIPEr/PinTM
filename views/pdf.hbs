@@ -19,11 +19,11 @@
             <div class="pdfSide">
                 <div>
                     <p>Dia:</p>
-                    <p>{{data}}</p>
+                    <p id = "diaPDF">{{data}}</p>
                 </div>
                 <div>
                     <p>Sala:</p>
-                    <p>{{sala}}</p>
+                    <p id = "salaPDF">{{sala}}</p>
                 </div>
             </div>
             <div class="pdfSide">
@@ -31,7 +31,7 @@
                     <p>
                         Horário:
                     </p>
-                    <p>{{horario}}</p>
+                    <p id = "horario">{{horario}}</p>
                 </div>
             </div>
         </div>
@@ -42,12 +42,6 @@
     <script src = "https://github.com/niklasvh/html2canvas/releases/download/v1.4.1/html2canvas.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.1/purify.min.js"></script>
     <script>
-        function calculaPosX(texto, docWidth, stringWidth, fontSize){
-            larguraTexto = stringWidth * fontSize;
-            posicaoX = (docWidth - larguraTexto) / 2;
-            return posicaoX;
-        }
-
         function downloadPDF() {
             /*var body = document.body;
             var originalWidth = body.offsetWidth;    
@@ -89,8 +83,7 @@
 
 
             var doc = new jspdf.jsPDF(orientation="landscape", unit = "mm", format = "a4");
-            console.log(doc.getFontList());
-            doc.setFontSize(20);
+            doc.setFontSize(30);
             doc.setTextColor(255, 255, 255);
             doc.setFillColor(61, 173, 22)
             doc.rect(0, 0, doc.internal.pageSize.width, 50, 'F');
@@ -99,15 +92,32 @@
             doc.addImage("../../images/PinTMLogo.png", 'PNG', doc.internal.pageSize.width - 42.5, 12.5, 35, 25, "pinlogo", 'NONE', 0);
 
             var texto = 'Reposição de Aula';
-            doc.text(texto, calculaPosX(texto, doc.internal.pageSize.width, doc.getStringUnitWidth(texto), doc.internal.getFontSize()), 30); // Texto do cabeçalho
-
+            doc.text(texto, doc.internal.pageSize.width / 2, 25, {align: 'center'}); // Texto do cabeçalho
             texto = document.getElementById("nomeMateria").innerText;
-            doc.text(texto, calculaPosX(texto, doc.internal.pageSize.width, doc.getStringUnitWidth(texto), doc.internal.getFontSize()), 40); // Texto do cabeçalho
+            doc.setFontSize(20);
+            doc.text(texto, doc.internal.pageSize.width / 2, 40, {align: 'center'}); // Texto do cabeçalho
 
             //doc.setTextColor(111, 111, 111);
             doc.setFontSize(10);
-            texto = "Pin";
-            doc.text(texto, calculaPosX(texto, doc.internal.pageSize.width, doc.getStringUnitWidth(texto), doc.internal.getFontSize()), doc.internal.pageSize.height - 1.75); // Texto do cabeçalho
+            texto = "Pin™";
+            doc.text(texto, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 1.75, {align:'center'}); // Texto do cabeçalho
+
+            doc.setTextColor(0,0,0);
+            doc.setFillColor(219, 207, 47);
+            doc.setFontSize(20);
+            doc.roundedRect(/*Centro + uma margenzinha*/ doc.internal.pageSize.width / 2 + 10, /*Centro - metade da altura do retangulo*/ ((doc.internal.pageSize.height - 55) / 2) + 50 - 30, 60, 60, 5, 5, 'F');
+            doc.text("Horário", doc.internal.pageSize.width / 2 + 10 + 30, ((doc.internal.pageSize.height - 55) / 2) + 50 - 30 + 25, {align:'center'});
+            texto = document.getElementById("horario").innerText;
+            doc.text(texto, doc.internal.pageSize.width / 2 + 10 + 30, ((doc.internal.pageSize.height - 55) / 2) + 50 - 30 + 40, {align:'center'});
+
+            texto = document.getElementById("diaPDF").innerText;
+            doc.text(texto, doc.internal.pageSize.width / 2 - 10, ((doc.internal.pageSize.height - 55) / 2) + 50 - 30 + 25, {align: 'right'});
+            texto = "Dia"
+            doc.text(texto, doc.internal.pageSize.width / 2 - 10, ((doc.internal.pageSize.height - 55) / 2) + 50 - 30 + 15, {align: 'right'});
+            texto = document.getElementById("salaPDF").innerText;
+            doc.text(texto, doc.internal.pageSize.width / 2 - 10, ((doc.internal.pageSize.height - 55) / 2) + 50 - 30 + 45, {align: 'right'})
+            texto = "Sala"
+            doc.text(texto, doc.internal.pageSize.width / 2 - 10, ((doc.internal.pageSize.height - 55) / 2) + 50 - 30 + 35, {align: 'right'})
 
             // Salve o PDF
             doc.save('Reposicao.pdf');
