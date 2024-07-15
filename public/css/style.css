@@ -1009,6 +1009,10 @@ input::placeholder  {
     font-weight: bold;
 }
 
+.reprovacaoAdmin .materias-content .materia .valor input:invalid{
+    color: #b41c1c;
+}
+
 .reprovacaoAdmin .materias-content .materia .valor p {
     display: flex;
     width: 30%;

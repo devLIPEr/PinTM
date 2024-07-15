@@ -126,4 +126,8 @@ export class RepositionController {
   async selectSchedule(@Body() reposition: RepositionRequestDTO, @Res() res: Response){
     res.render('selectSchedule', await this.repositionService.generateSchedule(reposition));
   }
+  
+  @Get('/accountInfo')
+  @Render("minhaConta")
+  branchConta(){}
 }
