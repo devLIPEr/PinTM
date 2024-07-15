@@ -1,63 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-<body onload = "verifyAuthentication(); getUsername()">
-    {{> headerController}}
-    <main class="minha-conta">
-        <div class="minha-conta-index">
-            <h1>Minha Conta</h1>
-            <div class="minha-conta-content">
-                <div class="editar-conta">
-                    <h2 class="nome-de-usuario" id="nome-de-usuario"></h2>
-                    <button onclick="showEditAccountElement()" class="editar-button"><p>Editar</p></button>
-                </div>
-            </div>
+
+<body onload="verifyAuthentication(); getUsername()">
+  {{> headerController}}
+  <main class="minha-conta">
+    <div class="minha-conta-index">
+      <h1>Minha Conta</h1>
+      <div class="minha-conta-content">
+        <div class="editar-conta">
+          <h2 class="nome-de-usuario" id="nome-de-usuario"></h2>
+          <button onclick="showEditAccountElement()" class="editar-button">
+            <p>Editar</p>
+          </button>
         </div>
+      </div>
+    </div>
 
-        <div class="minha-conta-editar" style="display: none;">
-            <h2>Editar Dados da Conta</h2>
-            <form id="editar-form">
-                <div class="name-input">
-                    <input type="text" placeholder="Nome de usuário:" class = "usernameEdit">
-                </div>
-                <div class="daltonismo-checkbox">
-                    <label for="daltonismo">Daltonismo</label>
-                    <input type="checkbox" name="daltonismo" id="daltonismo">
-                </div>
-                <input style="display: none;" type="submit" value="enviar" id="submit-button">
-            </form>
-
-            <div class="editar-buttons">
-                <button id="cancelar-button" onclick="hideEditAccountElement()"><p>Cancelar</p></button>
-                <button id="salvar-button"><p>Salvar</p></button>
-            </div>
+    <div class="minha-conta-editar" style="display: none;">
+      <h2>Editar Dados da Conta</h2>
+      <form id="editar-form"> 
+        <div class="name-input">
+          <input type="text" placeholder="Nome de usuário:">
         </div>
-    </main>
+        <div class="daltonismo-checkbox">
+          <label for="daltonismo">Daltonismo</label>
+          <input type="checkbox" name="daltonismo" id="daltonismo">
+        </div>
+        <input style="display: none;" type="submit" value="enviar" id="submit-button">
+      </form>
 
-    {{> footer}}
+      <div class="editar-buttons">
+        <button id="cancelar-button" onclick="hideEditAccountElement()">
+          <p>Cancelar</p>
+        </button>
+        <button id="salvar-button" onclick="save()">
+          <p>Salvar</p>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  {{> footer}}
 </body>
 <script src="../js/index.js"></script>
 <script>
-    function getUsername() {
-        var username = sessionStorage.getItem("username");
-        var elemento = document.getElementById("nome-de-usuario");
-        var elementoEdit = document.getElementsByClassName("usernameEdit")[0];
-        elemento.textContent = username;
-        elementoEdit.value = username;
-    }
+  function getUsername() {
+    var username = sessionStorage.getItem("username");
+    var element = document.getElementById("nome-de-usuario");
+    element.textContent = username;
+  }
 
-    function showEditAccountElement() {
-        var colorBlind = sessionStorage.getItem("isColorBlind");
-        if(colorBlind){
-            document.getElementById("daltonismo").checked = true;
-        }  
-        document.getElementsByClassName("minha-conta-index")[0].style.display = 'none';
-        document.getElementsByClassName("minha-conta-editar")[0].style.display = 'flex';            
-    }
+  function showEditAccountElement() {
+    document.getElementsByClassName("minha-conta-index")[0].style.display = 'none';
+    document.getElementsByClassName("minha-conta-editar")[0].style.display = 'flex';
+    document.querySelector(".daltonismo-checkbox #daltonismo").checked = sessionStorage.getItem("isColorBlind");
+  }
 
-    function hideEditAccountElement() {
-        document.getElementsByClassName("minha-conta-editar")[0].style.display = 'none';
-        document.getElementsByClassName("minha-conta-index")[0].style.display = 'flex';
+  function hideEditAccountElement() {
+    document.getElementsByClassName("minha-conta-editar")[0].style.display = 'none';
+    document.getElementsByClassName("minha-conta-index")[0].style.display = 'flex';
+  }
+
+  function save() {
+    const name = document.querySelector("#editar-form .name-input input").value;
+    const colorBlind = document.querySelector("#daltonismo").checked;
+    
+    if (name != '' || colorBlind == sessionStorage.getItem("isColorBlind")){
+      fetch("/user/edit", {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: name,
+          email: '',
+          password: '',
+          isColorBlind: colorBlind
+        })
+      })
+      .then( (response) => {
+        console.log(response.url)
+        
+      })
+      .catch((err) => {
+        console.error(err);
+    });
+    } else {
+      window.alert("Altere algum dos valores primeiro!");
     }
+  }
 </script>
+
 </html>
