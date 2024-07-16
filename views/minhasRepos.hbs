@@ -67,7 +67,7 @@
             .then(() => {
                 document.querySelector(`#repo${rid}`).remove();
                 var table = document.getElementsByTagName('table')[0];
-                if(table.children.length == 1 || (table.children.length == 2 && table.children[1].innerHTML == '')){
+                if(table.children[0].children.length == 1 || (table.children[0].children.length == 2 && table.children[0].children[1].innerHTML == '')){
                     table.remove();
                     document.getElementById('main').innerHTML += `<div class="emptyContentRepos" id="emptyRepos"><h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2><button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button></div>`;
                 }
