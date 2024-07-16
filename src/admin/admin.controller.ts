@@ -56,7 +56,6 @@ export class AdminController {
         res.send(subjects);
       })
       .catch((err) => {
-        res.send({});
         console.log(err);
       });
   }

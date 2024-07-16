@@ -52,7 +52,6 @@ export class RepositionController {
       res.send(subjects);
     })
     .catch((err) => {
-      res.send({});
       console.log(err);
     });
   }
