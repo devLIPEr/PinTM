@@ -46,19 +46,19 @@
           .then(response => response.json())
           .then((data) => {
               if(data['error']){
-                  alert(data['error']);
+                createAlert(data['error'], 'danger');
               }else{
-                  if(Object.keys(data).length){
-                      sessionStorage.setItem("isColorBlind", data.isColorBlind);
-                      window.location.href = '../reposition/account';
-                  }
+                if(Object.keys(data).length){
+                  sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                  window.location.href = '../reposition/account';
+                }
               }
           })
           .catch((err) => {
-              console.error(err);
+            console.error(err);
           });
         }else{
-          alert("Preencha o email");
+          createAlert("Preencha o email", 'danger');
         }
       }
     </script>

@@ -47,12 +47,11 @@ export class RepositionController {
 
   @Get('/getSubjects/:course')
   async getSubjects(@Param() course: string, @Res() res: Response){
-    this.repositionService.getSubjects(course)
+    this.repositionService.getSubjects(course['course'])
     .then((subjects) => {
       res.send(subjects);
     })
     .catch((err) => {
-      res.send({});
       console.log(err);
     });
   }

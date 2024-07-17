@@ -154,6 +154,9 @@
                     }
                 }
 
+                if(schedules.length == 0){
+                    createAlert("Selecione um horário para a reposição", 'danger');
+                }
                 // Post to save on DB
                 var created = true;
                 var message = false;
@@ -199,11 +202,12 @@
         async function goToPDF(){
             if(!creating){
                 var created = await createRepositions();
-                creating = false;
                 if(created && schedules.length > 0){
                     var lastRepo = schedules[schedules.length-1];
 
                     window.location.href = 'pdf/'+lastRepo.repoId;  
+                }else{
+                    creating = false;
                 }
             }
         }
@@ -211,15 +215,16 @@
         async function copyToClipboard(){
             if(!creating){
                 var created = await createRepositions();
-                creating = false;
                 if(created && schedules.length > 0){
                     var lastRepo = schedules[schedules.length-1];
                     texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";
                     navigator.clipboard.writeText(texto)
                     .then(() => {
-                        alert("Texto copiado para a área de transferência.");
+                        createAlert("Texto copiado para a área de transferência.", 'dark');
                         window.location.href = '../reposition/account';
                     });
+                }else{
+                    creating = false;
                 }
             }
         }
