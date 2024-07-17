@@ -14,6 +14,9 @@ import { APP_FILTER } from '@nestjs/core';
 import { AdminController } from './admin/admin.controller';
 import AdminService from './admin/admin.service';
 import AdminMiddleware from './middleware/admin.middleware';
+import DateCheckMiddleware from './middleware/repositionScheduling/dateCheck.middleware';
+import DateValidMiddleware from './middleware/repositionScheduling/dateValid.middleware';
+import ClassroomCheckMiddleware from './middleware/repositionScheduling/classroomCheck.middleware';
 
 export interface UserContext{
   username : string;
@@ -57,6 +60,12 @@ export class AppModule implements NestModule {
       .apply(RepositionMiddleware)
       .forRoutes(RepositionController)
       .apply(AdminMiddleware)
-      .forRoutes(AdminController);
+      .forRoutes(AdminController)
+      .apply(ClassroomCheckMiddleware)
+      .forRoutes("/reposition/createReposition")
+      .apply(DateCheckMiddleware)
+      .forRoutes("/reposition/createReposition")
+      .apply(DateValidMiddleware)
+      .forRoutes("/reposition/createReposition");
   }
 }
