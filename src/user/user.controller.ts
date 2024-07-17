@@ -98,15 +98,20 @@ export class UserController {
     if((req.cookies && req.cookies['token'])){
       verifyCustomToken(req.cookies['token'])
       .then(async (userCredential) => {
-        await this.userService.edit(userCredential.user.uid, dto);
-        res.redirect("/user/accountInfo");
+        this.userService.edit(userCredential.user.uid, dto)
+        .then((user) => {
+          res.send({username: user.username, isAdmin: user.isAdmin, isColorBlind: user.isColorBlind, redirect: "/user/accountInfo"});
+        })
+        .catch((err) => {
+          console.log(err);
+          throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
+        });
       })
       .catch((err) => {
         console.log(err);
         throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
       });
     }
-    res.end();
   }
 
   @Delete(":id")
