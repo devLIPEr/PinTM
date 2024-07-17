@@ -173,7 +173,7 @@
                             return true;
                         } else {
                             if(!message){
-                                alert(data.mensagem);
+                                createAlert(data.mensagem, 'danger');
                                 message = true;
                             }
                             return false;
