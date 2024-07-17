@@ -1,13 +1,5 @@
 import { AutoMap } from "@automapper/classes";
-import { IsInt, Max, Min } from "@nestjs/class-validator";
-
-class dataType{
-    key: number;
-    @IsInt()
-    @Min(0)
-    @Max(100)
-    failureRate: number;
-} 
+import dataType from "./DataType";
 
 export default class FailureRequest{
     @AutoMap()

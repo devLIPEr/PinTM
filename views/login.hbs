@@ -47,11 +47,6 @@
           .then((data) => {
               if(data['error']){
                 createAlert(data['error'], 'danger');
-              }else{
-                if(Object.keys(data).length){
-                  sessionStorage.setItem("isColorBlind", data.isColorBlind);
-                  window.location.href = '../reposition/account';
-                }
               }
           })
           .catch((err) => {

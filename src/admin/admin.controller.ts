@@ -63,12 +63,12 @@ export class AdminController {
   @Put('/saveFailureRate')
   async saveFailureRate(@Body() request: FailureRequest, @Req() req: Request, @Res() res: Response){
     try {
-      this.adminService.saveFailureRate(request)
+      await this.adminService.saveFailureRate(request);
       // https://peterdaugaardrasmussen.com/2020/05/09/how-to-redirect-http-put-or-post-requests/
-      res.redirect(303, '/admin/index');
+      res.send({redirect: '/admin/index'});
     } catch (err) {
-      res.send({});
       console.log(err);
+      res.status(err.status).send({error: err.message});
     };
   }
 } 
