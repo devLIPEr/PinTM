@@ -116,7 +116,7 @@ export default class RepositionService{
     }
 
     async getSubjects(course: string): Promise<any>{
-        return firebaseDB.collection("Courses").doc(course['course']).get()
+        return firebaseDB.collection("Courses").doc(course).get()
         .then((doc) => {
             if(!doc.exists){
                 throw new HttpException("Curso não encontrado", HttpStatus.NOT_FOUND);
@@ -212,13 +212,14 @@ export default class RepositionService{
     }
 
     dict2Mat(dict){
+        let keys = ['07h30min', '08h20min', '09h10min', '10h10min', '11h00min', '13h20min', '14h10min', '15h00min', '16h00min', '16h50min', '17h40min', '18h50min', '19h40min', '20h30min', '21h30min', '22h20min'];
         let mat = [];
-        for(let i = 0; i < dict.length; i++){
+        for(let i = 0; i < Object.keys(dict).length; i++){
             let row = [];
-            for(let j = 0; j < Object.keys(dict[i]).length; j++){
+            for(let j = 0; j < Object.keys(dict[keys[i]]).length; j++){
                 let classes = [];
-                for(let k = 0; k < Object.keys(dict[i][j.toString()]).length; k++){
-                    classes.push(dict[i][j.toString()][k.toString()]);
+                for(let k = 0; k < Object.keys(dict[keys[i]][j.toString()]).length; k++){
+                    classes.push(dict[keys[i]][j.toString()][k.toString()]);
                 }
                 row.push(classes);
             }
@@ -230,14 +231,15 @@ export default class RepositionService{
     async generateSchedule(dto: RepositionRequestDTO){
         const classrooms = await this.getClassrooms();
 
-        const subject = await this.getSubject(dto.course, dto.subject);
+        const subjects = await this.getSubjects(dto.course);
+        const subject = subjects[dto.subject];
         const grade = subject["grade"];
         const schedule = await this.getSchedule(dto.course, grade);
         
         type Qualities = number[][];
         
         var qualities: Qualities = new Array(16).fill(0).map(() => new Array(6).fill(4));
-        var horariosValues = this.dict2Mat(Object.values(schedule));
+        var horariosValues = this.dict2Mat(schedule);
 
         var correct;
         const firstKey = Object.keys(schedule)[0];
@@ -252,14 +254,37 @@ export default class RepositionService{
 
         for (var i = 0; i < horariosValues.length; i++) {
             for (var j = 0; j < 6; j++) {
-                if (horariosValues[i][j] != '') {
-                    qualities[i + correct][j] = 0;
+                for(var k = 0; k < horariosValues[i][j].length; k++){
+                    if (qualities[i+correct][j] != 0 && horariosValues[i][j][k] != '') {
+                        qualities[i + correct][j] = 1;
+                    }
                 }
             }
         }
 
         const horariosOcupados = qualities.map((linha) => linha.includes(0));
+        function getFailureRate(i, j){
+            let maxFailureRate = 0;
+            if(i < horariosValues.length && j < horariosValues[i].length){
+                for(var k = 0; k < horariosValues[i][j].length; k++){
+                    let subject = horariosValues[i][j][k].split('-')[0];
+                    if(subject && subjects[subject].failureRate > maxFailureRate){
+                        maxFailureRate = subjects[subject].failureRate;
+                    }
+                }
+            }
+            return maxFailureRate/100;
+        }
 
+        function round(value: number): number{
+            let decimal = value - Math.floor(value);
+            if(decimal >= 0.7){
+                return Math.floor(value);
+            }else{
+                return Math.ceil(value);
+            }
+        }
+        
         for (let i = 0; i < qualities.length; i++) {
             for (let j = 0; j < qualities[i].length; j++) {
                 if (qualities[i][j] === 4) {
@@ -291,12 +316,14 @@ export default class RepositionService{
                     if (distanciaMinima <= 3 ) {
                         qualities[i][j] = 4;
                     } else if (distanciaMinima <= 5) {
-                        qualities[i][j] = 3;
+                        qualities[i][j] = 4;
                     } else if (distanciaMinima <= 7) {
-                        qualities[i][j] = 2;
+                        qualities[i][j] = 3;
                     } else {
-                        qualities[i][j] = 1;
+                        qualities[i][j] = 2;
                     }
+                }else if(qualities[i][j] == 1){
+                    qualities[i][j] = round(qualities[i][j]-getFailureRate(i,j));
                 }
             }
         }
