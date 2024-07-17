@@ -1,6 +1,6 @@
 import { Mapper } from "@automapper/core";
 import { InjectMapper } from "@automapper/nestjs";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { firebaseDB } from "src/firebase";
 import FailureRequest from "./dto/FailureRequest.dto";
 
@@ -48,11 +48,15 @@ export default class AdminService {
   async saveFailureRate(request: FailureRequest){
     let updates = {};
     request.subjects.forEach( (subject) => {
+      if(subject.failureRate < 0 || subject.failureRate > 100){
+        throw new HttpException("Taxa de reprovação inválida, deve estar entre 0 e 100", HttpStatus.BAD_REQUEST);
+      }
       updates[`subjects.${subject["key"]}.failureRate`] = (subject["failureRate"] as number);
     })
     firebaseDB.collection("Courses").doc(request.course).update(updates)
     .catch((err) => {
       console.log(err);
+      throw new HttpException("Erro ao salvar os dados", HttpStatus.INTERNAL_SERVER_ERROR);
   });
   }
 }
