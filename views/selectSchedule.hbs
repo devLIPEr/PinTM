@@ -56,7 +56,6 @@
         function verifyColorBlindness(){
             var colorBlind = sessionStorage.getItem("isColorBlind");
             var description = document.getElementsByClassName("description")[0];
-            console.log(colorBlind);
             if(colorBlind != undefined && colorBlind != "null" && colorBlind != null && colorBlind != false && colorBlind != "false"){
                 const td = document.querySelectorAll('td');
                 td.forEach((cell) =>{
@@ -132,54 +131,66 @@
             if(!creating){
                 creating = true;
                 var sala = document.getElementById('salaInput').value;
-                if(sala != ''){
-                    var transposedSchedule = selectedClasses[0].map((_, colIndex) => selectedClasses.map(row => row[colIndex]));
-                    schedules = [];
-                    var schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
+                var transposedSchedule = selectedClasses[0].map((_, colIndex) => selectedClasses.map(row => row[colIndex]));
+                schedules = [];
+                var schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
 
-                    for(var i = 0; i < 6; i++){
-                        for(var j = 0; j < 16; j++){
-                            if(transposedSchedule[i][j]){
-                                if(schedule['start'] == '00:00'){
-                                    schedule['start'] = times[j];
-                                    var newDate = new Date(document.getElementById('week').valueAsNumber);
-                                    newDate.setDate(newDate.getDate()+i+1);
-                                    schedule['date'] = `${("0" + newDate.getDate()).slice(-2)}/${("0" + (newDate.getMonth() + 1)).slice(-2)}/${newDate.getFullYear()}`;
-                                }
-                            }else{
-                                if(schedule['start'] != '00:00'){
-                                    schedule['end'] = times[j];
-                                    schedules.push(schedule);
-                                    schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
-                                }
+                for(var i = 0; i < 6; i++){
+                    for(var j = 0; j < 16; j++){
+                        if(transposedSchedule[i][j]){
+                            if(schedule['start'] == '00:00'){
+                                schedule['start'] = times[j];
+                                var newDate = new Date(document.getElementById('week').valueAsNumber);
+                                newDate.setDate(newDate.getDate()+i+1);
+                                schedule['date'] = `${("0" + newDate.getDate()).slice(-2)}/${("0" + (newDate.getMonth() + 1)).slice(-2)}/${newDate.getFullYear()}`;
+                            }
+                        }else{
+                            if(schedule['start'] != '00:00'){
+                                schedule['end'] = times[j];
+                                schedules.push(schedule);
+                                schedule = {subject: '{{materia}}', course: '{{curso}}', date: '06/06/9420', start: '00:00', end: '00:00', classroom: sala, repoId:''};
                             }
                         }
                     }
-
-                    if(schedules.length == 0){
-                        createAlert("Selecione um horário para a reposição", 'primary');
-                    }
-                    // Post to save on DB
-                    for(var schedule of schedules){
-                        await fetch('createReposition', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            credentials : "include",
-                            body: JSON.stringify({subject: schedule.subject, course: schedule.course, date: schedule.date, start: schedule.start, end: schedule.end, classroom: schedule.classroom})
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            schedule.repoId = data._id;
-                        })
-                        .catch((error) => {
-                            console.error('Error:', error);
-                        });
-                    }
-                }else{
-                    createAlert("Selecione uma sala", 'danger');
                 }
+
+                if(schedules.length == 0){
+                    createAlert("Selecione um horário para a reposição", 'danger');
+                }
+                // Post to save on DB
+                var created = true;
+                var message = false;
+                for(var schedule of schedules){
+                    var creation = await fetch('createReposition', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials : "include",
+                        body: JSON.stringify({subject: schedule.subject, course: schedule.course, date: schedule.date, start: schedule.start, end: schedule.end, classroom: schedule.classroom})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(!data.mensagem){
+                            schedule.repoId = data._id;
+                            return true;
+                        } else {
+                            if(!message){
+                                createAlert(data.mensagem, 'danger');
+                                message = true;
+                            }
+                            return false;
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        return false;
+                    });
+                    if(!creation){
+                        created = false;
+                    }
+                }
+                return created;
             }
         }
 
@@ -190,8 +201,8 @@
 
         async function goToPDF(){
             if(!creating){
-                await createRepositions();
-                if(schedules.length > 0){
+                var created = await createRepositions();
+                if(created && schedules.length > 0){
                     var lastRepo = schedules[schedules.length-1];
 
                     window.location.href = 'pdf/'+lastRepo.repoId;  
@@ -203,8 +214,8 @@
         
         async function copyToClipboard(){
             if(!creating){
-                await createRepositions();
-                if(schedules.length > 0){
+                var created = await createRepositions();
+                if(created && schedules.length > 0){
                     var lastRepo = schedules[schedules.length-1];
                     texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";
                     navigator.clipboard.writeText(texto)
