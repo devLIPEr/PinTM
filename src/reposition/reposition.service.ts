@@ -278,7 +278,7 @@ export default class RepositionService{
 
         function round(value: number): number{
             let decimal = value - Math.floor(value);
-            if(decimal >= 0.7){
+            if(decimal <= 0.75){
                 return Math.floor(value);
             }else{
                 return Math.ceil(value);
