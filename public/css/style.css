@@ -115,12 +115,31 @@ footer{
 }
 
 /* Alert */
+.alerts{
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 1%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+@keyframes alert{
+      0% {opacity: 1;}
+     60% {opacity: 0.7;}
+    100% {opacity: 0.1;}
+}
+
 .alert{
     position: relative;
     padding: .75rem 1.25rem;
-    margin-bottom: 1rem;
+    margin-bottom: .25rem;
     border: 1px solid transparent;
     border-radius: .25rem;
+    animation-name: alert;
+    animation-duration: 5s;
+    width: fit-content;
 }
 
 .alert-danger{
@@ -133,6 +152,12 @@ footer{
     color: #004085;
     background-color: #cce5ff;
     border-color: #b8daff;
+}
+
+.alert-dark{
+    color: #1b1e21;
+    background-color: #d6d8d9;
+    border-color: #c6c8ca;
 }
 
 /* Main */

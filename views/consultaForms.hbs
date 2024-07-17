@@ -3,7 +3,6 @@
 {{> headController }}
 <body onload="setCourseListener(); verifyUser();">
     {{> headerController }}
-    <div class="alert alert-danger" style="display: none; margin: 50px"></div>
     <main class="mainConsulta">
         <div class="background-consulta">
             <h1 id="consultaTitle">HORÁRIOS</h1>
@@ -40,10 +39,7 @@
             if(cursoIpt.value != '' && materiaIpt.value != ''){
                 document.querySelector('#submit-button').click();
             }else{
-                var alertDiv = document.querySelector('.alert');
-                alertDiv.innerText = "Preencha os dados requeridos.";
-                alertDiv.style.display = 'flex';
-                setTimeout(() => {document.querySelector('.alert').style.display='none'}, 3000);
+                createAlert("Preencha os dados requeridos.", 'danger');
             }
         }
 

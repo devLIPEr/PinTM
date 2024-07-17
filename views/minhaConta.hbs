@@ -84,7 +84,7 @@
         .then((data) => {
           editing = false;
           if(data['error']){
-            alert(data['error']);
+            createAlert(data['error'], 'danger');
           }else{
             if(Object.keys(data).length){
               sessionStorage.setItem("username", data.username);
@@ -98,7 +98,7 @@
           console.error(err);
       });
       } else {
-        window.alert("Altere algum dos valores primeiro!");
+        createAlert("Altere algum dos valores primeiro!", 'danger');
       }
     }
   }
