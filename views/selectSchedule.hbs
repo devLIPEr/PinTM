@@ -56,7 +56,6 @@
         function verifyColorBlindness(){
             var colorBlind = sessionStorage.getItem("isColorBlind");
             var description = document.getElementsByClassName("description")[0];
-            console.log(colorBlind);
             if(colorBlind != undefined && colorBlind != "null" && colorBlind != null && colorBlind != false && colorBlind != "false"){
                 const td = document.querySelectorAll('td');
                 td.forEach((cell) =>{
@@ -201,7 +200,6 @@
             if(!creating){
                 var created = await createRepositions();
                 creating = false;
-                console.log(created);
                 if(created && schedules.length > 0){
                     var lastRepo = schedules[schedules.length-1];
 
@@ -214,7 +212,6 @@
             if(!creating){
                 var created = await createRepositions();
                 creating = false;
-                console.log(created);
                 if(created && schedules.length > 0){
                     var lastRepo = schedules[schedules.length-1];
                     texto = "Aviso: Reposição de " + lastRepo.subject + " do curso de " + lastRepo.course + ", dia " + lastRepo.date + " às " + lastRepo.start + " no local " + lastRepo.classroom + ".";
