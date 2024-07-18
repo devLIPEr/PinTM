@@ -49,7 +49,7 @@ export default class AdminService {
     let updates = {};
     request.subjects.forEach( (subject) => {
       if(subject.failureRate < 0 || subject.failureRate > 100){
-        throw new HttpException("Taxa de reprovação inválida, deve estar entre 0 e 100", HttpStatus.BAD_REQUEST);
+        throw new HttpException("Taxa de reprovação inválida", HttpStatus.BAD_REQUEST);
       }
       updates[`subjects.${subject["key"]}.failureRate`] = (subject["failureRate"] as number);
     })
