@@ -1,4 +1,3 @@
-
 function signUp(email, password, username, isColorBlind){
     fetch("/user/signup", {
         method: "POST",
@@ -15,7 +14,7 @@ function signUp(email, password, username, isColorBlind){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            createAlert(data['error'], 'danger');
+            alert(data['error']);
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -43,7 +42,7 @@ function signIn(email, password){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            createAlert(data['error'], 'danger');
+            alert(data['error']);
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -71,7 +70,7 @@ function resetPassword(password, email, code){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            createAlert(data['error'], 'danger');
+            alert(data['error']);
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -116,9 +115,11 @@ function authState(username){
 async function verifyUser(){
     var username = sessionStorage.getItem("username");
     var isColorBlind = sessionStorage.getItem("isColorBlind");
+    console.log("isColorBlind:", isColorBlind);
     if(username == "null" || username === undefined || username == null){
         return await verifyToken();
     } else {
+        // var isColorBlind = sessionStorage.getItem("isColorBlind");
         authState(username)
         return username;
     }
@@ -137,6 +138,7 @@ async function verifyToken(){
     }).then(username => {
         if(!(username === undefined)){
             authState(username);
+            sessionStorage.setItem("debug", username);
             return username;
         } else {
             return undefined;
@@ -149,7 +151,7 @@ function logOut(){
         method: 'GET',
         credentials: 'include'
     }).then(response => {
-        // console.log(response)
+        console.log(response)
         sessionStorage.clear();
         window.location.href = "/";
     }).catch(error => console.log(error));
@@ -161,13 +163,68 @@ async function verifyAuthentication(){
         window.location.href = "/user/login"
     }
 }
+/*
+<script type = "module">
+    import { atualizarNomeUsuario, auth} from '../js/firebase.js';
 
-function createAlert(message, type){
-    var alertDiv = document.createElement("div");
-    alertDiv.setAttribute("class", `alert alert-${type}`);
-    alertDiv.innerText = message;
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 4500);
-    document.querySelector(".alerts").append(alertDiv);
-}
+    auth.onAuthStateChanged(async (usuario) => {
+        if (usuario) {
+            var nome = usuario.displayName;
+            var divNome = document.getElementsByClassName("accNome")[0];
+            divNome.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
+            var email = usuario.email;
+            var divEmail = document.getElementsByClassName("accEmail")[0];
+            divEmail.getElementsByClassName("accInfo")[0].innerHTML = "Email: " + email;
+        }
+    });
+
+    function edit(){
+        document.getElementsByClassName("accTitleAndEdit")[0].remove(document.getElementsByClassName("editBtn")[0]);
+        var divNome = document.getElementsByClassName("accNome")[0];
+        divNome.innerHTML = "<p class='accInfo', style='font-size:20px; width:100%;'>Nome: </p><input type='text' style = 'width:100%;' class = 'tfName'>";
+        divNome.setAttribute("style", "margin-top:30%; width:100%;");
+        var divEmail = document.getElementsByClassName("accEmail")[0]; 
+        divEmail.innerHTML = "";
+        var btnSubmit = document.createElement('button');
+        btnSubmit.innerHTML = "<p>Enviar</p>";
+        btnSubmit.setAttribute("class", "btnIndex");
+        btnSubmit.setAttribute("onclick", "atualizar()");
+        document.getElementsByClassName("telaAcc")[0].appendChild(btnSubmit);
+    }
+
+    async function atualizar(){
+        var tfName = document.getElementsByClassName("tfName")[0];
+        var newName = tfName.value;
+        let retorno;
+
+        if (newName != ""){
+            retorno = await atualizarNomeUsuario(newName); 
+        } else {
+            retorno = false;
+        }
+        
+        if(retorno){
+            var warn1 = document.createElement('p');
+            window.location.href = window.location.href;
+        } else {
+            var warn = document.createElement('p');
+            warn.innerHTML = "Erro na atualização de informações";
+            warn.setAttribute("style", "color:red;");
+            document.getElementsByClassName("telaAcc")[0].appendChild(warn);
+        }
+    }
+
+    function verifyAuthentication(){
+        var user = verifyUser();
+        if(user === undefined){
+            window.location.href = "/user/login"
+        }
+    }
+
+    window.verifyAuthentication = verifyAuthentication;
+    
+    window.verifyUser = verifyUser;
+    window.edit = edit;
+    window.atualizar = atualizar;
+</script>
+*/
