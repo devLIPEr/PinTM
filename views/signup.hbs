@@ -17,6 +17,22 @@
     {{> footer }}
     <script src="../js/index.js"></script>
     <script>
+        document.getElementById("email").addEventListener('keydown', (key) => {
+            if(key.key == 'Enter'){
+                sendLogin();
+            }
+        });
+        document.getElementById("name").addEventListener('keydown', (key) => {
+            if(key.key == 'Enter'){
+                sendLogin();
+            }
+        });
+        document.getElementById("password").addEventListener('keydown', (key) => {
+            if(key.key == 'Enter'){
+                sendLogin();
+            }
+        });
+
         function sendSignup(){
             let email = document.getElementById("email").value;
             let password = document.getElementById("password").value;

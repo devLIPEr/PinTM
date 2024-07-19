@@ -28,7 +28,7 @@ export class UserMiddleware implements NestMiddleware {
       })
       .catch((err) => {
         console.log("Um erro ocorreu: ", err);
-        res.redirect('/user/login');
+        res.redirect('/user/signin');
       })
     }else{
       next();

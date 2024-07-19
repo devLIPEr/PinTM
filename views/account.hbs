@@ -26,6 +26,12 @@
     {{> footer }}
     <script src="../js/index.js"></script>
     <script>
+        document.getElementById("usernameInput").addEventListener('keydown', (key) => {
+            if(key.key == 'Enter'){
+                save();
+            }
+        });
+        
         function showEdit(){
             var account = document.getElementById("account");
             account.classList.remove("flex");
