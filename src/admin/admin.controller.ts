@@ -12,8 +12,8 @@ export class AdminController {
   @Render('admin')
   branchAdminIndex() { }
 
-  @Get('/reprovacao')
-  @Render('reprovacaoAdmin')
+  @Get('/failure')
+  @Render('failureAdmin')
   async branchAdminReprovacao() {
     return this.adminService.getCourses()
       .then((courses) => {

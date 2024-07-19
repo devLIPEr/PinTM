@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> headController }}
+<body class="h-screen" onload="verifyAuthentication(); getUsername()">
+    {{> header }}
+    <main class="h-4/6 flex flex-col justify-center">
+      <div class="flex flex-col items-center" id="account">
+        <h2 class="text-4xl font-extrabold mb-24">Minha Conta</h2>
+        <div class="bg-secondary flex items-center justify-between w-3/5 py-3 px-8 rounded-lg">
+            <h2 class="text-2xl font-bold" id="username"></h2>
+            <button onclick="showEdit()" class="bg-yellow-300 py-2 px-4 rounded-xl">Editar</button>
+        </div>
+      </div>
+      <div class="hidden justify-center" id="edition">
+        <div class="bg-secondary flex flex-col items-center w-3/4 md:w-1/2 p-4 rounded-lg">
+            <h2 class="text-2xl my-8 font-bold">Editar Dados da Conta</h2>
+            <input id="usernameInput" class="mb-4 p-2 pl-4 rounded-xl w-4/5 outline-none" type="text" placeholder="Nome de usuário:">
+            <p class="mb-4 flex justify-between bg-white w-4/5 p-2 pl-4 rounded-xl text-gray-400">Modo daltonismo<input id="colorBlindInput" class="mx-4" type="checkbox"></p>
+            <div class="my-4">
+                <button onclick="hideEdit()" class="bg-yellow-300 py-2 px-4 rounded-xl mr-16">Cancelar</button>
+                <button onclick="save()" class="bg-yellow-300 py-2 px-4 rounded-xl">Salvar</button>
+            </div>
+        </div>
+    </div>
+    </main>
+    {{> footer }}
+    <script src="../js/index.js"></script>
+    <script>
+        function showEdit(){
+            var account = document.getElementById("account");
+            account.classList.remove("flex");
+            account.classList.add("hidden");
+
+            var edition = document.getElementById("edition");
+            edition.classList.remove("hidden");
+            edition.classList.add("flex");
+
+            document.getElementById("colorBlindInput").checked = (sessionStorage.getItem("isColorBlind") === 'true') ? true : false;
+        }
+
+        function hideEdit(){
+            var edition = document.getElementById("edition");
+            edition.classList.remove("flex");
+            edition.classList.add("hidden");
+
+            var account = document.getElementById("account");
+            account.classList.remove("hidden");
+            account.classList.add("flex");
+        }
+
+        function getUsername() {
+            var username = sessionStorage.getItem("username");
+            var element = document.getElementById("username");
+            element.textContent = username;
+        }
+
+        var editing = false;
+        function save(){
+            if(!editing){
+                editing = true;
+                const name = document.getElementById("usernameInput").value;
+                const colorBlind = document.getElementById("colorBlindInput").checked;
+                
+                if (name != '' || `${colorBlind}` !== sessionStorage.getItem("isColorBlind")){
+                    fetch("/user/edit", {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: name,
+                            isColorBlind: colorBlind
+                        }),
+                        credentials: "include"
+                    })
+                    .then(response => response.json())
+                    .then((data) => {
+                        editing = false;
+                        if(data['error']){
+                            createAlert('Erro. ', data['error'], 'red');
+                        }else{
+                            if(Object.keys(data).length){
+                                sessionStorage.setItem("username", data.username);
+                                sessionStorage.setItem("isColorBlind", data.isColorBlind);
+                                sessionStorage.setItem("isAdmin", data.isAdmin);
+                                window.location.href = data.redirect;
+                            }
+                        }
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+                }else{
+                    createAlert('Erro. ', "Altere algum dos valores primeiro!", 'red');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

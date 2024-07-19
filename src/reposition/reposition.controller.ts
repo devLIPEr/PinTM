@@ -23,11 +23,11 @@ export class RepositionController {
         console.log(err);
       });
     }
-    res.render('minhasRepos', { repositions: repositions });
+    res.render('repositions', { repositions: repositions });
   }
 
   @Get('/scheduleForm')
-  @Render('consultaForms')
+  @Render('search')
   async branchConsultaForms(){
     return this.repositionService.getCourses()
     .then((courses) => {
@@ -125,8 +125,4 @@ export class RepositionController {
   async selectSchedule(@Body() reposition: RepositionRequestDTO, @Res() res: Response){
     res.render('selectSchedule', await this.repositionService.generateSchedule(reposition));
   }
-  
-  @Get('/accountInfo')
-  @Render("minhaConta")
-  branchConta(){}
 }

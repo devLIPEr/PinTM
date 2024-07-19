@@ -42,3 +42,8 @@ serviceAccountKey.json
 firebaseConfig.ts
 
 models/
+old/
+html/
+input.css
+output.css
+output.js

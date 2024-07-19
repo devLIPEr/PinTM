@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> headController }}
-
-<body onload="verifyUser()">
-  {{> headerController }}
-  <main class="mainAdmin">
-    <h1>Página de Administrador</h1>
-
-    <div class="adminContent">
-      <div class="reprovacao">
-        <h2>Taxas de Reprovação</h2>
-        <button class="editar-button" onclick="window.location.href='/admin/reprovacao'">
-          <p>Editar</p>
-        </button>
-      </div>
-    </div>
-  </main>
-  {{> footer }}
-  <script src="../js/index.js"></script>
+<body class="h-screen" onload="verifyUser()">
+    {{> header }}
+    <main class="h-4/6 flex flex-col justify-center">
+        <div class="flex flex-col items-center" id="account">
+          <h2 class="text-4xl font-extrabold mb-24">Página de Administrador</h2>
+          <div class="bg-secondary flex items-center justify-between w-5/6 md:w-3/5 py-3 px-8 rounded-lg">
+              <h2 class="text-2xl font-bold">Taxas de Reprovação</h2>
+              <button onclick="window.location.href='/admin/failure'" class="bg-yellow-300 py-2 px-4 rounded-xl">Editar</button>
+          </div>
+        </div>
+    </main>
+    {{> footer }}
+    <script src="../js/index.js"></script>
 </body>
-
 </html>

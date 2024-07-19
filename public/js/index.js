@@ -1,4 +1,3 @@
-
 function signUp(email, password, username, isColorBlind){
     fetch("/user/signup", {
         method: "POST",
@@ -15,7 +14,7 @@ function signUp(email, password, username, isColorBlind){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            createAlert(data['error'], 'danger');
+            createAlert('Erro. ', data['error'], 'red');
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -30,7 +29,7 @@ function signUp(email, password, username, isColorBlind){
 }
 
 function signIn(email, password){
-    fetch("/user/login", {
+    fetch("/user/signin", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -43,7 +42,7 @@ function signIn(email, password){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            createAlert(data['error'], 'danger');
+            createAlert('Erro. ', data['error'], 'red');
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -71,7 +70,7 @@ function resetPassword(password, email, code){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            createAlert(data['error'], 'danger');
+            createAlert('Erro. ', data['error'], 'red');
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -84,31 +83,34 @@ function resetPassword(password, email, code){
     });
 }
 
+function dropdown(isAdmin){
+    document.getElementById("dropdown").classList.toggle("hidden");
+    if(isAdmin){
+        document.getElementById("admin").classList.toggle("hidden");
+    }
+}
+
 // Função retirada do firebase.js e modificada para atender às novas particularidades do projeto
 function authState(username){
     sessionStorage.setItem("username", username);
-    document.querySelectorAll('.sepBar')[1].style = 'display: inherit;'
-    document.querySelectorAll('.navButton')[0].style = 'display: inherit;'
-    var login = document.querySelector('#headerLogin');
+    document.getElementById('headerConsulta').classList.toggle("hidden");
+    var login = document.getElementById('headerLogin');
     if(login){
         login.removeAttribute('href');
         login.innerHTML = username;
 
-        var dropDown = document.createElement("div");
-        dropDown.setAttribute('class', "accountActions")
-        var adminBtn = (sessionStorage.getItem("isAdmin") === 'true') ? "<button name = 'admBtn' class = 'accountActionsBtn' onclick = \"location.href='/admin/index'\">Administrador</button>" : "";
-        dropDown.innerHTML = adminBtn+"<button name = 'aaBtn1' class = 'accountActionsBtn' onclick = \"location.href='../reposition/account'\">Minhas reposições</button><button name = 'aaBtn2' class = 'accountActionsBtn' onclick = \"location.href='/user/accountInfo'\">Minha conta</button><button name = 'aaBtn3' class = 'accountActionsBtn' onclick = \"logOut()\">Sair</button>";
         login.addEventListener("click", function(){
-        if(!login.contains(dropDown)){
-            login.parentElement.parentElement.appendChild(dropDown);
-        }
+            dropdown(sessionStorage.getItem("isAdmin") === 'true');
         });
-        document.addEventListener("click", function(event){
-        if(event.target !== login && event.target !== dropDown && event.target !== dropDown.childNodes){
-            if(login.parentElement.parentElement.contains(dropDown)){
-            login.parentElement.parentElement.removeChild(dropDown);
+
+        document.addEventListener('click', (e) => {
+            var dropDown = document.getElementById("dropdown");
+            if(e.target.id != 'headerLogin' && !dropDown.classList.contains("hidden")){
+                dropDown.classList.toggle("hidden");
+                if(sessionStorage.getItem("isAdmin") === 'true'){
+                    document.getElementById("admin").classList.toggle("hidden");
+                }
             }
-        }
         });
     }
 }
@@ -162,12 +164,25 @@ async function verifyAuthentication(){
     }
 }
 
-function createAlert(message, type){
+function createAlert(title, message, color){
     var alertDiv = document.createElement("div");
-    alertDiv.setAttribute("class", `alert alert-${type}`);
-    alertDiv.innerText = message;
+    var strong = document.createElement("strong");
+    var span = document.createElement("span");
+
+    alertDiv.setAttribute('class', `animate-fade w-fit bg-${color}-100 border border-${color}-400 text-${color}-700 px-4 py-3 rounded relative`);
+    alertDiv.role = "alert";
+
+    strong.setAttribute('class', "font-extrabold");
+    strong.innerText = title;
+
+    span.setAttribute('class', "block sm:inline");
+    span.innerText = message;
+
+    alertDiv.append(strong);
+    alertDiv.append(span);
+
     setTimeout(() => {
         alertDiv.remove();
     }, 4500);
-    document.querySelector(".alerts").append(alertDiv);
+    document.getElementById("alerts").append(alertDiv);
 }

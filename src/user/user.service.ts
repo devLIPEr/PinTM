@@ -142,10 +142,9 @@ export default class UserService{
             }
             if(dto.isColorBlind != undefined){
                 updatedUser["isColorBlind"] = dto.isColorBlind;
-                firebaseUpdatedUser["isColorBlind"] = dto.isColorBlind;
                 user.isColorBlind = dto.isColorBlind;
             }
-            return firebaseAuth.updateUser(id, updatedUser)
+            return firebaseAuth.updateUser(id, firebaseUpdatedUser)
             .then(async (userRecord) => {
                 const res = await firebaseDB.collection("Users").doc(userRecord.uid).update(updatedUser);
                 return user;

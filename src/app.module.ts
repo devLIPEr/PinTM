@@ -51,7 +51,7 @@ export class AppModule implements NestModule {
           next();
         }
       })
-      .forRoutes("/user/login", "/user/signup")
+      .forRoutes("/user/signin", "/user/signup")
       .apply(UserMiddleware)
       .exclude(
         {path: "user", method:RequestMethod.GET}

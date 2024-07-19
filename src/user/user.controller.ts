@@ -11,8 +11,8 @@ export class UserController {
   constructor(private userService: UserService){}
 
   // Base Pages
-  @Get('/login')
-  @Render('login')
+  @Get('/signin')
+  @Render('signin')
   branchIndex(){}
 
   @Get('/signup')
@@ -20,7 +20,7 @@ export class UserController {
   branchSignup(){}
 
   @Get('/accountInfo')
-  @Render('minhaConta')
+  @Render('account')
   branchMinhaConta(){}
   
   @Get('/resetPassword')
@@ -28,7 +28,7 @@ export class UserController {
   branchResetPass(){}
 
   // Requests
-  @Post("/login")
+  @Post("/signin")
   authenticate(@Body() dto: LoginRequestDTO, @Res() res: Response){
     this.userService.authenticate(dto)
     .then((response) => {
