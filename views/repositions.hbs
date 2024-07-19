@@ -9,7 +9,7 @@
             <div id="noRepositions" class="{{#if repositions}}hidden{{/if}} text-center bg-secondary p-8 lg:p-16 rounded-xl">
                 <h2 class="text-2xl mb-4">Não há reposições marcadas!</h2>
                 <h2 class="text-2xl mb-8">Você pode marcar uma reposição clicando aqui:</h2>
-                <button class="bg-yellow-300 rounded-lg py-2 px-4 text-lg">Marcar Reposição</button>
+                <button class="bg-yellow-300 rounded-lg py-2 px-4 text-lg" onclick="window.location.href='/reposition/scheduleForm'">Marcar Reposição</button>
             </div>
             <table id="repositionTable" class="{{#if repositions}}{{else}}hidden{{/if}} w-[90%] lg:w-5/6 table-auto border-separate">
                 <tr>
