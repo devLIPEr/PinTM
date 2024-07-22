@@ -15,7 +15,7 @@
         <div class="bg-secondary flex flex-col items-center w-3/4 md:w-1/2 p-4 rounded-lg">
             <h2 class="text-2xl my-8 font-bold">Editar Dados da Conta</h2>
             <input id="usernameInput" class="mb-4 p-2 pl-4 rounded-xl w-4/5 outline-none" type="text" placeholder="Nome de usuário:">
-            <p class="mb-4 flex justify-between bg-white w-4/5 p-2 pl-4 rounded-xl text-gray-400">Modo daltonismo<input id="colorBlindInput" class="mx-4" type="checkbox"></p>
+            <p class="mb-4 flex justify-between bg-white w-4/5 p-2 pl-4 rounded-xl text-gray-400" onclick = "toggleColorBlind()">Modo daltonismo<input id="colorBlindInput" class="mx-4" type="checkbox" onclick = "toggleColorBlind()"></p>
             <div class="my-4">
                 <button onclick="hideEdit()" class="bg-yellow-300 py-2 px-4 rounded-xl mr-16">Cancelar</button>
                 <button onclick="save()" class="bg-yellow-300 py-2 px-4 rounded-xl">Salvar</button>
@@ -41,6 +41,7 @@
             edition.classList.remove("hidden");
             edition.classList.add("flex");
 
+            document.getElementById("usernameInput").value = sessionStorage.getItem("username");
             document.getElementById("colorBlindInput").checked = (sessionStorage.getItem("isColorBlind") === 'true') ? true : false;
         }
 
@@ -58,6 +59,11 @@
             var username = sessionStorage.getItem("username");
             var element = document.getElementById("username");
             element.textContent = username;
+        }
+
+        function toggleColorBlind(){
+            var cbi = document.getElementById("colorBlindInput");
+            cbi.checked = !cbi.checked;
         }
 
         var editing = false;

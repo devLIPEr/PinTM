@@ -32,6 +32,8 @@
             let password = document.getElementById("password").value;
             if(email != '' && password != ''){
                 signIn(email, password);
+            }else{
+                createAlert('Erro. ', 'insira seu email e senha!', 'red');
             }
         }
         
