@@ -19,7 +19,7 @@
                     <tr class="flex justify-evenly mb-2">
                         <td class="bg-secondary text-center w-1/5">{{ horario }}</td> {{!-- Horário do Período (07:30) --}}
                         {{#qualities}} {{!-- Array de qualidades (gerado pelo algoritmo) --}}
-                            <td selected="0" quality="{{ quality }}" class="bg-quality{{ quality }} text-center w-1/10"></td> {{!-- Qualidade do horário --}}
+                            <td selected="0" quality="{{ quality }}" class="bg-quality{{ quality }} text-center w-1/10"><span class = "text-white"></span></td> {{!-- Qualidade do horário --}}
                         {{/qualities}}
                     </tr>
                 {{/each}}
@@ -52,7 +52,8 @@
                     if(!cell.innerText){
                         var quality = parseInt(cell.getAttribute("quality"));
                         if(!isNaN(quality)){
-                            cell.innerText = quality + 1;
+                            cell.firstChild.innerText = quality + 1;
+                            //cell.innerText = quality + 1;
                         }
                     }
                 });
