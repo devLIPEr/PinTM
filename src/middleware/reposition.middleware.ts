@@ -17,11 +17,11 @@ export class RepositionMiddleware implements NestMiddleware {
         next();
       })
       .catch((err) => {
-        res.redirect('/user/login');
+        res.redirect('/user/signin');
         console.log(err);
       })
     }else{
-      res.redirect('/user/login');
+      res.redirect('/user/signin');
       next();
     }
   }

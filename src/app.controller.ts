@@ -7,6 +7,6 @@ export class AppController {
   root() {}
 
   @Get('/404')
-  @Render('notFound')
+  @Render('404')
   notFound() {}
 }

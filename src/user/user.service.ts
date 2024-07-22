@@ -131,10 +131,8 @@ export default class UserService{
     }
 
     async edit(id: string, dto: UserRequestDTO): Promise<UserResponseDTO>{
-        console.log("chegou na service")
         return this.getById(id)
         .then(async (user) => {
-            console.log("tentou atualizar")
             let updatedUser = {};
             let firebaseUpdatedUser = {};
             if(dto.username){
@@ -144,10 +142,9 @@ export default class UserService{
             }
             if(dto.isColorBlind != undefined){
                 updatedUser["isColorBlind"] = dto.isColorBlind;
-                firebaseUpdatedUser["isColorBlind"] = dto.isColorBlind;
                 user.isColorBlind = dto.isColorBlind;
             }
-            return firebaseAuth.updateUser(id, updatedUser)
+            return firebaseAuth.updateUser(id, firebaseUpdatedUser)
             .then(async (userRecord) => {
                 const res = await firebaseDB.collection("Users").doc(userRecord.uid).update(updatedUser);
                 return user;

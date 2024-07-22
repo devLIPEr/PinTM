@@ -14,7 +14,7 @@ function signUp(email, password, username, isColorBlind){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            alert(data['error']);
+            createAlert('Erro. ', data['error'], 'red');
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -29,7 +29,7 @@ function signUp(email, password, username, isColorBlind){
 }
 
 function signIn(email, password){
-    fetch("/user/login", {
+    fetch("/user/signin", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ function signIn(email, password){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            alert(data['error']);
+            createAlert('Erro. ', data['error'], 'red');
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -70,7 +70,7 @@ function resetPassword(password, email, code){
     .then(response => response.json())
     .then((data) => {
         if(data['error']){
-            alert(data['error']);
+            createAlert('Erro. ', data['error'], 'red');
         }else{
             if(Object.keys(data).length){
                 sessionStorage.setItem("isColorBlind", data.isColorBlind);
@@ -83,31 +83,34 @@ function resetPassword(password, email, code){
     });
 }
 
+function dropdown(isAdmin){
+    document.getElementById("dropdown").classList.toggle("hidden");
+    if(isAdmin){
+        document.getElementById("admin").classList.toggle("hidden");
+    }
+}
+
 // Função retirada do firebase.js e modificada para atender às novas particularidades do projeto
 function authState(username){
     sessionStorage.setItem("username", username);
-    document.querySelectorAll('.sepBar')[1].style = 'display: inherit;'
-    document.querySelectorAll('.navButton')[0].style = 'display: inherit;'
-    var login = document.querySelector('#headerLogin');
+    document.getElementById('headerConsulta').classList.toggle("hidden");
+    var login = document.getElementById('headerLogin');
     if(login){
         login.removeAttribute('href');
         login.innerHTML = username;
 
-        var dropDown = document.createElement("div");
-        dropDown.setAttribute('class', "accountActions")
-        var adminBtn = (sessionStorage.getItem("isAdmin") === 'true') ? "<button name = 'admBtn' class = 'accountActionsBtn' onclick = \"location.href='/admin/index'\">Administrador</button>" : "";
-        dropDown.innerHTML = adminBtn+"<button name = 'aaBtn1' class = 'accountActionsBtn' onclick = \"location.href='../reposition/account'\">Minhas reposições</button><button name = 'aaBtn2' class = 'accountActionsBtn' onclick = \"location.href='/user/accountInfo'\">Minha conta</button><button name = 'aaBtn3' class = 'accountActionsBtn' onclick = \"logOut()\">Sair</button>";
         login.addEventListener("click", function(){
-        if(!login.contains(dropDown)){
-            login.parentElement.parentElement.appendChild(dropDown);
-        }
+            dropdown(sessionStorage.getItem("isAdmin") === 'true');
         });
-        document.addEventListener("click", function(event){
-        if(event.target !== login && event.target !== dropDown && event.target !== dropDown.childNodes){
-            if(login.parentElement.parentElement.contains(dropDown)){
-            login.parentElement.parentElement.removeChild(dropDown);
+
+        document.addEventListener('click', (e) => {
+            var dropDown = document.getElementById("dropdown");
+            if(e.target.id != 'headerLogin' && !dropDown.classList.contains("hidden")){
+                dropDown.classList.toggle("hidden");
+                if(sessionStorage.getItem("isAdmin") === 'true'){
+                    document.getElementById("admin").classList.toggle("hidden");
+                }
             }
-        }
         });
     }
 }
@@ -163,68 +166,26 @@ async function verifyAuthentication(){
         window.location.href = "/user/login"
     }
 }
-/*
-<script type = "module">
-    import { atualizarNomeUsuario, auth} from '../js/firebase.js';
 
-    auth.onAuthStateChanged(async (usuario) => {
-        if (usuario) {
-            var nome = usuario.displayName;
-            var divNome = document.getElementsByClassName("accNome")[0];
-            divNome.getElementsByClassName("accInfo")[0].innerHTML = "Nome: " + nome;
-            var email = usuario.email;
-            var divEmail = document.getElementsByClassName("accEmail")[0];
-            divEmail.getElementsByClassName("accInfo")[0].innerHTML = "Email: " + email;
-        }
-    });
+function createAlert(title, message, color){
+    var alertDiv = document.createElement("div");
+    var strong = document.createElement("strong");
+    var span = document.createElement("span");
 
-    function edit(){
-        document.getElementsByClassName("accTitleAndEdit")[0].remove(document.getElementsByClassName("editBtn")[0]);
-        var divNome = document.getElementsByClassName("accNome")[0];
-        divNome.innerHTML = "<p class='accInfo', style='font-size:20px; width:100%;'>Nome: </p><input type='text' style = 'width:100%;' class = 'tfName'>";
-        divNome.setAttribute("style", "margin-top:30%; width:100%;");
-        var divEmail = document.getElementsByClassName("accEmail")[0]; 
-        divEmail.innerHTML = "";
-        var btnSubmit = document.createElement('button');
-        btnSubmit.innerHTML = "<p>Enviar</p>";
-        btnSubmit.setAttribute("class", "btnIndex");
-        btnSubmit.setAttribute("onclick", "atualizar()");
-        document.getElementsByClassName("telaAcc")[0].appendChild(btnSubmit);
-    }
+    alertDiv.setAttribute('class', `animate-fade w-fit bg-${color}-100 border border-${color}-400 text-${color}-700 px-4 py-3 rounded relative`);
+    alertDiv.role = "alert";
 
-    async function atualizar(){
-        var tfName = document.getElementsByClassName("tfName")[0];
-        var newName = tfName.value;
-        let retorno;
+    strong.setAttribute('class', "font-extrabold");
+    strong.innerText = title;
 
-        if (newName != ""){
-            retorno = await atualizarNomeUsuario(newName); 
-        } else {
-            retorno = false;
-        }
-        
-        if(retorno){
-            var warn1 = document.createElement('p');
-            window.location.href = window.location.href;
-        } else {
-            var warn = document.createElement('p');
-            warn.innerHTML = "Erro na atualização de informações";
-            warn.setAttribute("style", "color:red;");
-            document.getElementsByClassName("telaAcc")[0].appendChild(warn);
-        }
-    }
+    span.setAttribute('class', "block sm:inline");
+    span.innerText = message;
 
-    function verifyAuthentication(){
-        var user = verifyUser();
-        if(user === undefined){
-            window.location.href = "/user/login"
-        }
-    }
+    alertDiv.append(strong);
+    alertDiv.append(span);
 
-    window.verifyAuthentication = verifyAuthentication;
-    
-    window.verifyUser = verifyUser;
-    window.edit = edit;
-    window.atualizar = atualizar;
-</script>
-*/
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 4500);
+    document.getElementById("alerts").append(alertDiv);
+}

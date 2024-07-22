@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> headController }}
+<body class="h-screen" onload="verifyUser(); setCourseListener()">
+    {{> header }}
+    <main class="h-fit flex flex-col mt-6 items-center">
+        <div class="flex flex-col bg-secondary rounded-lg p-4 w-11/12 md:w-4/6 mb-12">
+            <h2 class="text-2xl font-bold mb-4">Taxas de Reprovação</h2>
+            <div class="flex w-full justify-evenly">
+                <select class="p-2 rounded-xl w-2/5 outline-none" id="nomeCurso">
+                    <option class="hidden" value="" disabled selected><p>Curso:</p></option>
+                    {{#cursos}}
+                        <option value="{{key}}">{{nome}}</option>
+                    {{/cursos}}
+                </select>
+                <select class="p-2 rounded-xl w-2/5 outline-none" id="nomeMateria">
+                    <option class="hidden" value="" disabled selected><p>Materia:</p></option>
+                </select>
+                <button onclick="search()" class="bg-yellow-300 py-2 px-4 rounded-xl">Buscar</button>
+            </div>
+            <div class="w-full hidden flex-col items-center mt-8" id="subjects">
+                <div class="w-full"></div>
+                <div class="flex w-3/5 justify-between mt-4">
+                    <button onclick="window.location.href = '/admin/index'" class="bg-yellow-300 py-2 px-4 rounded-xl">Cancelar</button>
+                    <button onclick="save()" class="bg-yellow-300 py-2 px-4 rounded-xl">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    {{> footer }}
+    <script src="../js/index.js"></script>
+    <script>
+        function setCourseListener(){
+            var materiasDropDown = document.getElementById("nomeMateria");
+            var cursosDropDown = document.getElementById("nomeCurso");
+            cursosDropDown.addEventListener('change', () => {
+                fetch('getSubjects/'+cursosDropDown.value, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: "include"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    materiasDropDown.innerHTML = '<option class="hidden" value="" disabled selected><p>Materia:</p></option>';
+                    materiasDropDown.innerHTML += '<option value=""><p></p></option>';
+                    let entries = Object.entries(data);
+                    entries.sort((a, b) => a[1].name.localeCompare(b[1].name));
+                    for(var entry of entries){
+                        materiasDropDown.innerHTML += `<option value="${entry[0]}"><p>${entry[1].name}</p></option>`;
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+
+        function buildSubject(name, code, failureRate){
+            var div = document.createElement("div");
+            var h2 = document.createElement("h2");
+            var input = document.createElement("input");
+
+            div.setAttribute("class", "flex w-full justify-between mb-2");
+
+            h2.setAttribute("class", "w-4/5 bg-white p-2 rounded-l-lg");
+            h2.innerText = name;
+
+            input.setAttribute("class", "w-1/6 rounded-r-lg pl-2 materia");
+            input.type = "number";
+            input.value = failureRate;
+            input.min = "0";
+            input.max = "100";
+            input.id = code;
+
+            div.append(h2);
+            div.append(input);
+
+            return div;
+        }
+
+        function getContent(course, subject){
+            var subjectContent = document.getElementById("subjects").children[0];
+            subjectContent.innerHTML = ''
+
+            fetch(`/admin/getSubjects/${course}/${subject}`, {
+                method: "GET",
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include"
+            })
+            .then(response => response.json())
+            .then((data) => {
+                let entries = Object.entries(data);
+                entries.sort((a, b) => a[1].name.localeCompare(b[1].name));
+                for(var entry of entries){
+                    subjectContent.append(buildSubject(entry[1].name, entry[0], entry[1].failureRate));
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        var lastQuery;
+        function search(){
+            var subjects = document.getElementById("subjects");
+
+            var course = document.getElementById('nomeCurso').value;
+            lastQuery = course;
+            var subject = document.getElementById('nomeMateria').value;
+            if(course != ''){
+                subjects.classList.remove("hidden");
+                subjects.classList.add("flex");
+                getContent(course, subject);
+                document.getElementById('nomeCurso').value = '';
+                document.getElementById('nomeMateria').value = '';
+            }else{
+                createAlert("Erro. ", "Selecione pelo menos um campo", 'red');
+            }
+        }
+
+        function save(){
+            const materias = document.getElementsByClassName('materia');
+            const materiasData = [];
+            for(var i = 0; i < materias.length; i++){
+                let materia = materias[i];
+                const id = materia.id;
+                const value = Number(materia.value);
+                materiasData.push({"key": id, "failureRate": value})
+            }
+            
+            fetch('/admin/saveFailureRate/', {
+                method: "PUT", 
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'include',
+                body: JSON.stringify({
+                "course": lastQuery, 
+                "subjects": materiasData})
+            })
+            .then(response => response.json())
+            .then((data) => {
+                if(data['error']){
+                    createAlert('Erro. ', data['error'], 'red');
+                }
+                if(data['redirect']){
+                    window.location.href = data['redirect'];
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> headController }}
+<body class="h-screen" onload="verifyAuthentication()">
+    {{> header }}
+    <main class="h-4/5 flex flex-col mt-8">
+        <div class="flex flex-col justify-center items-center w-full">
+            <h2 class="text-4xl font-extrabold mb-8">Minhas Reposições</h2>
+            <div id="noRepositions" class="{{#if repositions}}hidden{{/if}} text-center bg-secondary p-8 lg:p-16 rounded-xl">
+                <h2 class="text-2xl mb-4">Não há reposições marcadas!</h2>
+                <h2 class="text-2xl mb-8">Você pode marcar uma reposição clicando aqui:</h2>
+                <button class="bg-yellow-300 rounded-lg py-2 px-4 text-lg" onclick="window.location.href='/reposition/scheduleForm'">Marcar Reposição</button>
+            </div>
+            <table id="repositionTable" class="{{#if repositions}}{{else}}hidden{{/if}} w-[90%] lg:w-5/6 table-auto border-separate">
+                <tr>
+                    <td class="bg-secondary text-center rounded-md p-1">Matéria</td>
+                    <td class="bg-secondary text-center rounded-md p-1">Curso</td>
+                    <td class="bg-secondary text-center rounded-md p-1">Data</td>
+                    <td class="bg-secondary text-center rounded-md p-1">Horário</td>
+                    <td class="bg-secondary text-center rounded-md p-1">Local</td>
+                    <td class="bg-secondary text-center rounded-md p-1">Ações</td>
+                </tr>
+                {{#repositions}}
+                    <tr id="repo{{ id }}">
+                        <td class="bg-secondary text-center rounded-md p-1">{{ subject }}</td>
+                        <td class="bg-secondary text-center rounded-md p-1">{{ course }}</td>
+                        <td class="bg-secondary text-center rounded-md p-1">{{ date }}</td>
+                        <td class="bg-secondary text-center rounded-md p-1">{{ start }}</td>
+                        <td class="bg-secondary text-center rounded-md p-1">{{ classroom }}</td>
+                        <td class="bg-secondary text-center rounded-md p-1">
+                            <div class="flex flex-col md:flex-row md:min-w-[6rem] justify-evenly items-center">
+                                <img class="cursor-pointer size-6 m-1" src="../images/compartilharEmail.png" onclick="copyToClipboard('{{ subject }}', '{{ course }}', '{{ date }}', '{{ start }}', '{{ classroom }}')">
+                                <img class="cursor-pointer size-6 m-1" src="../images//compartilharPDF.png" onclick="goToPDF('{{ id }}')">
+                                <img class="cursor-pointer size-6 m-1" src="../images/deletarReposicao32.png" onclick="deleteReposition('{{ id }}')">
+                            </div>
+                        </td>
+                    </tr>
+                {{/repositions}}
+            </table>
+        </div>
+    </main>
+    {{> footer }}
+    <script src="../js/index.js"></script>
+    <script>
+        function copyToClipboard(materia, curso, data, horario, local){
+            texto = "Aviso: Reposição de " + materia + " do curso de " + curso + ", dia " + data + " às " + horario + " no local " + local + ".";
+            navigator.clipboard.writeText(texto);
+            createAlert('Sucesso. ', "Texto copiado para a área de transferência.", 'blue');
+        }
+
+        async function goToPDF(repoId){
+            window.location.href = 'pdf/'+repoId;  
+        }
+
+        function deleteReposition(rid){
+            fetch('deleteReposition/'+rid, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials : "include"
+            })
+            .then(() => {
+                document.querySelector(`#repo${rid}`).remove();
+                var table = document.getElementById('repositionTable');
+                if(table.children[0].children.length == 1 || (table.children[0].children.length == 2 && table.children[0].children[1].innerHTML == '')){
+                    table.classList.toggle("hidden");
+                    document.getElementById("noRepositions").classList.toggle("hidden");
+                    // table.remove();
+                    // document.getElementById('main').innerHTML += `<div class="emptyContentRepos" id="emptyRepos"><h2>Não há reposições marcadas! Você pode marcar uma reposição clicando aqui:</h2><button id = "send-button" class = "btnIndex" onclick="window.location.href = '../reposition/scheduleForm'"><p>Marcar Reposição</p></button></div>`;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

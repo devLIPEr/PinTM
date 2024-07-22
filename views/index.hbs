@@ -1,42 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 {{> head }}
-<body onload = "verifyUser()">
+<body class="h-screen" onload="verifyUser()">
     {{> header }}
-    <main class="mainIndex">
-        <div>
-            <div>
-                <div class="info">
-                    <div class="containerIndex">
-                        <img src="images/PinTMLogo.png" alt="Logo Pin">
-                    </div>
-                    <p class="infoIndex">
-                        Com o Pin™, você conseguirá encontrar horários para marcar qualquer evento para alunos do Campus CEDETEG, de acordo com os horários das turmas em que eles estão matriculados!
-                    </p>
-                    <button class="btnIndex" onclick="document.querySelector('footer').scrollIntoView({behavior: 'smooth'})">
-                        <p>CONFIRA</p>
-                    </button>
-                </div>
-                <img class="imgIndex" src="images/imagem_inicio_1.png" alt="">
-            </div>
-            <div class="sepBarH"></div>
-            <div>
-                <img style = "transform: scaleX(1.25);" class="imgIndex" src="images/imagem_inicio_2.png" alt="">
-                <div class="info">
-                    <div class="containerIndex">
-                        Nunca mais perca tempo organizando reuniões!
-                    </div>
-                    <p class="infoIndex">
-                        Utilizando o Pin™, você pode organizar uma reunião com um grupo de alunos ou professores informando quais matérias cada um participa. Então, nós buscamos o melhor horário para que todos possam participar, simples, rápido e fácil!
-                    </p>
-                    <button class="btnIndex" onclick="window.location.href='/reposition/scheduleForm'">
-                        <p>VAMOS LÁ</p>
-                    </button>
-                </div>
-            </div>
+    <main class="h-4/5 flex flex-col justify-center items-center">
+      <div class="absolute z-[-1] h-5/6 top-0 left-0 w-full bg-primary"></div>
+      <div class="relative flex justify-center">
+        <div id="slide1" class="bg-secondary w-11/12 md:w-4/5 lg:w-4/6 rounded-3xl h-fit flex">
+          <div class="flex flex-col justify-evenly w-1/2 items-center ml-8">
+            <h2 class="text-4xl font-black mt-2">Nunca mais perca tempo organizando reuniões!</h2>
+            <p>Com o Pin™, você conseguirá encontrar horários para marcar qualquer evento para alunos do Campus CEDETEG, de acordo com os horários das turmas em que eles estão matriculados!</p>
+            <button onclick="next()" class="bg-yellow-300 w-1/3 rounded-lg p-2 my-2">Confira</button>
+          </div>
+          <div class="flex justify-center items-center">
+            <img class="h-4/5" src="../images/imagem_inicio_1.png">
+          </div>
         </div>
+        <div id="slide2" class="bg-secondary w-11/12 md:w-4/5 lg:w-4/6 rounded-3xl h-fit hidden">
+          <div class="flex justify-center items-center w-1/2 md:w-full">
+            <img class="h-4/6" src="../images/imagem_inicio_2.png">
+          </div>
+          <div class="flex flex-col justify-evenly w-2/3 items-center mr-8">
+            <img src="../images/PinTMLogo.png" alt="Logo do PinTM">
+            <p>Utilizando o Pin™, você pode organizar uma reunião com um grupo de alunos ou professores informando quais matérias cada um participa. Então, nós buscamos o melhor horário para que todos possam participar, simples, rápido e fácil!</p>
+            <button class="bg-yellow-300 w-1/3 rounded-lg p-2 my-2" onclick="letsgo()">Vamos lá</button>
+          </div>
+        </div>
+      </div>
+    </main>
     </main>
     {{> footer }}
     <script src="../js/index.js"></script>
+    <script>
+      function next(){
+        var slide1 = document.querySelector("#slide1");
+        slide1.classList.remove("flex");
+        slide1.classList.add("hidden");
+
+        var slide2 = document.querySelector("#slide2");
+        slide2.classList.remove("hidden");
+        slide2.classList.add("flex");
+      }
+
+      function letsgo(){
+        if(sessionStorage.getItem("username")){
+          window.location.href='/reposition/scheduleForm';
+        } else {
+          window.location.href = '/user/signin';
+        }
+      }
+    </script>
 </body>
 </html>

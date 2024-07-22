@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> headController }}
+<body class="h-screen" onload="setCourseListener(); verifyUser();">
+    {{> header }}
+    <main class="h-4/5 flex flex-col justify-center items-center">
+        <div class="flex flex-col justify-center items-center bg-secondary h-2/3 md:w-2/5 lg:w-1/4 rounded-3xl p-4">
+            <h2 class="text-4xl font-black mb-12">Horários</h2>
+            <form action="/reposition/selectSchedule" method="POST">
+                <select class="mb-8 p-2 rounded-xl w-full outline-none" id="nomeCurso" name="course">
+                    <option class="hidden" value="" disabled selected><p>Curso:</p></option>
+                    {{#cursos}}
+                        <option value="{{key}}">{{nome}}</option>
+                    {{/cursos}}
+                </select>
+                <select class="mb-8 p-2 rounded-xl w-full outline-none" id="nomeMateria" name="subject">
+                    <option class="hidden" value="" disabled selected><p>Materia:</p></option>
+                </select>
+                <input class="hidden" type="submit" value="enviar" id="submit-button">
+            </form>
+            <button onclick="sendConsulta()" class="bg-yellow-300 w-1/3 rounded-lg px-1 py-2">Enviar</button>
+        </div>
+    </main>
+    {{> footer }}
+    <script src="../js/index.js"></script>
+    <script>
+        function setCourseListener(){
+            var materiasDropDown = document.getElementById("nomeMateria");
+            var cursosDropDown = document.getElementById("nomeCurso");
+            cursosDropDown.addEventListener('change', () => {
+                fetch('getSubjects/'+cursosDropDown.value, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: "include"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    materiasDropDown.innerHTML = '<option class="hidden" value="" disabled selected><p>Materia:</p></option>';
+                    let entries = Object.entries(data);
+                    entries.sort((a, b) => a[1].name.localeCompare(b[1].name));
+                    for(var entry of entries){
+                        materiasDropDown.innerHTML += `<option value="${entry[0]}"><p>${entry[1].name}</p></option>`;
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+
+        function sendConsulta(){
+            var cursoIpt = document.getElementById('nomeCurso').value;
+            var materiaIpt = document.getElementById('nomeMateria').value;
+
+            if(cursoIpt != '' && materiaIpt != ''){
+                document.getElementById('submit-button').click();
+            }else{
+                createAlert('Erro. ', "Preencha os dados requeridos.", 'red');
+            }
+        }
+    </script>
+</body>
+</html>

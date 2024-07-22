@@ -11,8 +11,8 @@ export class UserController {
   constructor(private userService: UserService){}
 
   // Base Pages
-  @Get('/login')
-  @Render('login')
+  @Get('/signin')
+  @Render('signin')
   branchIndex(){}
 
   @Get('/signup')
@@ -20,7 +20,7 @@ export class UserController {
   branchSignup(){}
 
   @Get('/accountInfo')
-  @Render('minhaConta')
+  @Render('account')
   branchMinhaConta(){}
   
   @Get('/resetPassword')
@@ -28,7 +28,7 @@ export class UserController {
   branchResetPass(){}
 
   // Requests
-  @Post("/login")
+  @Post("/signin")
   authenticate(@Body() dto: LoginRequestDTO, @Res() res: Response){
     this.userService.authenticate(dto)
     .then((response) => {
@@ -98,15 +98,20 @@ export class UserController {
     if((req.cookies && req.cookies['token'])){
       verifyCustomToken(req.cookies['token'])
       .then(async (userCredential) => {
-        await this.userService.edit(userCredential.user.uid, dto);
-        res.redirect("/user/accountInfo");
+        this.userService.edit(userCredential.user.uid, dto)
+        .then((user) => {
+          res.send({username: user.username, isAdmin: user.isAdmin, isColorBlind: user.isColorBlind, redirect: "/user/accountInfo"});
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(400).send({error: "Não foi possível verificar o usuário"});
+        });
       })
       .catch((err) => {
         console.log(err);
-        throw new HttpException("Não foi possível verificar o usuário", HttpStatus.BAD_REQUEST);
+        res.status(400).send({error: "Não foi possível verificar o usuário"});
       });
     }
-    res.end();
   }
 
   @Delete(":id")

@@ -1,14 +1,20 @@
-<header>
-    <div class="logos">
-        <a href="/"><img src="./images/UnicentroLogo.png" alt="Logo UNICENTRO"></a>
-        <div class="sepBar"></div>
-        <a href="/"><img src="./images/PinTMLogo.png" alt="Logo Pin"></a>
-    </div>
-    <div class="nav">
-        <ul>
-            <li class="navButton" style="display: none;"><div class="navButtonContainer"><a href="/reposition/scheduleForm">Consulta</a></div></li>
-            <div class="sepBar" style="display: none;"></div>
-            <li class="navButton"><div class="navButtonContainer"><a id="headerLogin" href="/user/login">Login</a></div></li>
-        </ul>
+<header class="h-fit">
+    <div class="flex justify-between bg-primary text-white items-center md:px-16 lg:px-32">
+        <div class="flex justify-between p-2">
+            <a href="/"><img src="../images/UnicentroLogo.png" class="hidden md:flex" alt="Logo da UNICENTRO"></a>
+            <a href="/"><img src="../images/PinTMLogo.png" alt="Logo do PINTM"></a>
+        </div>
+        <div class="flex justify-between p-2 text-xl">
+            <a href="/reposition/scheduleForm" id="headerConsulta" class="hidden mx-6 md:mx-4 lg:mx-12 hover:scale-110">Consulta</a>
+            <a href="/user/signin" id="headerLogin" class="cursor-pointer hover:scale-110">
+                Login
+                <div id="dropdown" class="hidden absolute mt-8 right-0 mr-1 text-center bg-secondary text-black">
+                    <a href="/admin/index"><div id="admin" class="hidden p-1 border-b border-black hover:bg-hoverSecondary">Administrador</div></a>
+                    <a href="/reposition/account"><div class="p-1 border-b border-black hover:bg-hoverSecondary">Minhas Reposições</div></a>
+                    <a href="/user/accountInfo"><div class="p-1 border-b border-black hover:bg-hoverSecondary">Minha Conta</div></a>
+                    <a href="#" onclick="logOut()"><div class="p-1 hover:bg-hoverSecondary">Sair</div></a>
+                </div>
+            </a>
+        </div>
     </div>
 </header>
